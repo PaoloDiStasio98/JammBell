@@ -11,5 +11,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         System.out.print("A gaviglia piac o pesc");
         System.out.print("paolo");
+        System.out.print("egidia");
     }
 }
