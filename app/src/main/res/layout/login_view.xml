@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:orientation="vertical"
+    tools:context=".LoginActivity">
+
+    <EditText
+        android:id="@+id/EditTextMail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Mail" />
+
+    <EditText
+        android:id="@+id/EditTextPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:hint="Password" />
+
+    <Button
+        android:id="@+id/ButtonLogin"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="Login" />
+
+    <Button
+        android:id="@+id/ButtonRegistrazione"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:text="Registrati"/>
+
+
+</LinearLayout>
