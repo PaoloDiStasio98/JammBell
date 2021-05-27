@@ -59,7 +59,27 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        SignupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, SignupActivity.class));
 
+            }
+        });
+
+
+        //Change UI according to user data.
+     //   public void updateUI(FirebaseUser account){
+
+       //     if(account != null){
+         //       Toast.makeText(this,"U Signed In successfully",Toast.LENGTH_LONG).show();
+           //     startActivity(new Intent(this,AnotherActivity.class));
+
+           // }else {
+             //   Toast.makeText(this,"U Didnt signed in",Toast.LENGTH_LONG).show();
+           // }
+
+       // }
 
     }
 
