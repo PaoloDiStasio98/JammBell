@@ -54,25 +54,8 @@ public class MapFragment extends Fragment {
     GoogleMap map1;
     Location mLastLocation;
     Marker mCurrLocationMarker;
-    int prova = 0;
 
 
-    @Override
-    public void onCreate( Bundle savedInstanceState) {
-        Log.d("posizione nuova", String.valueOf(PosizioneCorrente));
-        prova++;
-        Log.d("posizione prova on create", String.valueOf(prova));
-
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onStart() {
-        Log.d("posizione nuova", String.valueOf(PosizioneCorrente));
-        prova++;
-        Log.d("posizione prova on start", String.valueOf(prova));
-        super.onStart();
-    }
 
     @Override
     public void onResume() {
@@ -96,25 +79,11 @@ public class MapFragment extends Fragment {
         super.onResume();
     }
 
-    @Override
-    public void onPause() {
-        Log.d("posizione nuova pause", String.valueOf(PosizioneCorrente));
 
-        super.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        Log.d("posizione nuova stop", String.valueOf(PosizioneCorrente));
-
-        super.onStop();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        prova++;
-        Log.d("posizione prova on create view", String.valueOf(prova));
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
         supportMapFragment = (SupportMapFragment)
