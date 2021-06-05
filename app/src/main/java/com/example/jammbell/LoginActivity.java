@@ -35,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
         SignupButton = (Button)findViewById(R.id.ButtonRegistrazione);
 
 
+
         LoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,23 +69,20 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-        //Change UI according to user data.
-     //   public void updateUI(FirebaseUser account){
-
-       //     if(account != null){
-         //       Toast.makeText(this,"U Signed In successfully",Toast.LENGTH_LONG).show();
-           //     startActivity(new Intent(this,AnotherActivity.class));
-
-           // }else {
-             //   Toast.makeText(this,"U Didnt signed in",Toast.LENGTH_LONG).show();
-           // }
-
-       // }
 
     }
 
 
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            startActivity(new Intent(LoginActivity.this, Main2Activity.class));
+        }
+    }
 
     }
 

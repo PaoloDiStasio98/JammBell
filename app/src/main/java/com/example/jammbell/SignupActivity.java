@@ -3,6 +3,7 @@ package com.example.jammbell;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -43,7 +44,9 @@ public class SignupActivity extends AppCompatActivity {
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d("TAG", "createUserWithEmail:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
-                                    //updateUI(user);
+                                    Log.d("id", user.getUid());
+                                    idTransfer(user);
+
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w("TAG", "createUserWithEmail:failure", task.getException());
@@ -55,5 +58,12 @@ public class SignupActivity extends AppCompatActivity {
                         });
             }
         });
+
+
+    }
+    public void idTransfer(FirebaseUser user) {
+        Intent intent = new Intent(getBaseContext(), RegistrazioneProfiloActivity.class);
+        intent.putExtra("USER_ID", user.getUid());
+        startActivity(intent);
     }
 }

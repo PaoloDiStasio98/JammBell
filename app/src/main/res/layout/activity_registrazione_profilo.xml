@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegistrazioneProfiloActivity"
+    android:padding="15dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:paddingTop="5dp"
+            android:id="@+id/UsernameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Username" />
+
+        <EditText
+            android:paddingTop="10dp"
+            android:id="@+id/NomeEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nome" />
+
+        <EditText
+            android:paddingTop="10dp"
+            android:id="@+id/CognomeEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Cognome" />
+
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Data di nascita"
+                android:textSize="20dp"
+                android:textColor="@color/black"/>
+
+            <Button
+                android:id="@+id/ButtonSelectData"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textColor="@color/black"
+                android:text="JAN 01 2020"
+                style="?android:spinnerStyle"
+                android:onClick="openDatePicker"/>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="20dp">
+
+            <TextView
+                android:id="@+id/SessoTextView"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="Sesso"
+                android:paddingTop="35dp"
+                android:textSize="20dp"
+                android:textColor="@color/black"/>
+
+            <NumberPicker
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/SessoNumberPicker"/>
+
+
+        </LinearLayout>
+
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingTop="20dp">
+
+    <TextView
+        android:id="@+id/PesoTextView"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:text="Peso"
+        android:paddingTop="35dp"
+        android:textSize="20dp"
+        android:textColor="@color/black"/>
+
+    <NumberPicker
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:id="@+id/PesoNumberPicker"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:text="kg"
+        android:paddingTop="35dp"
+        android:textSize="20dp"
+        android:textColor="@color/black"/>
+
+
+</LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="20dp">
+
+            <TextView
+                android:id="@+id/altezzaTextView"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="Altezza"
+                android:paddingTop="35dp"
+                android:textSize="20dp"
+                android:textColor="@color/black"/>
+
+            <NumberPicker
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:id="@+id/altezzaNumberPicker"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="cm"
+                android:paddingTop="35dp"
+                android:textSize="20dp"
+                android:textColor="@color/black"/>
+
+
+        </LinearLayout>
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="125dp"
+            android:layout_marginTop="30dp"
+            android:id="@+id/buttonConferma"
+            android:text="Conferma"
+            />
+    </LinearLayout>
+
+</RelativeLayout>

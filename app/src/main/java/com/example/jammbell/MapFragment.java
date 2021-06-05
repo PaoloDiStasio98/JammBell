@@ -54,13 +54,67 @@ public class MapFragment extends Fragment {
     GoogleMap map1;
     Location mLastLocation;
     Marker mCurrLocationMarker;
+    int prova = 0;
 
 
+    @Override
+    public void onCreate( Bundle savedInstanceState) {
+        Log.d("posizione nuova", String.valueOf(PosizioneCorrente));
+        prova++;
+        Log.d("posizione prova on create", String.valueOf(prova));
+
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        Log.d("posizione nuova", String.valueOf(PosizioneCorrente));
+        prova++;
+        Log.d("posizione prova on start", String.valueOf(prova));
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        Log.d("posizione nuova resume", String.valueOf(PosizioneCorrente));
+
+        supportMapFragment.getMapAsync(new OnMapReadyCallback() {
+            @SuppressLint("MissingPermission")
+            @Override
+            public void onMapReady(GoogleMap map) {
+
+                map.addMarker(new MarkerOptions().position(PosizioneCorrente).title("La tua posizione"));
+                map.moveCamera(CameraUpdateFactory.newLatLng(PosizioneCorrente));
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(PosizioneCorrente, 16.6f));
+
+
+            }
+        });
+
+
+
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        Log.d("posizione nuova pause", String.valueOf(PosizioneCorrente));
+
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        Log.d("posizione nuova stop", String.valueOf(PosizioneCorrente));
+
+        super.onStop();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        prova++;
+        Log.d("posizione prova on create view", String.valueOf(prova));
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
         supportMapFragment = (SupportMapFragment)
@@ -85,32 +139,7 @@ public class MapFragment extends Fragment {
         }
 
 
-        supportMapFragment.getMapAsync(new OnMapReadyCallback() {
-            @SuppressLint("MissingPermission")
-            @Override
-            public void onMapReady(GoogleMap map) {
 
-                map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                    @Override
-                    public void onMapClick(LatLng latLng) {
-
-
-                        Log.d("posizione1", String.valueOf(PosizioneCorrente));
-
-
-                        map.addMarker(new MarkerOptions().position(PosizioneCorrente).title("La tua posizione"));
-                        map.moveCamera(CameraUpdateFactory.newLatLng(PosizioneCorrente));
-                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(PosizioneCorrente, 16.6f));
-
-                    }
-
-
-
-
-                });
-
-            }
-        });
 
 
 
