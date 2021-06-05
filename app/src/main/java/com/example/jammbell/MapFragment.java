@@ -12,6 +12,7 @@ import android.os.Bundle;
 
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -33,19 +34,28 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.Timer;
+import java.util.concurrent.TimeUnit;
+
 
 public class MapFragment extends Fragment {
 
-    LatLng sydney;
+    LatLng PosizioneCorrente;
     SupportMapFragment supportMapFragment;
     FusedLocationProviderClient client;
-    GoogleMap map;
+    GoogleMap map1;
+    Location mLastLocation;
+    Marker mCurrLocationMarker;
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,64 +63,56 @@ public class MapFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
-         supportMapFragment = (SupportMapFragment)
+        supportMapFragment = (SupportMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.google_map);
 
-         client = LocationServices.getFusedLocationProviderClient(getActivity());
+        client = LocationServices.getFusedLocationProviderClient(getActivity());
 
-         if (ContextCompat.checkSelfPermission(getActivity(),
-                 Manifest.permission.ACCESS_FINE_LOCATION)
-                 == PackageManager.PERMISSION_GRANTED &&
-                 ContextCompat.checkSelfPermission(getActivity(),
-                         Manifest.permission.ACCESS_COARSE_LOCATION) 
-         ==PackageManager.PERMISSION_GRANTED){
-             //permessi concessi
-             Log.d("prova", "entrato nell'if");
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
+            //permessi concessi
 
-             getCurrentLocation();
-         } else {
-             //quando i permessi non sono concessi
-            requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
-         }
+
+            getCurrentLocation();
+        } else {
+            //quando i permessi non sono concessi
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
+        }
 
 
         supportMapFragment.getMapAsync(new OnMapReadyCallback() {
+            @SuppressLint("MissingPermission")
             @Override
             public void onMapReady(GoogleMap map) {
 
                 map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                     @Override
                     public void onMapClick(LatLng latLng) {
-                        MarkerOptions markerOptions = new MarkerOptions();
-
-                        markerOptions.position(latLng);
-
-                        markerOptions.title(latLng.latitude + ":" + latLng.longitude);
-
-                        map.clear();
-
-                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                                latLng, 10
-                        ));
-
-                        map.addMarker(markerOptions);
-
-                        Log.d("posizione1", String.valueOf(sydney));
 
 
-                        map.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-                        map.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+                        Log.d("posizione1", String.valueOf(PosizioneCorrente));
+
+
+                        map.addMarker(new MarkerOptions().position(PosizioneCorrente).title("La tua posizione"));
+                        map.moveCamera(CameraUpdateFactory.newLatLng(PosizioneCorrente));
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(PosizioneCorrente, 16.6f));
+
                     }
+
+
+
+
                 });
-
-
 
             }
         });
 
 
-        Log.d("posizione1", String.valueOf(sydney));
 
         return view;
     }
@@ -144,20 +146,18 @@ public class MapFragment extends Fragment {
             client.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
                 @Override
                 public void onComplete(@NonNull Task<Location> task) {
-            //inizializzazione location
+                    //inizializzazione location
                     Location location = task.getResult();
                     //controllo condizione
                     if(location != null){
                         Log.d("prova", "Latitudine" + String.valueOf(location.getLatitude()));
                         Log.d("prova", "Longitudine" + String.valueOf(location.getLongitude()));
 
-                        sydney = new LatLng(location.getLatitude(), location.getLongitude());
+                        PosizioneCorrente = new LatLng(location.getLatitude(), location.getLongitude());
 
-                        Log.d("posizione", String.valueOf(sydney));
+                        Log.d("posizione", String.valueOf(PosizioneCorrente));
 
-                  //          map.clear();
-                   //    map.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-                    //    map.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
 
 
                     }
@@ -171,7 +171,7 @@ public class MapFragment extends Fragment {
                         LocationCallback locationCallback = new LocationCallback() {
                             @Override
                             public void onLocationResult(LocationResult locationResult) {
-                               Location location1 = locationResult.getLastLocation();
+                                Location location1 = locationResult.getLastLocation();
 
                                 Log.d("prova", "Latitudine" + String.valueOf(location1.getLatitude()));
                                 Log.d("prova", "Longitudine" + String.valueOf(location1.getLongitude()));
