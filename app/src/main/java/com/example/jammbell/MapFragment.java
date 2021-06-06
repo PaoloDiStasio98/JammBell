@@ -51,7 +51,6 @@ public class MapFragment extends Fragment {
     LatLng PosizioneCorrente;
     SupportMapFragment supportMapFragment;
     FusedLocationProviderClient client;
-    GoogleMap map1;
     Location mLastLocation;
     Marker mCurrLocationMarker;
 
