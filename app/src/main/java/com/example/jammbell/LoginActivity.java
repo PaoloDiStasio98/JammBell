@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    EditText MailEditText, PasswordEditText;
+    EditText MailEditText=null, PasswordEditText=null;
     Button LoginButton, SignupButton;
 
     @Override
@@ -39,24 +39,33 @@ public class LoginActivity extends AppCompatActivity {
         LoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAuth.signInWithEmailAndPassword(MailEditText.getText().toString(), PasswordEditText.getText().toString())
-                        .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    // Sign in success, update UI with the signed-in user's information
-                                    Log.d("TAG", "signInWithEmail:success");
-                                    FirebaseUser user = mAuth.getCurrentUser();
-                                    startActivity(new Intent(LoginActivity.this, Main2Activity.class));
-                                } else {
-                                    // If sign in fails, display a message to the user.
-                                    Log.w("TAG", "signInWithEmail:failure", task.getException());
-                                    Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
-                                    //updateUI(null);
+
+                if (MailEditText.getText().toString().matches("") && PasswordEditText.getText().toString().matches("")) {
+                    Toast.makeText(LoginActivity.this, "Inserisci i dati d'accesso",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.d("accesso", "dentroooooo:success");
+
+                    mAuth.signInWithEmailAndPassword(MailEditText.getText().toString(), PasswordEditText.getText().toString())
+                            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        // Sign in success, update UI with the signed-in user's information
+                                        Log.d("TAG", "signInWithEmail:success");
+                                        FirebaseUser user = mAuth.getCurrentUser();
+                                        startActivity(new Intent(LoginActivity.this, Main2Activity.class));
+                                    } else {
+                                        // If sign in fails, display a message to the user.
+                                        Log.w("TAG", "signInWithEmail:failure", task.getException());
+                                        Toast.makeText(LoginActivity.this, "Autenticazione fallita, ricontrolla mail e/o password",
+                                                Toast.LENGTH_SHORT).show();
+                                        //updateUI(null);
+                                    }
                                 }
-                            }
-                        });
+                            });
+                }
+
             }
         });
 

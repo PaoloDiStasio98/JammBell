@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -43,6 +44,9 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity {
     private TextView usernameTextView;
 
     String date;
+
+    boolean isValid;
+
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -91,14 +95,27 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity {
         nomeTextView = findViewById(R.id.NomeEditText);
         cognomeTextView = findViewById(R.id.CognomeEditText);
 
+
         String userId = getIntent().getStringExtra("USER_ID");
+
+
 
         confermaButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                //controllo se ci sono dati non inseriti
+                if (usernameTextView.getText().toString().matches("")  && nomeTextView.getText().toString().matches("")  &&
+                        cognomeTextView.getText().toString().matches("")  && date == null)
+                {
 
-                utente.put("IDUtente", userId);
+                    Toast.makeText(RegistrazioneProfiloActivity.this, "Inserisci tutti i campi",
+                            Toast.LENGTH_LONG).show();
+                }
+                else {
+
+                //Prendo le informazioni e le metto in utente
+                    utente.put("IDUtente", userId);
                 utente.put("Username", usernameTextView.getText().toString());
                 utente.put("Nome", nomeTextView.getText().toString());
                 utente.put("Cognome", cognomeTextView.getText().toString());
@@ -112,7 +129,7 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity {
 
                 Log.d("utente", String.valueOf(utente));
 
-
+                //pusho utente nel database
                 db.collection("Utente")
                         .add(utente)
                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -130,9 +147,14 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity {
                             }
                         });
 
+
+
+                }
             }
         });
     }
+
+
 
     private void initAltezzaPicker() {
         altezzaNumberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {

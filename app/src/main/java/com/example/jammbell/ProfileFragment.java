@@ -97,7 +97,7 @@ public class ProfileFragment extends Fragment {
                                         ImageProfilo.setColorFilter(blu);
                                     }
                                     if(document.get("Sesso").toString().equals("Femmina")){
-                                        int rosa = Color.parseColor("##ef35fc");
+                                        int rosa = Color.parseColor("#ef35fc");
                                         ImageProfilo.setColorFilter(rosa);
                                     }
 
