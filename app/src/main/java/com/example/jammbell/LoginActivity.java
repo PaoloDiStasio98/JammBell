@@ -34,13 +34,11 @@ public class LoginActivity extends AppCompatActivity {
         LoginButton = (Button)findViewById(R.id.ButtonLogin);
         SignupButton = (Button)findViewById(R.id.ButtonRegistrazione);
 
-
-
         LoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (MailEditText.getText().toString().matches("") && PasswordEditText.getText().toString().matches("")) {
+                if (MailEditText.getText().toString().matches("") || PasswordEditText.getText().toString().matches("")) {
                     Toast.makeText(LoginActivity.this, "Inserisci i dati d'accesso",
                             Toast.LENGTH_SHORT).show();
                 } else {

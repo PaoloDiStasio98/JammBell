@@ -15,16 +15,21 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RegistrazioneProfiloActivity extends AppCompatActivity {
+public class RegistrazioneProfiloActivity extends AppCompatActivity
+{
 
     private DatePickerDialog datePickerDialog;
     private Button dateButton;
@@ -45,14 +50,13 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity {
 
     String date;
 
-    boolean isValid;
-
+    int isValid = 0;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registrazione_profilo);
 
@@ -95,85 +99,109 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity {
         nomeTextView = findViewById(R.id.NomeEditText);
         cognomeTextView = findViewById(R.id.CognomeEditText);
 
-
         String userId = getIntent().getStringExtra("USER_ID");
 
-
-
-        confermaButton.setOnClickListener(new View.OnClickListener() {
+        confermaButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-
+            public void onClick(View v)
+            {
                 //controllo se ci sono dati non inseriti
-                if (usernameTextView.getText().toString().matches("")  && nomeTextView.getText().toString().matches("")  &&
-                        cognomeTextView.getText().toString().matches("")  && date == null)
+                if (usernameTextView.getText().toString().matches("")  || nomeTextView.getText().toString().matches("")  || cognomeTextView.getText().toString().matches("")  || date == null)
                 {
-
-                    Toast.makeText(RegistrazioneProfiloActivity.this, "Inserisci tutti i campi",
-                            Toast.LENGTH_LONG).show();
+                    Toast.makeText(RegistrazioneProfiloActivity.this, "Inserisci tutti i campi", Toast.LENGTH_LONG).show();
                 }
-                else {
-
-                //Prendo le informazioni e le metto in utente
-                    utente.put("IDUtente", userId);
-                utente.put("Username", usernameTextView.getText().toString());
-                utente.put("Nome", nomeTextView.getText().toString());
-                utente.put("Cognome", cognomeTextView.getText().toString());
-                utente.put("Data di nascita", date);
-                utente.put("Sesso", sesso[sessoNumberPicker.getValue()]);
-                utente.put("Peso", pesoNumberPicker.getValue());
-                utente.put("Altezza", altezzaNumberPicker.getValue());
-
-
-
-
-                Log.d("utente", String.valueOf(utente));
-
-                //pusho utente nel database
-                db.collection("Utente")
-                        .add(utente)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Log.d("TAG", "DocumentSnapshot written with ID: " + documentReference.getId());
-                                startActivity(new Intent(RegistrazioneProfiloActivity.this, Main2Activity.class));
-
+                else
+                {
+                    db.collection("Utente").whereEqualTo("Username", usernameTextView.getText().toString()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                    {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task)
+                        {
+                            if(task.isSuccessful())
+                            {
+                                for(QueryDocumentSnapshot document : task.getResult())
+                                {
+                                    isValid = 1;
+                                }
                             }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w("TAG", "Error adding document", e);
+                            else
+                            {
+                                Log.d("TAG", "Errore documento non trovato: ", task.getException());
                             }
-                        });
 
+                            if(isValid == 0)
+                            {
+                                //Prendo le informazioni e le metto in utenteutente.put("IDUtente", userId);
+                                utente.put("Username", usernameTextView.getText().toString());
+                                utente.put("Nome", nomeTextView.getText().toString());
+                                utente.put("Cognome", cognomeTextView.getText().toString());
+                                utente.put("Data di nascita", date);
+                                utente.put("Sesso", sesso[sessoNumberPicker.getValue()]);
+                                utente.put("Peso", pesoNumberPicker.getValue());
+                                utente.put("Altezza", altezzaNumberPicker.getValue());
 
+                                Log.d("utente", String.valueOf(utente));
 
+                                //pusho utente nel database
+                                db.collection("Utente").add(utente).addOnSuccessListener(new OnSuccessListener<DocumentReference>()
+                                {
+                                    @Override
+                                    public void onSuccess(DocumentReference documentReference)
+                                    {
+                                        Log.d("TAG", "DocumentSnapshot written with ID: " + documentReference.getId());
+                                        startActivity(new Intent(RegistrazioneProfiloActivity.this, Main2Activity.class));
+                                    }
+                                }).addOnFailureListener(new OnFailureListener()
+                                {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e)
+                                    {
+                                        Log.w("TAG", "Error adding document", e);
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                Toast.makeText(RegistrazioneProfiloActivity.this, "Username già esistente", Toast.LENGTH_LONG).show();
+                            }
+                            isValid = 0;
+                        }
+                    });
                 }
             }
+
         });
     }
 
 
 
-    private void initAltezzaPicker() {
-        altezzaNumberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+    private void initAltezzaPicker()
+    {
+        altezzaNumberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener()
+        {
             @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal)
+            {
 
             }
         });
     }
 
-    private void initPesoPicker() {
-        pesoNumberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+    private void initPesoPicker()
+    {
+        pesoNumberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener()
+        {
             @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal)
+            {
+
             }
         });
     }
 
-    private String getTodayDate() {
+    private String getTodayDate()
+    {
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
         int month = cal.get(Calendar.MONTH);
@@ -183,10 +211,13 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity {
         return makeDateString(day, month, year);
     }
 
-    private void initDatePicker(){
-        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+    private void initDatePicker()
+    {
+        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener()
+        {
             @Override
-            public void onDateSet(DatePicker view, int year, int month, int day) {
+            public void onDateSet(DatePicker view, int year, int month, int day)
+            {
                 month = month + 1;
                 date = makeDateString(day, month, year);
                 dateButton.setText(date);
@@ -201,14 +232,15 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity {
         int style = AlertDialog.THEME_HOLO_LIGHT;
 
         datePickerDialog = new DatePickerDialog(this, style, dateSetListener, year, month, day);
-
     }
 
-    private String makeDateString(int day, int month, int year) {
+    private String makeDateString(int day, int month, int year)
+    {
         return day + " " + getMonthFormat(month) + " " + year;
     }
 
-    private String getMonthFormat(int month) {
+    private String getMonthFormat(int month)
+    {
         if(month == 1){
             return "GEN";
         }
@@ -250,9 +282,8 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity {
         return "JAN";
     }
 
-    public void openDatePicker(View view) {
+    public void openDatePicker(View view)
+    {
         datePickerDialog.show();
     }
-
-
 }
