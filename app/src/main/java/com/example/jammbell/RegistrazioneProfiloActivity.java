@@ -132,7 +132,8 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity
 
                             if(isValid == 0)
                             {
-                                //Prendo le informazioni e le metto in utenteutente.put("IDUtente", userId);
+                                //Prendo le informazioni e le metto in utente
+                                utente.put("IDUtente", userId);
                                 utente.put("Username", usernameTextView.getText().toString());
                                 utente.put("Nome", nomeTextView.getText().toString());
                                 utente.put("Cognome", cognomeTextView.getText().toString());
