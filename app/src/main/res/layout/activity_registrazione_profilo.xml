@@ -12,12 +12,30 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ErroreUsername"
+            android:text="*Inserisci username"
+            android:textSize="15dp"
+            android:visibility="invisible"
+            android:textColor="#ff0000"/>
+
         <EditText
             android:paddingTop="5dp"
             android:id="@+id/UsernameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Username" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ErroreNome"
+            android:text="*Inserisci nome"
+            android:textSize="15dp"
+            android:visibility="invisible"
+            android:textColor="#ff0000"/>
 
         <EditText
             android:paddingTop="10dp"
@@ -26,6 +44,15 @@
             android:layout_height="wrap_content"
             android:hint="Nome" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ErroreCognome"
+            android:text="*Inserisci cognome"
+            android:textSize="15dp"
+            android:visibility="invisible"
+            android:textColor="#ff0000"/>
+
         <EditText
             android:paddingTop="10dp"
             android:id="@+id/CognomeEditText"
@@ -33,14 +60,21 @@
             android:layout_height="wrap_content"
             android:hint="Cognome" />
 
-
-
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Data di nascita"
                 android:textSize="20dp"
                 android:textColor="@color/black"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/ErroreDataDiNascita"
+                android:text="*Inserisci data di nascita"
+                android:textSize="15dp"
+                android:visibility="invisible"
+                android:textColor="#ff0000"/>
 
             <Button
                 android:id="@+id/ButtonSelectData"
@@ -142,13 +176,12 @@
 
 
         <Button
+            android:id="@+id/buttonConferma"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="125dp"
-            android:layout_marginTop="30dp"
-            android:id="@+id/buttonConferma"
-            android:text="Conferma"
-            />
+            android:layout_marginTop="10dp"
+            android:text="Conferma" />
     </LinearLayout>
 
 </RelativeLayout>

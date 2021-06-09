@@ -47,6 +47,10 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity
     private TextView nomeTextView;
     private TextView cognomeTextView;
     private TextView usernameTextView;
+    private TextView erroreUsernameTextView;
+    private TextView erroreNomeTextView;
+    private TextView erroreCognomeTextView;
+    private TextView erroreDataDiNascitaTextView;
 
     String date;
 
@@ -59,7 +63,6 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registrazione_profilo);
-
 
         //settaggio date picker
         initDatePicker();
@@ -95,9 +98,14 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity
         Map<String, Object> utente = new HashMap<>();
 
         //set informazioni
-        usernameTextView = findViewById(R.id.UsernameEditText);
-        nomeTextView = findViewById(R.id.NomeEditText);
-        cognomeTextView = findViewById(R.id.CognomeEditText);
+        usernameTextView            = findViewById(R.id.UsernameEditText);
+        nomeTextView                = findViewById(R.id.NomeEditText);
+        cognomeTextView             = findViewById(R.id.CognomeEditText);
+
+        erroreUsernameTextView      = findViewById(R.id.ErroreUsername);
+        erroreNomeTextView          = findViewById(R.id.ErroreNome);
+        erroreCognomeTextView       = findViewById(R.id.ErroreCognome);
+        erroreDataDiNascitaTextView = findViewById(R.id.ErroreDataDiNascita);
 
         String userId = getIntent().getStringExtra("USER_ID");
 
@@ -106,12 +114,33 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
+                erroreUsernameTextView.setVisibility(View.INVISIBLE);
+                erroreNomeTextView.setVisibility(View.INVISIBLE);
+                erroreCognomeTextView.setVisibility(View.INVISIBLE);
+                erroreDataDiNascitaTextView.setVisibility(View.INVISIBLE);
+                
                 //controllo se ci sono dati non inseriti
                 if (usernameTextView.getText().toString().matches("")  || nomeTextView.getText().toString().matches("")  || cognomeTextView.getText().toString().matches("")  || date == null)
                 {
                     Toast.makeText(RegistrazioneProfiloActivity.this, "Inserisci tutti i campi", Toast.LENGTH_LONG).show();
+                    if(usernameTextView.getText().toString().matches(""))
+                    {
+                        erroreUsernameTextView.setVisibility(View.VISIBLE);
+                    }
+                    if(nomeTextView.getText().toString().matches(""))
+                    {
+                        erroreNomeTextView.setVisibility(View.VISIBLE);
+                    }
+                    if(cognomeTextView.getText().toString().matches(""))
+                    {
+                        erroreCognomeTextView.setVisibility(View.VISIBLE);
+                    }
+                    if(date == null)
+                    {
+                        erroreDataDiNascitaTextView.setVisibility(View.VISIBLE);
+                    }
                 }
-                else
+                else if(!usernameTextView.getText().toString().matches("") && !nomeTextView.getText().toString().matches("") && !cognomeTextView.getText().toString().matches("")  || date != null)
                 {
                     db.collection("Utente").whereEqualTo("Username", usernameTextView.getText().toString()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
                     {
@@ -132,7 +161,8 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity
 
                             if(isValid == 0)
                             {
-                                //Prendo le informazioni e le metto in utenteutente.put("IDUtente", userId);
+                                //Prendo le informazioni e le metto in utente
+                                utente.put("IDUtente", userId);
                                 utente.put("Username", usernameTextView.getText().toString());
                                 utente.put("Nome", nomeTextView.getText().toString());
                                 utente.put("Cognome", cognomeTextView.getText().toString());
@@ -164,6 +194,8 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity
                             else
                             {
                                 Toast.makeText(RegistrazioneProfiloActivity.this, "Username già esistente", Toast.LENGTH_LONG).show();
+                                erroreUsernameTextView.setVisibility(View.VISIBLE);
+                                erroreUsernameTextView.setText("Username già esistente");
                             }
                             isValid = 0;
                         }
@@ -173,8 +205,6 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity
 
         });
     }
-
-
 
     private void initAltezzaPicker()
     {
