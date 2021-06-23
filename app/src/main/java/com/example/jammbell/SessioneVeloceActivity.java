@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -29,9 +30,18 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +50,9 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         com.google.android.gms.location.LocationListener {
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseAuth mAuth;
 
     Button ButtonStart;
     Button ButtonStop;
@@ -61,6 +74,12 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
     private float distanza;
     private float risultato = 0;
 
+    private TextView KmtextView;
+    private TextView CalorieTextView;
+    private TextView VelocitàTextView;
+    double calorie;
+    String peso;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +89,16 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
         ButtonPause = findViewById(R.id.ButtonPausa);
         ButtonStop = findViewById(R.id.ButtonStop);
         Cronometro = findViewById(R.id.Cronometro);
+
+
+        KmtextView = findViewById(R.id.KmTextView);
+        CalorieTextView = findViewById(R.id.CalorieTextView);
+        VelocitàTextView = findViewById(R.id.VelocitaTextView);
+
+        mAuth = FirebaseAuth.getInstance();
+        accessodatabase();
+
+
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -84,6 +113,31 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
 
     }
 
+    private void accessodatabase() {
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            Log.d("utenteid", currentUser.getUid());
+
+            db.collection("Utente")
+                    .whereEqualTo("IDUtente", currentUser.getUid())
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    peso = document.get("Peso").toString();
+                                    Log.d("database", document.getId() + " => " + document.getData() + " "  + " " + document.get("Altezza"));
+                                }
+                            } else {
+                                Log.d("database", "Error getting documents: ", task.getException());
+                            }
+                        }
+                    });
+        }
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -92,6 +146,7 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
         polylineOptions.color(Color.RED);
         polylineOptions.width(10);
         gpsTrack = mMap.addPolyline(polylineOptions);
+
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
@@ -184,6 +239,10 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
     @Override
     public void onLocationChanged(Location location) {
         lastKnownLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+        LatLng atual = new LatLng(location.getLatitude(), location.getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(atual, 18));
+
         updateTrack();
     }
 
@@ -231,6 +290,33 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
         Log.d("distanza", String.valueOf(distanza));
         risultato = risultato + distanza;
         Log.d("risultato", String.valueOf(risultato));
+
+        if(risultato != 0) {
+
+            DecimalFormat df = new DecimalFormat("##.###");
+            df.setRoundingMode(RoundingMode.DOWN);
+            KmtextView.setText(String.valueOf(df.format(risultato / 1000)) + " " + "Km");
+
+            DecimalFormat df1 = new DecimalFormat("##");
+            df1.setRoundingMode(RoundingMode.DOWN);
+            calorie = 0.75 * Integer.parseInt(peso) * (risultato / 1000);
+            Log.d("pesocalorie", String.valueOf(peso));
+            Log.d("pesocalo", String.valueOf(calorie));
+
+
+            CalorieTextView.setText(String.valueOf(df1.format(calorie)) + " " + "Kcal");
+
+
+        }
+
+
+        Location vel = new Location("");
+        Log.d("velbo", String.valueOf(vel.hasSpeed()));
+        Log.d("velspeed", String.valueOf(vel.getSpeed()));
+
+        VelocitàTextView.setText(String.valueOf(vel.getSpeed()));
+
+
 
         points.add(lastKnownLatLng);
         gpsTrack.setPoints(points);

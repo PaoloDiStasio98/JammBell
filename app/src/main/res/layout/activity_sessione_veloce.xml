@@ -57,7 +57,7 @@
               android:textSize="15dp"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:text="Calorie"
+              android:text="0 kcal"
               />
        </LinearLayout>
 
@@ -74,7 +74,7 @@
                   android:textSize="20dp"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:text="Km"
+                  android:text="Km percorsi"
                   android:textColor="@color/black"/>
 
               <TextView
@@ -84,7 +84,7 @@
                   android:textSize="15dp"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:text="Km"
+                  android:text="0.0 Km"
                   />
 
               <TextView
@@ -104,7 +104,7 @@
                   android:textSize="15dp"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:text="Velocità"
+                  android:text="0.0 Km/h"
                   />
           </LinearLayout>
       </LinearLayout>
