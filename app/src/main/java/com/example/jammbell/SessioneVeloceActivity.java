@@ -32,6 +32,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SessioneVeloceActivity extends AppCompatActivity implements
@@ -57,6 +58,8 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
     private SupportMapFragment mapFragment;
     private GoogleApiClient googleApiClient;
     private LatLng lastKnownLatLng;
+    private float distanza;
+    private float risultato = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -214,9 +217,23 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
 
     private void updateTrack() {
         List<LatLng> points = gpsTrack.getPoints();
+
+        for(int i = 0; i < points.size() - 1; i++)
+        {
+            Location loc1 = new Location("");
+            loc1.setLatitude(points.get(i).latitude);
+            loc1.setLongitude(points.get(i).longitude);
+            Location loc2 = new Location("");
+            loc2.setLatitude(points.get(i+1).latitude);
+            loc2.setLongitude(points.get(i+1).longitude);
+            distanza = loc1.distanceTo(loc2);
+        }
+        Log.d("distanza", String.valueOf(distanza));
+        risultato = risultato + distanza;
+        Log.d("risultato", String.valueOf(risultato));
+
         points.add(lastKnownLatLng);
         gpsTrack.setPoints(points);
-
     }
 
     public void clickButton(View v) {
