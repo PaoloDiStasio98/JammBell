@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".SessioneVeloceActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="200dp"
+          android:background="@drawable/box"
+          android:orientation="horizontal">
+
+       <LinearLayout
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:orientation="vertical">
+
+          <TextView
+              android:textStyle="bold"
+              android:layout_marginTop="30dp"
+              android:layout_marginLeft="20dp"
+              android:textSize="20dp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="Tempo"
+              android:textColor="@color/black"/>
+
+          <Chronometer
+              android:id="@+id/Cronometro"
+              android:layout_marginTop="5dp"
+              android:layout_marginLeft="25dp"
+              android:textSize="15dp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              />
+
+          <TextView
+              android:textStyle="bold"
+              android:layout_marginTop="30dp"
+              android:layout_marginLeft="20dp"
+              android:textSize="20dp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="Calorie"
+              android:textColor="@color/black"/>
+
+          <TextView
+              android:id="@+id/CalorieTextView"
+              android:layout_marginTop="5dp"
+              android:layout_marginLeft="25dp"
+              android:textSize="15dp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="Calorie"
+              />
+       </LinearLayout>
+
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:layout_marginLeft="130dp">
+
+              <TextView
+                  android:textStyle="bold"
+                  android:layout_marginTop="30dp"
+                  android:layout_marginLeft="20dp"
+                  android:textSize="20dp"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="Km"
+                  android:textColor="@color/black"/>
+
+              <TextView
+                  android:id="@+id/KmTextView"
+                  android:layout_marginTop="5dp"
+                  android:layout_marginLeft="25dp"
+                  android:textSize="15dp"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="Km"
+                  />
+
+              <TextView
+                  android:textStyle="bold"
+                  android:layout_marginTop="30dp"
+                  android:layout_marginLeft="20dp"
+                  android:textSize="20dp"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="Velocità media"
+                  android:textColor="@color/black"/>
+
+              <TextView
+                  android:id="@+id/VelocitaTextView"
+                  android:layout_marginTop="5dp"
+                  android:layout_marginLeft="25dp"
+                  android:textSize="15dp"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="Velocità"
+                  />
+          </LinearLayout>
+      </LinearLayout>
+
+
+        <fragment
+            xmlns:map="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".MapsActivity" />
+
+
+
+    </LinearLayout>
+
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="70dp">
+
+
+
+            <Button
+                android:id="@+id/ButtonPausa"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:onClick="clickButton"
+                android:background="@drawable/ic_baseline_pause_24"
+                android:alpha="0"/>
+
+            <Button
+                android:id="@+id/ButtonStart"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:onClick="clickButton"
+                android:background="@drawable/ic_baseline_play_arrow_24"/>
+
+            <Button
+                android:id="@+id/ButtonStop"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:onClick="clickButton"
+                android:background="@drawable/ic_baseline_stop_24"
+                android:alpha="0"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>

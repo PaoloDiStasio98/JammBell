@@ -23,8 +23,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -48,12 +50,15 @@ import java.util.concurrent.TimeUnit;
 
 public class MapFragment extends Fragment {
 
+    //mappa
     LatLng PosizioneCorrente;
     SupportMapFragment supportMapFragment;
     FusedLocationProviderClient client;
     Location mLastLocation;
     Marker mCurrLocationMarker;
 
+    //sessione veloce
+    FloatingActionButton buttonSessioneVeloce;
 
 
     @Override
@@ -78,12 +83,26 @@ public class MapFragment extends Fragment {
         super.onResume();
     }
 
+    @Override
+    public void onViewCreated(View view,Bundle savedInstanceState) {
+        buttonSessioneVeloce = (FloatingActionButton) getView().findViewById(R.id.ButtonSessioneVeloce);
 
+        buttonSessioneVeloce.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SessioneVeloceActivity.class);
+                startActivity(intent);
+            }
+        });
+        super.onViewCreated(view, savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
+
+
 
         supportMapFragment = (SupportMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.google_map);

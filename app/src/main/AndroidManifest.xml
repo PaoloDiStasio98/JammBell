@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.JammBell">
-        <activity android:name=".RegistrazioneProfiloActivity"></activity>
+        <activity android:name=".SessioneVeloceActivity"></activity>
+        <activity android:name=".RegistrazioneProfiloActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

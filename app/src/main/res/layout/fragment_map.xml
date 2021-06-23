@@ -27,7 +27,8 @@
          app:fab_colorNormal="#FFF"
          app:fab_size="mini"
          app:fab_title="Sessione veloce"
-          app:fab_icon="@drawable/ic_baseline_play_arrow_24"/>
+          app:fab_icon="@drawable/ic_baseline_play_arrow_24"
+          android:id="@+id/ButtonSessioneVeloce"/>
 
       <com.getbase.floatingactionbutton.FloatingActionButton
           android:layout_width="wrap_content"
