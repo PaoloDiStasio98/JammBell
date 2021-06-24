@@ -52,7 +52,7 @@ public class MyAdapterStorico extends RecyclerView.Adapter<MyAdapterStorico.MyVi
 
     @Override
     public int getItemCount() {
-        return 3;
+        return data2.size();
     }
 
     public class MyViewHolderStorico extends RecyclerView.ViewHolder {
