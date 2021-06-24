@@ -8,80 +8,99 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-      <TextView
-          android:layout_margin="10dp"
-          android:id="@+id/CiaoNomeCognomeText"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="Ciao,"
-          android:textSize="30dp"
-          android:textColor="@color/black"/> -->
+        <TextView
+            android:id="@+id/CiaoNomeCognomeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Ciao,"
+            android:textColor="@color/black"
+            android:textSize="30dp" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="30dp">
-
-        <ImageView
-            android:id="@+id/Imageprofilo"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:src="@drawable/ic_baseline_person_24"
-            android:scaleType="fitXY"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:paddingTop="30dp">
 
-        <TextView
-            android:id="@+id/UsernameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Username"
-            android:textSize="20dp"
-            android:padding="5dp"/>
+            <ImageView
+                android:id="@+id/Imageprofilo"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_baseline_person_24" />
 
-            <TextView
-                android:id="@+id/DataTextView"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Data di nascita"
-                android:textSize="20dp"
-                android:padding="5dp"/>
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/AltezzaProfiloTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Altezza"
-                android:textSize="20dp"
-                android:padding="5dp"/>
+                <TextView
+                    android:id="@+id/UsernameTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Username"
+                    android:textSize="20dp" />
 
-            <TextView
-                android:id="@+id/PesoProfiloTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Peso"
-                android:textSize="20dp"
-                android:padding="5dp"/>
+                <TextView
+                    android:id="@+id/DataTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Data di nascita"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/AltezzaProfiloTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Altezza"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/PesoProfiloTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Peso"
+                    android:textSize="20dp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:text="Statistiche"
+            android:textColor="@color/black"
+            android:textSize="30dp"
+            android:textStyle="bold" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewStatistiche"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="horizontal"
+            android:padding="10dp" />
+
+        <Button
+            android:id="@+id/logoutButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="logout" />
+
+
     </LinearLayout>
-
-
-    <Button
-        android:id="@+id/logoutButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="100dp"
-        android:text="logout"/>
-
-
-   </LinearLayout>
 </FrameLayout>

@@ -7,12 +7,15 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,6 +29,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -44,7 +49,16 @@ public class ProfileFragment extends Fragment {
     TextView altezzaTextView;
 
 
+    double KmTot = 0;
+    long PassiTot = 0;
+    long CalorieTot = 0;
+    long TempoTot = 0;
 
+
+    String TitoliStatistiche[] = {"Km percorsi", "Passi", "Calorie", "Ore totali"};
+    String DescrizioneStatistiche[] = {"0", "0", "0", "0"};
+
+    RecyclerView recyclerViewStatistiche;
 
 
 
@@ -58,6 +72,11 @@ public class ProfileFragment extends Fragment {
         altezzaTextView = (TextView) getView().findViewById(R.id.AltezzaProfiloTextView);
         ImageProfilo = (ImageView) getView().findViewById(R.id.Imageprofilo);
 
+
+        recyclerViewStatistiche = (RecyclerView) getView().findViewById(R.id.recyclerViewStatistiche);
+
+        PullDatiDatabase();
+
         super.onViewCreated(view, savedInstanceState);
 
         logoutButton.setOnClickListener(new View.OnClickListener() {
@@ -69,6 +88,73 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+
+   public String[] PullDatiDatabase() {
+
+
+
+       mAuth = FirebaseAuth.getInstance();
+
+
+       FirebaseUser currentUser = mAuth.getCurrentUser();
+       if(currentUser != null){
+           Log.d("utenteid", currentUser.getUid());
+
+           db.collection("SessioneVeloce")
+                   .whereEqualTo("UserID", currentUser.getUid())
+                   .get()
+                   .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                       @Override
+                       public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                           if (task.isSuccessful()) {
+                               for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                   KmTot = KmTot + (double) document.get("Km");
+                                   PassiTot = PassiTot + (long) document.get("Passi");
+                                   CalorieTot = CalorieTot + (long) document.get("Calorie");
+                                   TempoTot = TempoTot + (long) document.get("Tempo");
+
+
+                               }
+
+                               DecimalFormat df = new DecimalFormat("##########.###");
+                               df.setRoundingMode(RoundingMode.DOWN);
+                               DescrizioneStatistiche[0] = String.valueOf(df.format(KmTot) + " Km");
+                               DescrizioneStatistiche[1] = String.valueOf(PassiTot);
+                               DescrizioneStatistiche[2] = String.valueOf(CalorieTot + " Kcal");
+                               DescrizioneStatistiche[3] = String.valueOf(TempoTot/3600 + " h");
+
+                               MyAdapter myAdapter = new MyAdapter(getContext(), TitoliStatistiche, DescrizioneStatistiche);
+                               recyclerViewStatistiche.setAdapter(myAdapter);
+                               recyclerViewStatistiche.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+
+                           }
+
+                           else
+                               {
+                               Log.d("database", "Error getting documents: ", task.getException());
+                           }
+
+
+
+
+
+
+                       }
+                   });
+
+           Log.d("descrizione", DescrizioneStatistiche[1]);
+
+
+       }
+       else {
+           Log.d("utenteid", "niente vuoto");
+       }
+
+
+
+        return DescrizioneStatistiche;
+   }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

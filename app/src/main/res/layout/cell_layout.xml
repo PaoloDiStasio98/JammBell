@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="150dp"
+    android:layout_height="150dp"
+    android:padding="10dp"
+    android:layout_gravity="center"
+    app:layout_constraintCircleRadius="50dp"
+    android:background="@drawable/box1"
+    android:layout_margin="6dp">
+
+    <TextView
+        android:paddingTop="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Titolo"
+        android:id="@+id/TitoloCellaTextView"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:layout_gravity="center"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:paddingTop="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Descrizione"
+        android:id="@+id/DescrizioneCellaTextView"
+        android:textSize="15dp"
+        android:textAlignment="center"
+        android:layout_gravity="center"/>
+
+
+
+</LinearLayout>
