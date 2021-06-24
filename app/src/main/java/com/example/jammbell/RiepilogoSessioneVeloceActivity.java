@@ -21,6 +21,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -110,6 +112,14 @@ public class RiepilogoSessioneVeloceActivity extends AppCompatActivity {
         buttonConferma.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                DateTimeFormatter dtf = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                    LocalDateTime now = LocalDateTime.now();
+                    Log.d("data", dtf.format(now));
+                    SessioneVeloce.put("Data", now);
+                }
 
                 SessioneVeloce.put("Tempo", tempoint);
                 SessioneVeloce.put("Calorie", calorieint);
