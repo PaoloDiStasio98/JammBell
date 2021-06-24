@@ -243,6 +243,9 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
         LatLng atual = new LatLng(location.getLatitude(), location.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(atual, 18));
 
+        DecimalFormat df = new DecimalFormat("##.##");
+        df.setRoundingMode(RoundingMode.DOWN);
+        VelocitàTextView.setText(String.valueOf(df.format(location.getSpeed()*3600/1000)) + " " + "Km/h");
         updateTrack();
     }
 
@@ -303,21 +306,9 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
             Log.d("pesocalorie", String.valueOf(peso));
             Log.d("pesocalo", String.valueOf(calorie));
 
-
             CalorieTextView.setText(String.valueOf(df1.format(calorie)) + " " + "Kcal");
-
-
         }
-
-
-        Location vel = new Location("");
-        Log.d("velbo", String.valueOf(vel.hasSpeed()));
-        Log.d("velspeed", String.valueOf(vel.getSpeed()));
-
-        VelocitàTextView.setText(String.valueOf(vel.getSpeed()));
-
-
-
+        
         points.add(lastKnownLatLng);
         gpsTrack.setPoints(points);
     }
