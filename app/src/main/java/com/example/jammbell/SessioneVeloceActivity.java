@@ -7,6 +7,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -339,12 +340,37 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
                     pauseOffset = SystemClock.elapsedRealtime() - Cronometro.getBase();
                     CronometroRunning = false;
                 }
+
+                Log.d("cronometro1", String.valueOf((SystemClock.elapsedRealtime() - Cronometro.getBase())/1000));
+
+
+
+                VelocitàTextView.setText("0.0 Km/h");
+                stopLocationUpdates();
                 ButtonPause.setAlpha(0);
                 ButtonStart.setAlpha(1);
                 break;
 
             case R.id.ButtonStop:
                 Cronometro.stop();
+
+                FirebaseUser user = mAuth.getCurrentUser();
+                long tempo = (SystemClock.elapsedRealtime() - Cronometro.getBase())/1000;
+                float km = risultato/1000;
+
+
+                Log.d("buttonstop", String.valueOf(tempo));
+                Log.d("buttonstop", String.valueOf(km));
+                Log.d("buttonstop", String.valueOf(calorie));
+                Log.d("buttonstop", String.valueOf(user.getUid()));
+
+                Intent intent = new Intent(getBaseContext(), RiepilogoSessioneVeloceActivity.class);
+                intent.putExtra("USER_ID", user.getUid());
+                intent.putExtra("TEMPO", tempo);
+                intent.putExtra("KM", km);
+                intent.putExtra("CALORIE", calorie);
+
+                startActivity(intent);
                 break;
 
         }

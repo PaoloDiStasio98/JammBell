@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.JammBell">
-        <activity android:name=".SessioneVeloceActivity"></activity>
+        <activity android:name=".RiepilogoSessioneVeloceActivity"></activity>
+        <activity android:name=".SessioneVeloceActivity" />
         <activity android:name=".RegistrazioneProfiloActivity" />
 
         <meta-data
