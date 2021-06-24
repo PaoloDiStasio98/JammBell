@@ -89,7 +89,7 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-   public String[] PullDatiDatabase() {
+   public void PullDatiDatabase() {
 
 
 
@@ -150,11 +150,7 @@ public class ProfileFragment extends Fragment {
        else {
            Log.d("utenteid", "niente vuoto");
        }
-
-
-
-        return DescrizioneStatistiche;
-   }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

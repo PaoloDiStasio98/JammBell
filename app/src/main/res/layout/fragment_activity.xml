@@ -5,10 +5,31 @@
     android:layout_height="match_parent"
     tools:context=".ActivityFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Activty Fragment" />
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical">
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="5dp"
+          android:layout_marginTop="10dp"
+          android:layout_marginBottom="5dp"
+          android:text="Storico"
+          android:textColor="@color/black"
+          android:textSize="30dp"
+          android:textStyle="bold" />
+
+
+      <androidx.recyclerview.widget.RecyclerView
+          android:id="@+id/recyclerViewStorico"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_margin="5dp"
+          android:orientation="vertical"
+          android:padding="10dp" />
+
+  </LinearLayout>
 
 </FrameLayout>

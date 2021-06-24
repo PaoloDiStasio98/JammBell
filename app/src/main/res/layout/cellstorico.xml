@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="350dp"
+    android:layout_height="200dp"
+    android:padding="10dp"
+    android:layout_gravity="center"
+    app:layout_constraintCircleRadius="50dp"
+    android:background="@drawable/box1"
+    android:layout_margin="6dp">
+
+    <TextView
+        android:paddingTop="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sessione: DATA"
+        android:id="@+id/SessioneDataCellaTextView"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:layout_gravity="center"
+        android:textColor="@color/black"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tempo"
+        android:id="@+id/TempoCellaTextView"
+        android:textSize="15dp"
+        android:layout_gravity="left"
+        android:padding="3dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Calorie"
+        android:id="@+id/CalorieCellaTextView"
+        android:textSize="15dp"
+        android:layout_gravity="left"
+        android:padding="3dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Km percorsi"
+        android:id="@+id/KmCellaTextView"
+        android:textSize="15dp"
+        android:layout_gravity="left"
+        android:padding="3dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Passi"
+        android:id="@+id/PassiCellaTextView"
+        android:textSize="15dp"
+        android:layout_gravity="left"
+        android:padding="3dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Velocità media"
+        android:id="@+id/VelocitaCellaTextView"
+        android:textSize="15dp"
+        android:layout_gravity="left"
+        android:padding="3dp"/>
+
+    </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0/5"
+            android:id="@+id/ValutazioneCellaTextView"
+            android:textSize="30dp"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="end"
+            android:layout_marginTop="40dp"
+            android:padding="3dp"/>
+    </LinearLayout>
+</LinearLayout>
