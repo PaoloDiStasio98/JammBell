@@ -1,9 +1,11 @@
 package com.example.jammbell;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +15,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -23,8 +28,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.math.RoundingMode;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -52,14 +59,137 @@ public class ActivityFragment extends Fragment {
     long Calorie;
     long Valutazione;
     double Velocita;
-    Date Data;
+    HashMap<String, String> Datamap = new HashMap<>();
 
+    Button SearchButtonDate;
+    private DatePickerDialog.OnDateSetListener dateSetListener;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable  Bundle savedInstanceState) {
         recyclerViewStorico = (RecyclerView) getView().findViewById(R.id.recyclerViewStorico);
+        SearchButtonDate = (Button) getView().findViewById(R.id.ButtonSearchDate);
+
+        SearchButtonDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar cal = Calendar.getInstance();
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog dialog = new DatePickerDialog(getContext(), android.R.style.Theme_DeviceDefault_Dialog, dateSetListener, year, month, day);
+
+                dialog.show();
+            }
+        });
+
+
+        dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+
+                    month = month + 1;
+                    Log.d("provadata", "onDateSet: dd/mm/yyyy: " + day + "/" + month + "/" + year);
+
+
+
+                    PullDatiDatabaseStoricoData(day, month, year);
+            }
+        };
+
         PullDatiDatabaseStorico();
-        super.onViewCreated(view, savedInstanceState);
+
+    }
+
+    public void PullDatiDatabaseStoricoData(int day, int month, int year){
+
+
+        StoricoKm.clear();
+        StoricoCalorie.clear();
+        StoricoPassi.clear();
+        StoricoSessioneData.clear();
+        StoricoTempo.clear();
+        StoricoVelocitaMedia.clear();
+        StoricoValutazione.clear();
+
+        mAuth = FirebaseAuth.getInstance();
+
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            Log.d("utenteid", currentUser.getUid());
+
+            db.collection("SessioneVeloce")
+                    .whereEqualTo("UserID", currentUser.getUid())
+                    .whereEqualTo("Data.dayOfMonth", day)
+                    .whereEqualTo("Data.monthValue", month)
+                    .whereEqualTo("Data.year", year)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+
+
+                                    Km = (double) document.get("Km");
+                                    Passi = (long) document.get("Passi");
+                                    Calorie = (long) document.get("Calorie");
+                                    Tempo =  (long) document.get("Tempo");
+                                    Valutazione = (long) document.get("Feedback");
+                                    Velocita = (double) document.get("Velocita");
+                                    Datamap = (HashMap<String, String>) document.get("Data");
+
+
+                                    Log.d("mappa1", String.valueOf(Datamap));
+
+
+                                    DecimalFormat df = new DecimalFormat("##########.###");
+                                    df.setRoundingMode(RoundingMode.DOWN);
+                                    StoricoKm.add("Km: " + String.valueOf(df.format(Km)));
+                                    StoricoCalorie.add("Calorie: " + String.valueOf(Calorie));
+                                    StoricoPassi.add("Passi: " + String.valueOf(Passi));
+                                    StoricoSessioneData.add("Sessione del " + String.valueOf(Datamap.get("dayOfMonth")) + "/" + String.valueOf(Datamap.get("monthValue")) + "/" +  String.valueOf(Datamap.get("year")));
+                                    StoricoTempo.add("Durata: " + formatSecondDateTime((int) Tempo));
+                                    DecimalFormat df1 = new DecimalFormat("###.##");
+                                    df.setRoundingMode(RoundingMode.DOWN);
+                                    StoricoVelocitaMedia.add("Velocità media: " + String.valueOf(df1.format(Velocita)));
+                                    StoricoValutazione.add(String.valueOf(Valutazione) + "/5");
+
+
+
+                                }
+
+
+                                MyAdapterStorico myAdapter = new MyAdapterStorico(getContext(), StoricoSessioneData, StoricoKm, StoricoTempo, StoricoCalorie, StoricoPassi, StoricoVelocitaMedia, StoricoValutazione);
+                                recyclerViewStorico.setAdapter(myAdapter);
+                                recyclerViewStorico.setLayoutManager(new LinearLayoutManager(getContext()));
+
+                            }
+
+                            else
+                            {
+                                Log.d("database", "Error getting documents: ", task.getException());
+                            }
+
+
+
+
+
+
+                        }
+                    });
+
+
+
+
+        }
+        else {
+            Log.d("utenteid", "niente vuoto");
+        }
+
+
+
     }
 
 
@@ -89,14 +219,17 @@ public class ActivityFragment extends Fragment {
                                     Tempo =  (long) document.get("Tempo");
                                     Valutazione = (long) document.get("Feedback");
                                     Velocita = (double) document.get("Velocita");
-                                    //Data = (Date) document.get("Data");
+                                    Datamap = (HashMap<String, String>) document.get("Data");
+
+                                   Log.d("mappa", String.valueOf(Datamap));
+
 
                                     DecimalFormat df = new DecimalFormat("##########.###");
                                     df.setRoundingMode(RoundingMode.DOWN);
                                     StoricoKm.add("Km: " + String.valueOf(df.format(Km)));
                                     StoricoCalorie.add("Calorie: " + String.valueOf(Calorie));
                                     StoricoPassi.add("Passi: " + String.valueOf(Passi));
-                                    StoricoSessioneData.add("Sessione del " + String.valueOf(Data));
+                                    StoricoSessioneData.add("Sessione del " + String.valueOf(Datamap.get("dayOfMonth")) + "/" + String.valueOf(Datamap.get("monthValue")) + "/" +  String.valueOf(Datamap.get("year")));
                                     StoricoTempo.add("Durata: " + formatSecondDateTime((int) Tempo));
                                     DecimalFormat df1 = new DecimalFormat("###.##");
                                     df.setRoundingMode(RoundingMode.DOWN);
