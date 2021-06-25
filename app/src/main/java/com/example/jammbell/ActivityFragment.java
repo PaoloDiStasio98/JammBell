@@ -18,12 +18,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -189,6 +192,9 @@ public class ActivityFragment extends Fragment {
         }
 
 
+        if(StoricoKm.size() == 0){
+            Toast.makeText(getContext(), "Nessuna sessione trovata", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -204,8 +210,9 @@ public class ActivityFragment extends Fragment {
         if(currentUser != null){
             Log.d("utenteid", currentUser.getUid());
 
-            db.collection("SessioneVeloce")
-                    .whereEqualTo("UserID", currentUser.getUid())
+                    db.collection("SessioneVeloce")
+                     .whereEqualTo("UserID", currentUser.getUid())
+                            .orderBy("Data", Query.Direction.DESCENDING)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override

@@ -11,7 +11,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Looper;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +23,8 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -81,9 +85,15 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
     double calorie;
     String peso;
 
+
+    private LocationCallback locationCallback;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+
         setContentView(R.layout.activity_sessione_veloce);
 
         ButtonStart = findViewById(R.id.ButtonStart);
@@ -112,6 +122,8 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
                     .build();
         }
 
+
+
     }
 
     private void accessodatabase() {
@@ -138,6 +150,9 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
                     });
         }
     }
+
+
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -168,6 +183,7 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
 
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
+
 
         LocationServices.getFusedLocationProviderClient(this).getLastLocation()
                 .addOnSuccessListener(new OnSuccessListener<Location>() {
@@ -216,14 +232,16 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
     public void onResume() {
         super.onResume();
         if (googleApiClient.isConnected()) {
-            //startLocationUpdates();
+            startLocationUpdates();
         }
+
     }
+
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         if (googleApiClient.isConnected()) {
-            //startLocationUpdates();
+            startLocationUpdates();
         }
     }
 
@@ -249,6 +267,8 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
         VelocitàTextView.setText(String.valueOf(df.format(location.getSpeed()*3600/1000)) + " " + "Km/h");
         updateTrack();
     }
+
+
 
     protected void startLocationUpdates() {
         LocationRequest locationRequest = new LocationRequest();
