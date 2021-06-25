@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -64,28 +67,13 @@ public class ActivityFragment extends Fragment {
     double Velocita;
     HashMap<String, String> Datamap = new HashMap<>();
 
-    Button SearchButtonDate;
     private DatePickerDialog.OnDateSetListener dateSetListener;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable  Bundle savedInstanceState) {
         recyclerViewStorico = (RecyclerView) getView().findViewById(R.id.recyclerViewStorico);
-        SearchButtonDate = (Button) getView().findViewById(R.id.ButtonSearchDate);
 
-        SearchButtonDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar cal = Calendar.getInstance();
-                int year = cal.get(Calendar.YEAR);
-                int month = cal.get(Calendar.MONTH);
-                int day = cal.get(Calendar.DAY_OF_MONTH);
-
-                DatePickerDialog dialog = new DatePickerDialog(getContext(), android.R.style.Theme_DeviceDefault_Dialog, dateSetListener, year, month, day);
-
-                dialog.show();
-            }
-        });
-
+        setHasOptionsMenu(true);
 
         dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -102,6 +90,33 @@ public class ActivityFragment extends Fragment {
 
         PullDatiDatabaseStorico();
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull  MenuInflater inflater) {
+            inflater.inflate(R.menu.upbar_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.search_button: {
+
+                Calendar cal = Calendar.getInstance();
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog dialog = new DatePickerDialog(getContext(), android.R.style.Theme_DeviceDefault_Dialog, dateSetListener, year, month, day);
+
+                dialog.show();
+
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 
     public void PullDatiDatabaseStoricoData(int day, int month, int year){
