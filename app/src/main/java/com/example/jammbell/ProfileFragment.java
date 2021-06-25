@@ -1,17 +1,24 @@
 package com.example.jammbell;
 
+import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -33,10 +40,12 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 
 
 public class ProfileFragment extends Fragment {
 
+    private FragmentActivity myContext;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth;
 
@@ -62,6 +71,9 @@ public class ProfileFragment extends Fragment {
 
 
 
+
+
+
     @Override
     public void onViewCreated(View view,Bundle savedInstanceState) {
         Button logoutButton = (Button) getView().findViewById(R.id.logoutButton);
@@ -72,6 +84,8 @@ public class ProfileFragment extends Fragment {
         altezzaTextView = (TextView) getView().findViewById(R.id.AltezzaProfiloTextView);
         ImageProfilo = (ImageView) getView().findViewById(R.id.Imageprofilo);
 
+
+        setHasOptionsMenu(true);
 
         recyclerViewStatistiche = (RecyclerView) getView().findViewById(R.id.recyclerViewStatistiche);
 
@@ -89,7 +103,58 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-   public void PullDatiDatabase() {
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull  MenuInflater inflater) {
+        inflater.inflate(R.menu.upbarprofile_menu, menu);
+
+    }
+
+    /*
+    @Override
+    public void applicaText(String Nome, String Cognome, String Datadinascita, int Peso, int Altezza, String sesso) {
+        ciaoNomeeCognomeTextView.setText("Ciao " + Nome + " " + Cognome);
+        datadinascitaTextView.setText(Datadinascita);
+        pesoTextView.setText(Peso);
+        altezzaTextView.setText(Altezza);
+
+        if(sesso.equals("Maschio")){
+            int blu = Color.parseColor("#1e90ff");
+            ImageProfilo.setColorFilter(blu);
+        }
+        if(sesso.equals("Femmina")){
+            int rosa = Color.parseColor("#ef35fc");
+            ImageProfilo.setColorFilter(rosa);
+        }
+    }
+    */
+
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.edit_button: {
+
+               openEditDialog();
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        myContext=(FragmentActivity) activity;
+        super.onAttach(activity);
+    }
+
+    public void openEditDialog() {
+        EditDialogClass editDialogClass = new EditDialogClass();
+        editDialogClass.show(myContext.getSupportFragmentManager(), "esempio" );
+    }
+
+    public void PullDatiDatabase() {
 
 
 

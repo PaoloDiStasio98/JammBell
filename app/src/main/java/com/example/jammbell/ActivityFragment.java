@@ -67,6 +67,8 @@ public class ActivityFragment extends Fragment {
     double Velocita;
     HashMap<String, String> Datamap = new HashMap<>();
 
+
+
     private DatePickerDialog.OnDateSetListener dateSetListener;
 
     @Override
@@ -95,6 +97,7 @@ public class ActivityFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull  MenuInflater inflater) {
             inflater.inflate(R.menu.upbar_menu, menu);
+
     }
 
     @Override
@@ -178,6 +181,11 @@ public class ActivityFragment extends Fragment {
 
                                 }
 
+                                if(StoricoKm.size() == 0) {
+                                    Toast.makeText(getContext(), "Nessuna sessione trovata", Toast.LENGTH_SHORT).show();
+
+                                }
+
 
                                 MyAdapterStorico myAdapter = new MyAdapterStorico(getContext(), StoricoSessioneData, StoricoKm, StoricoTempo, StoricoCalorie, StoricoPassi, StoricoVelocitaMedia, StoricoValutazione);
                                 recyclerViewStorico.setAdapter(myAdapter);
@@ -187,6 +195,7 @@ public class ActivityFragment extends Fragment {
 
                             else
                             {
+
                                 Log.d("database", "Error getting documents: ", task.getException());
                             }
 
@@ -207,9 +216,7 @@ public class ActivityFragment extends Fragment {
         }
 
 
-        if(StoricoKm.size() == 0){
-            Toast.makeText(getContext(), "Nessuna sessione trovata", Toast.LENGTH_SHORT).show();
-        }
+
 
     }
 
