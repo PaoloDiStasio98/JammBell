@@ -128,8 +128,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
                             Log.i("teste", "deu");
 
                             LatLng atual = new LatLng(location.getLatitude(), location.getLongitude());
-                            mMap.addMarker(new MarkerOptions().position(atual).title("Localizção atual"));
-                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(atual, 18));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(atual, 18));
 
                         }else {
                             Log.i("teste", "n deu");
@@ -149,6 +148,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     @Override
     public void onStart() {
         googleApiClient.connect();
+
+        if (googleApiClient.isConnected())
+        {
+            startLocationUpdates();
+        }
+
+
         super.onStart();
     }
 
@@ -163,6 +169,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
         super.onPause();
         stopLocationUpdates();
     }
+
+
 
     @Override
     public void onResume()
@@ -200,6 +208,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
         });
         AlertDialog alert = builder.create();
         alert.show();
+
     }
 
     @Override
@@ -222,6 +231,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     @Override
     public void onLocationChanged(Location location) {
         lastKnownLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+
     }
 
     protected void startLocationUpdates() {

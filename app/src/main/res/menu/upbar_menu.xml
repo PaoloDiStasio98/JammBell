@@ -5,10 +5,18 @@
 
 
         <item
-            android:title="prova"
+            android:title="search"
             android:id="@+id/search_button"
             android:icon="@drawable/ic_baseline_search_24"
             app:showAsAction="ifRoom" />
+
+    <item
+        android:title="cancel"
+        android:visible="false"
+        android:id="@+id/close_button"
+        android:icon="@drawable/ic_baseline_close_24"
+        app:showAsAction="ifRoom" />
+
 
     </menu>
 

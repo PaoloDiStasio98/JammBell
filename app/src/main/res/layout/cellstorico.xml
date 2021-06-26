@@ -8,7 +8,8 @@
     android:layout_gravity="center"
     app:layout_constraintCircleRadius="50dp"
     android:background="@drawable/box1"
-    android:layout_margin="6dp">
+    android:layout_margin="6dp"
+    android:id="@+id/CellaStorico">
 
     <TextView
         android:paddingTop="5dp"

@@ -73,12 +73,20 @@ public class ActivityFragment extends Fragment {
 
     private DatePickerDialog.OnDateSetListener dateSetListener;
 
+    TextView filtroTextView;
+
+    DatePickerDialog dialog;
+
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable  Bundle savedInstanceState) {
         recyclerViewStorico = (RecyclerView) getView().findViewById(R.id.recyclerViewStorico);
+        filtroTextView = (TextView) getView().findViewById(R.id.FiltroTextView);
 
         setHasOptionsMenu(true);
+
+
 
 
 
@@ -88,6 +96,14 @@ public class ActivityFragment extends Fragment {
 
                     month = month + 1;
                     Log.d("provadata", "onDateSet: dd/mm/yyyy: " + day + "/" + month + "/" + year);
+
+
+
+                filtroTextView.setText("Filtro, giorno: " + day + "/" + month + "/" + year);
+
+                menu.getItem(1).setVisible(true);
+
+
 
 
 
@@ -116,22 +132,34 @@ public class ActivityFragment extends Fragment {
                 int month = cal.get(Calendar.MONTH);
                 int day = cal.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog dialog = new DatePickerDialog(getContext(), android.R.style.Theme_DeviceDefault_Dialog, dateSetListener, year, month, day);
+                 dialog = new DatePickerDialog(getContext(), android.R.style.Theme_DeviceDefault_Dialog, dateSetListener, year, month, day);
 
                 dialog.show();
 
-                menu.getItem(0).setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_baseline_videogame_asset_24));
+
+
+
 
                 return true;
             }
+
+            case R.id.close_button:
+                {
+
+                    menu.getItem(1).setVisible(false);
+                    PullDatiDatabaseStorico();
+                    filtroTextView.setText("Tutte le tue sessioni");
+
+                    return true;
+                }
+
             default:
                 return super.onOptionsItemSelected(item);
 
         }
     }
 
-    public void PullDatiDatabaseStoricoData(int day, int month, int year){
-
+    public void clearCell(){
 
         StoricoKm.clear();
         StoricoCalorie.clear();
@@ -140,6 +168,14 @@ public class ActivityFragment extends Fragment {
         StoricoTempo.clear();
         StoricoVelocitaMedia.clear();
         StoricoValutazione.clear();
+
+    }
+
+    public void PullDatiDatabaseStoricoData(int day, int month, int year){
+
+
+
+            clearCell();
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -232,6 +268,7 @@ public class ActivityFragment extends Fragment {
     public void PullDatiDatabaseStorico() {
 
 
+        clearCell();
 
         mAuth = FirebaseAuth.getInstance();
 
