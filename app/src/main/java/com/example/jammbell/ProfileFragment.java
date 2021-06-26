@@ -142,7 +142,7 @@ public class ProfileFragment extends Fragment {
 
         ArrayList<BarEntry> sessioni = new ArrayList<>();
 
-        sessioni.add(new BarEntry(0f,1));
+        sessioni.add(new BarEntry(0f,0));
         sessioni.add(new BarEntry(1f,0));
         sessioni.add(new BarEntry(2f,0));
         sessioni.add(new BarEntry(3f,0));
@@ -256,7 +256,7 @@ public class ProfileFragment extends Fragment {
                                             barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
                                             BarData data = new BarData(barDataSet);
                                             barChart.setData(data);
-                                            barDataSet.setColors(Color.CYAN);
+                                            barDataSet.setColors(Color.BLACK);
                                             barDataSet.setValueTextColor(Color.BLACK);
                                             barDataSet.setValueTextSize(16f);
                                             barChart.getDescription().setText("Riepilogo Km settimanali");
