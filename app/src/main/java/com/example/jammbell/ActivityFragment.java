@@ -1,6 +1,8 @@
 package com.example.jammbell;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -67,10 +69,10 @@ public class ActivityFragment extends Fragment {
     long Valutazione;
     double Velocita;
     HashMap<String, String> Datamap = new HashMap<>();
-
-
+    private Menu menu;
 
     private DatePickerDialog.OnDateSetListener dateSetListener;
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable  Bundle savedInstanceState) {
@@ -100,13 +102,14 @@ public class ActivityFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull  MenuInflater inflater) {
             inflater.inflate(R.menu.upbar_menu, menu);
-
+            this.menu = menu;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.search_button: {
+        switch (item.getItemId()) {
+            case R.id.search_button:
+                {
 
                 Calendar cal = Calendar.getInstance();
                 int year = cal.get(Calendar.YEAR);
@@ -116,6 +119,8 @@ public class ActivityFragment extends Fragment {
                 DatePickerDialog dialog = new DatePickerDialog(getContext(), android.R.style.Theme_DeviceDefault_Dialog, dateSetListener, year, month, day);
 
                 dialog.show();
+
+                menu.getItem(0).setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_baseline_videogame_asset_24));
 
                 return true;
             }
