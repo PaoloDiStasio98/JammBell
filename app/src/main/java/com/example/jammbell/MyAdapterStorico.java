@@ -16,10 +16,10 @@ import java.util.ArrayList;
 
 public class MyAdapterStorico extends RecyclerView.Adapter<MyAdapterStorico.MyViewHolderStorico> {
 
-    ArrayList<String> data1, data2, data3, data4, data5, data6, data7;
+    ArrayList<String> data1, data2, data3, data4, data5, data6, data7, data8;
     Context context;
 
-    public MyAdapterStorico(Context ct, ArrayList<String> DataTempo, ArrayList<String> Km, ArrayList<String> Tempo, ArrayList<String> Calorie, ArrayList<String> Passi, ArrayList<String> Velocita, ArrayList<String> Valutazione){
+    public MyAdapterStorico(Context ct, ArrayList<String> DataTempo, ArrayList<String> Km, ArrayList<String> Tempo, ArrayList<String> Calorie, ArrayList<String> Passi, ArrayList<String> Velocita, ArrayList<String> Valutazione, ArrayList<String> DocumentoID){
         context = ct;
         data1 = DataTempo;
         data2 = Km;
@@ -28,6 +28,7 @@ public class MyAdapterStorico extends RecyclerView.Adapter<MyAdapterStorico.MyVi
         data5 = Passi;
         data6 = Velocita;
         data7 = Valutazione;
+        data8 = DocumentoID;
     }
 
     @NonNull
