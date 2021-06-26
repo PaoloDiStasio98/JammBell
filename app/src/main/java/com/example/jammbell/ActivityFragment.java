@@ -53,6 +53,8 @@ public class ActivityFragment extends Fragment {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth;
+    private Menu menu;
+    private DatePickerDialog.OnDateSetListener dateSetListener;
 
     ArrayList<String> StoricoSessioneData = new ArrayList<String>();
     ArrayList<String> StoricoKm = new ArrayList<String>();
@@ -63,8 +65,6 @@ public class ActivityFragment extends Fragment {
     ArrayList<String> StoricoValutazione = new ArrayList<String>();
     ArrayList<String> ArrayDocumentoID = new ArrayList<String>();
 
-
-
     RecyclerView recyclerViewStorico;
 
     double Km;
@@ -73,19 +73,14 @@ public class ActivityFragment extends Fragment {
     long Calorie;
     long Valutazione;
     double Velocita;
-    HashMap<String, String> Datamap = new HashMap<>();
-    private Menu menu;
+    int dayprova;
+    int monthprova;
+    int yearprova;
     String DocumentID;
-
-    private DatePickerDialog.OnDateSetListener dateSetListener;
-
-    TextView filtroTextView;
-
-    DatePickerDialog dialog;
-
     boolean filtroapplicato = false;
-
-
+    HashMap<String, String> Datamap = new HashMap<>();
+    TextView filtroTextView;
+    DatePickerDialog dialog;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable  Bundle savedInstanceState) {
@@ -129,55 +124,45 @@ public class ActivityFragment extends Fragment {
                     //MyAdapterStorico.notifyDataSetChanged();
 
                     if(filtroapplicato == false)
-                    PullDatiDatabaseStorico();
-
-
+                        PullDatiDatabaseStorico();
+                    else
+                        PullDatiDatabaseStoricoData(dayprova,monthprova,yearprova);
             }
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerViewStorico);
 
-
-
-
         dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
 
-                    month = month + 1;
-                    Log.d("provadata", "onDateSet: dd/mm/yyyy: " + day + "/" + month + "/" + year);
+                month = month + 1;
+                Log.d("provadata", "onDateSet: dd/mm/yyyy: " + day + "/" + month + "/" + year);
 
-
+                dayprova = day;
+                monthprova = month;
+                yearprova = year;
 
                 filtroTextView.setText("Filtro, giorno: " + day + "/" + month + "/" + year);
 
                 filtroapplicato = true;
                 menu.getItem(1).setVisible(true);
 
-
-
-
-
-
-
-             //   PullDatiDatabaseStoricoData(day, month, year);
-
                 Log.d("Documento2", ArrayDocumentoID.toString());
                 Log.d("Documento2", StoricoCalorie.toString());
                 Log.d("Documento2", StoricoKm.toString());
                 Log.d("Documento2", StoricoTempo.toString());
 
-                if(filtroapplicato == false)
-                    PullDatiDatabaseStorico();
-                else
+                if(filtroapplicato == true)
+                {
                     PullDatiDatabaseStoricoData(day, month, year);
-
+                }
 
             }
         };
 
        if(filtroapplicato == false)
-    PullDatiDatabaseStorico();
+             PullDatiDatabaseStorico();
 
 
     }
@@ -213,7 +198,6 @@ public class ActivityFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.search_button:
                 {
-
                 Calendar cal = Calendar.getInstance();
                 int year = cal.get(Calendar.YEAR);
                 int month = cal.get(Calendar.MONTH);
@@ -222,10 +206,6 @@ public class ActivityFragment extends Fragment {
                  dialog = new DatePickerDialog(getContext(), android.R.style.Theme_DeviceDefault_Dialog, dateSetListener, year, month, day);
 
                 dialog.show();
-
-
-
-
 
                 return true;
             }
@@ -332,28 +312,13 @@ public class ActivityFragment extends Fragment {
 
                                 Log.d("database", "Error getting documents: ", task.getException());
                             }
-
-
-
-
-
-
                         }
                     });
-
-
-
-
         }
         else {
             Log.d("utenteid", "niente vuoto");
         }
-
-
-
-
     }
-
 
     public void PullDatiDatabaseStorico() {
 
@@ -416,18 +381,8 @@ public class ActivityFragment extends Fragment {
                             {
                                 Log.d("database", "Error getting documents: ", task.getException());
                             }
-
-
-
-
-
-
                         }
                     });
-
-
-
-
         }
         else {
             Log.d("utenteid", "niente vuoto");

@@ -39,12 +39,14 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -79,6 +81,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
                 startActivity(intent);
             }
         });
+
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -114,8 +117,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
         }
         mMap = googleMap;
 
+        LatLngBounds ItaliaBounds = new LatLngBounds(
+                new LatLng(42, 13), // SW bounds
+                new LatLng(42, 13)  // NE bounds
+        );
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ItaliaBounds.getCenter(),0));
+
         mMap.setMinZoomPreference(6.6f);
-        mMap.setMaxZoomPreference(20.20f);
+        mMap.setMaxZoomPreference(30f);
 
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
@@ -148,13 +157,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     @Override
     public void onStart() {
         googleApiClient.connect();
-
-        if (googleApiClient.isConnected())
-        {
-            startLocationUpdates();
-        }
-
-
         super.onStart();
     }
 
@@ -170,11 +172,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
         stopLocationUpdates();
     }
 
-
-
     @Override
     public void onResume()
     {
+        super.onResume();
         mgr = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
         boolean enabled = mgr.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
@@ -183,11 +184,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
             showDialogGPS();
         }
 
-        super.onResume();
-        if (googleApiClient.isConnected())
-        {
-            startLocationUpdates();
-        }
     }
 
     private void showDialogGPS() {
@@ -208,7 +204,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
         });
         AlertDialog alert = builder.create();
         alert.show();
-
     }
 
     @Override
@@ -231,8 +226,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     @Override
     public void onLocationChanged(Location location) {
         lastKnownLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(lastKnownLatLng, 18);
+        mMap.animateCamera(update);
     }
 
     protected void startLocationUpdates() {
@@ -252,8 +247,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest,
-                this);
+        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
     }
 
     protected void stopLocationUpdates() {
