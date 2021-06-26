@@ -4,17 +4,21 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,7 +29,15 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,12 +47,24 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.type.DateTime;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
+import java.time.temporal.WeekFields;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
 
 
 public class ProfileFragment extends Fragment {
@@ -63,20 +87,31 @@ public class ProfileFragment extends Fragment {
     long CalorieTot = 0;
     long TempoTot = 0;
 
+    HashMap<String, String> Datamap1 = new HashMap<>();
+
 
     String TitoliStatistiche[] = {"Km percorsi", "Passi", "Calorie", "Ore totali"};
     String DescrizioneStatistiche[] = {"0", "0", "0", "0"};
 
     RecyclerView recyclerViewStatistiche;
 
+    BarChart barChart;
 
+    String datacorrente;
+    String data7giorni;
+    String DateSessioni;
 
 
 
 
     @Override
+    public void onCreate(@Nullable  Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
     public void onViewCreated(View view,Bundle savedInstanceState) {
-        Button logoutButton = (Button) getView().findViewById(R.id.logoutButton);
         ciaoNomeeCognomeTextView = (TextView) getView().findViewById(R.id.CiaoNomeCognomeText);
         usernameTextView = (TextView) getView().findViewById(R.id.UsernameTextView);
         datadinascitaTextView = (TextView) getView().findViewById(R.id.DataTextView);
@@ -91,16 +126,176 @@ public class ProfileFragment extends Fragment {
 
         PullDatiDatabase();
 
+
+        barChart = getView().findViewById(R.id.graficoSettimanale);
+
+
+
         super.onViewCreated(view, savedInstanceState);
 
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                startActivity(intent);
+    }
+
+    public void graficogenerate(){
+
+        SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date(System.currentTimeMillis());
+
+        ArrayList<BarEntry> sessioni = new ArrayList<>();
+
+        sessioni.add(new BarEntry(0f,1));
+        sessioni.add(new BarEntry(1f,0));
+        sessioni.add(new BarEntry(2f,0));
+        sessioni.add(new BarEntry(3f,0));
+        sessioni.add(new BarEntry(4f,0));
+        sessioni.add(new BarEntry(5f,0));
+        sessioni.add(new BarEntry(6f,0));
+
+
+        Log.d("data", formatter.format(date));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        Log.d("data", String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
+        calendar.add(Calendar.DATE, -7);
+        Log.d("dataoggi", String.valueOf(formatter.format(date)));
+        Log.d("data7giornifa", String.valueOf(formatter.format(calendar.getTime())));
+
+        datacorrente = formatter.format(date);
+        data7giorni = formatter.format(calendar.getTime());
+
+            mAuth = FirebaseAuth.getInstance();
+
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+            if(currentUser != null){
+                Log.d("utenteid", currentUser.getUid());
+
+                db.collection("SessioneVeloce")
+                        .whereEqualTo("UserID", currentUser.getUid())
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                        Double Km = (Double) document.get("Km");
+                                        Datamap1 = (HashMap<String, String>) document.get("Data");
+
+                                        Log.d("datamap", String.valueOf(Datamap1));
+
+                                        Log.d("datamapint", String.valueOf(Datamap1.get("monthValue")));
+
+                                        String stringmese = String.valueOf(Datamap1.get("monthValue"));
+                                        int mese = Integer.parseInt(stringmese);
+
+                                        String stringgiorno = String.valueOf(Datamap1.get("dayOfMonth"));
+                                        int giorno = Integer.parseInt(stringgiorno);
+
+                                        String giornosettimana = Datamap1.get("dayOfWeek");
+
+
+
+                                        if(mese < 10)
+                                           DateSessioni = String.valueOf(Datamap1.get("year")) + "-0" + String.valueOf(Datamap1.get("monthValue")) + "-" +  String.valueOf(Datamap1.get("dayOfMonth"));
+                                        if(giorno < 10)
+                                            DateSessioni = String.valueOf(Datamap1.get("year")) + "-" + String.valueOf(Datamap1.get("monthValue")) + "-0" +  String.valueOf(Datamap1.get("dayOfMonth"));
+                                        if(mese < 10 && giorno < 10)
+                                            DateSessioni = String.valueOf(Datamap1.get("year")) + "-0" + String.valueOf(Datamap1.get("monthValue")) + "-0" +  String.valueOf(Datamap1.get("dayOfMonth"));
+
+
+
+                                        if(data7giorni.compareTo(DateSessioni) < 0 && datacorrente.compareTo(DateSessioni) >= 0)
+                                        {
+                                            Log.d("datamap1", DateSessioni);
+
+
+
+                                            barChart.setVisibility(View.VISIBLE);
+
+                                            Log.d("giorno", giornosettimana + " " + Km);
+
+
+                                            if(giornosettimana.equals("MONDAY"))
+                                            sessioni.add(new BarEntry(0f,Float.parseFloat(String.valueOf(Km))));
+
+                                            if(giornosettimana.equals("TUESDAY"))
+                                                sessioni.add(new BarEntry(1f, Float.parseFloat(String.valueOf(Km))));
+
+
+                                            if(giornosettimana.equals("WEDNESDAY"))
+                                                sessioni.add(new BarEntry(2f, Float.parseFloat(String.valueOf(Km))));
+
+
+                                            if(giornosettimana.equals("THURSDAY"))
+                                                sessioni.add(new BarEntry(3f, Float.parseFloat(String.valueOf(Km))));
+
+
+                                            if(giornosettimana.equals("FRIDAY"))
+                                                sessioni.add(new BarEntry(4f, Float.parseFloat(String.valueOf(Km))));
+
+
+                                            if(giornosettimana.equals("SATURDAY"))
+                                                sessioni.add(new BarEntry(5f, Float.parseFloat(String.valueOf(Km))));
+
+
+                                            if(giornosettimana.equals("SUNDAY"))
+                                                sessioni.add(new BarEntry(6f, Float.parseFloat(String.valueOf(Km))));
+
+
+                                            BarDataSet barDataSet = new BarDataSet(sessioni, "Km");
+
+
+                                            ArrayList<String> labels = new ArrayList<>();
+                                            labels.add("Lun");
+                                            labels.add("Mar");
+                                            labels.add("Mer");
+                                            labels.add("Gio");
+                                            labels.add("Ven");
+                                            labels.add("Sab");
+                                            labels.add("Dom");
+
+                                            barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
+                                            BarData data = new BarData(barDataSet);
+                                            barChart.setData(data);
+                                            barDataSet.setColors(Color.CYAN);
+                                            barDataSet.setValueTextColor(Color.BLACK);
+                                            barDataSet.setValueTextSize(16f);
+                                            barChart.getDescription().setText("Riepilogo Km settimanali");
+                                            barChart.getDescription().setTextSize(15f);
+                                            barChart.animateY(2000);
+
+
+                                        }
+
+
+                                    }
+
+
+
+                                }
+
+                                else
+                                {
+                                    Log.d("database", "Error getting documents: ", task.getException());
+                                }
+
+
+
+
+
+
+                            }
+                        });
+
+                Log.d("descrizione", DescrizioneStatistiche[1]);
+
+
             }
-        });
+            else {
+                Log.d("utenteid", "niente vuoto");
+            }
+
+
+
     }
 
     @Override
@@ -108,25 +303,6 @@ public class ProfileFragment extends Fragment {
         inflater.inflate(R.menu.upbarprofile_menu, menu);
 
     }
-
-    /*
-    @Override
-    public void applicaText(String Nome, String Cognome, String Datadinascita, int Peso, int Altezza, String sesso) {
-        ciaoNomeeCognomeTextView.setText("Ciao " + Nome + " " + Cognome);
-        datadinascitaTextView.setText(Datadinascita);
-        pesoTextView.setText(Peso);
-        altezzaTextView.setText(Altezza);
-
-        if(sesso.equals("Maschio")){
-            int blu = Color.parseColor("#1e90ff");
-            ImageProfilo.setColorFilter(blu);
-        }
-        if(sesso.equals("Femmina")){
-            int rosa = Color.parseColor("#ef35fc");
-            ImageProfilo.setColorFilter(rosa);
-        }
-    }
-    */
 
 
     @Override
@@ -137,10 +313,21 @@ public class ProfileFragment extends Fragment {
                openEditDialog();
                 return true;
             }
+            case R.id.logout_button: {
+                logout();
+
+                return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+
+    public void logout(){
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -174,6 +361,7 @@ public class ProfileFragment extends Fragment {
                            if (task.isSuccessful()) {
                                for (QueryDocumentSnapshot document : task.getResult()) {
 
+                                   //Statistiche Totali
                                    KmTot = KmTot + (double) document.get("Km");
                                    PassiTot = PassiTot + (long) document.get("Passi");
                                    CalorieTot = CalorieTot + (long) document.get("Calorie");
@@ -192,6 +380,10 @@ public class ProfileFragment extends Fragment {
                                MyAdapter myAdapter = new MyAdapter(getContext(), TitoliStatistiche, DescrizioneStatistiche);
                                recyclerViewStatistiche.setAdapter(myAdapter);
                                recyclerViewStatistiche.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+
+
+                                   graficogenerate();
+
 
                            }
 

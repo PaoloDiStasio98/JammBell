@@ -203,30 +203,10 @@ public class EditDialogClass extends AppCompatDialogFragment {
         else {
             Log.d("utenteid", "niente vuoto");
         }
- /*
-        String Nome = NomeEditText.getText().toString();
-        String Cognome = CognomeEditText.getText().toString();
-        int    Altezza = altezzaNumberPicker.getValue();
-        String Datadinascita = dateButton.getText().toString();
-        String Sesso = sesso[sessoNumberPicker.getValue()];
-        int    Peso = pesoNumberPicker.getValue();
 
-        listener.applicaText(Nome, Cognome, Datadinascita, Peso, Altezza, Sesso);
-*/
 
     }
- /*
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
 
-        try {
-            listener = (EditDialogListener) context;
-        } catch (ClassCastException e){
-            throw  new ClassCastException(context.toString() + " devi implementare ExampleDialogListener");
-        }
-    }
-    */
 
 
     private void initAltezzaPicker()
@@ -334,11 +314,7 @@ public class EditDialogClass extends AppCompatDialogFragment {
         return "JAN";
     }
 
-    /*
-    public interface EditDialogListener {
-            void applicaText(String Nome, String Cognome, String Datadinascita, int Peso, int Altezza, String sesso);
-    }
-*/
+
 
 }
 

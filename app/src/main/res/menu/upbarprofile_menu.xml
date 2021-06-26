@@ -5,9 +5,15 @@
 
 
     <item
-        android:title="prova"
+        android:title="edit"
         android:id="@+id/edit_button"
         android:icon="@drawable/ic_baseline_create_24"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:title="logout"
+        android:id="@+id/logout_button"
+        android:icon="@drawable/ic_baseline_exit_to_app_24"
         app:showAsAction="ifRoom" />
 
 </menu>

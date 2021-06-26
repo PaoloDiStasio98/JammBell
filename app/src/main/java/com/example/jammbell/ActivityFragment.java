@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.speech.RecognizerIntent;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -90,6 +91,9 @@ public class ActivityFragment extends Fragment {
         setHasOptionsMenu(true);
 
 
+
+
+
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
             @Override
@@ -143,6 +147,7 @@ public class ActivityFragment extends Fragment {
                 monthprova = month;
                 yearprova = year;
 
+                if(StoricoKm.size() != 0)
                 filtroTextView.setText("Filtro, giorno: " + day + "/" + month + "/" + year);
 
                 filtroapplicato = true;
@@ -215,7 +220,9 @@ public class ActivityFragment extends Fragment {
 
                     menu.getItem(1).setVisible(false);
                     PullDatiDatabaseStorico();
-                    filtroTextView.setText("Tutte le tue sessioni");
+                    if(StoricoKm.size() != 0) {
+                        filtroTextView.setText("Tutte le tue sessioni");
+                    }
                     filtroapplicato = false;
                     return true;
                 }
@@ -297,6 +304,8 @@ public class ActivityFragment extends Fragment {
 
                                 if(StoricoKm.size() == 0) {
                                     Toast.makeText(getContext(), "Nessuna sessione trovata", Toast.LENGTH_SHORT).show();
+                                    filtroTextView.setText("Nessuna sessione");
+                                    filtroTextView.setGravity(Gravity.CENTER);
 
                                 }
 
@@ -371,6 +380,12 @@ public class ActivityFragment extends Fragment {
 
                                 }
 
+                                if(StoricoKm.size() == 0) {
+                                    Toast.makeText(getContext(), "Nessuna sessione trovata", Toast.LENGTH_SHORT).show();
+                                    filtroTextView.setText("Nessuna sessione");
+
+                                }
+
                                 MyAdapterStorico myAdapter = new MyAdapterStorico(getContext(), StoricoSessioneData, StoricoKm, StoricoTempo, StoricoCalorie, StoricoPassi, StoricoVelocitaMedia, StoricoValutazione, ArrayDocumentoID);
                                 recyclerViewStorico.setAdapter(myAdapter);
                                 recyclerViewStorico.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -413,6 +428,8 @@ public class ActivityFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
 
     }
 
