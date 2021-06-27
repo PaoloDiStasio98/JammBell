@@ -73,7 +73,6 @@ public class ProfileFragment extends Fragment {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth;
 
-
     TextView ciaoNomeeCognomeTextView;
     ImageView ImageProfilo;
     TextView usernameTextView;
@@ -81,14 +80,19 @@ public class ProfileFragment extends Fragment {
     TextView pesoTextView;
     TextView altezzaTextView;
 
-
     double KmTot = 0;
     long PassiTot = 0;
     long CalorieTot = 0;
     long TempoTot = 0;
+    double KmTotLunedi = 0;
+    double KmTotMartedi = 0;
+    double KmTotMercoledi = 0;
+    double KmTotGiovedi = 0;
+    double KmTotVenerdi = 0;
+    double KmTotSabato = 0;
+    double KmTotDomenica = 0;
 
     HashMap<String, String> Datamap1 = new HashMap<>();
-
 
     String TitoliStatistiche[] = {"Km percorsi", "Passi", "Calorie", "Ore totali"};
     String DescrizioneStatistiche[] = {"0", "0", "0", "0"};
@@ -101,15 +105,6 @@ public class ProfileFragment extends Fragment {
     String data7giorni;
     String DateSessioni;
 
-
-
-
-    @Override
-    public void onCreate(@Nullable  Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
     @Override
     public void onViewCreated(View view,Bundle savedInstanceState) {
         ciaoNomeeCognomeTextView = (TextView) getView().findViewById(R.id.CiaoNomeCognomeText);
@@ -119,17 +114,13 @@ public class ProfileFragment extends Fragment {
         altezzaTextView = (TextView) getView().findViewById(R.id.AltezzaProfiloTextView);
         ImageProfilo = (ImageView) getView().findViewById(R.id.Imageprofilo);
 
-
         setHasOptionsMenu(true);
 
         recyclerViewStatistiche = (RecyclerView) getView().findViewById(R.id.recyclerViewStatistiche);
 
         PullDatiDatabase();
 
-
         barChart = getView().findViewById(R.id.graficoSettimanale);
-
-
 
         super.onViewCreated(view, savedInstanceState);
 
@@ -139,17 +130,6 @@ public class ProfileFragment extends Fragment {
 
         SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date(System.currentTimeMillis());
-
-        ArrayList<BarEntry> sessioni = new ArrayList<>();
-
-        sessioni.add(new BarEntry(0f,0));
-        sessioni.add(new BarEntry(1f,0));
-        sessioni.add(new BarEntry(2f,0));
-        sessioni.add(new BarEntry(3f,0));
-        sessioni.add(new BarEntry(4f,0));
-        sessioni.add(new BarEntry(5f,0));
-        sessioni.add(new BarEntry(6f,0));
-
 
         Log.d("data", formatter.format(date));
         Calendar calendar = Calendar.getInstance();
@@ -192,8 +172,6 @@ public class ProfileFragment extends Fragment {
 
                                         String giornosettimana = Datamap1.get("dayOfWeek");
 
-
-
                                         if(mese < 10)
                                            DateSessioni = String.valueOf(Datamap1.get("year")) + "-0" + String.valueOf(Datamap1.get("monthValue")) + "-" +  String.valueOf(Datamap1.get("dayOfMonth"));
                                         if(giorno < 10)
@@ -201,101 +179,74 @@ public class ProfileFragment extends Fragment {
                                         if(mese < 10 && giorno < 10)
                                             DateSessioni = String.valueOf(Datamap1.get("year")) + "-0" + String.valueOf(Datamap1.get("monthValue")) + "-0" +  String.valueOf(Datamap1.get("dayOfMonth"));
 
-
-
                                         if(data7giorni.compareTo(DateSessioni) < 0 && datacorrente.compareTo(DateSessioni) >= 0)
                                         {
                                             Log.d("datamap1", DateSessioni);
-
-
-
-                                            barChart.setVisibility(View.VISIBLE);
-
                                             Log.d("giorno", giornosettimana + " " + Km);
 
-
                                             if(giornosettimana.equals("MONDAY"))
-                                            sessioni.add(new BarEntry(0f,Float.parseFloat(String.valueOf(Km))));
-
+                                                KmTotLunedi = KmTotLunedi + Km;
                                             if(giornosettimana.equals("TUESDAY"))
-                                                sessioni.add(new BarEntry(1f, Float.parseFloat(String.valueOf(Km))));
-
-
+                                                KmTotMartedi = KmTotMartedi + Km;
                                             if(giornosettimana.equals("WEDNESDAY"))
-                                                sessioni.add(new BarEntry(2f, Float.parseFloat(String.valueOf(Km))));
-
-
+                                                KmTotMercoledi = KmTotMercoledi + Km;
                                             if(giornosettimana.equals("THURSDAY"))
-                                                sessioni.add(new BarEntry(3f, Float.parseFloat(String.valueOf(Km))));
-
-
+                                                KmTotGiovedi = KmTotGiovedi + Km;
                                             if(giornosettimana.equals("FRIDAY"))
-                                                sessioni.add(new BarEntry(4f, Float.parseFloat(String.valueOf(Km))));
-
-
+                                                KmTotVenerdi = KmTotVenerdi + Km;
                                             if(giornosettimana.equals("SATURDAY"))
-                                                sessioni.add(new BarEntry(5f, Float.parseFloat(String.valueOf(Km))));
-
-
+                                                KmTotSabato = KmTotSabato + Km;
                                             if(giornosettimana.equals("SUNDAY"))
-                                                sessioni.add(new BarEntry(6f, Float.parseFloat(String.valueOf(Km))));
-
-
-                                            BarDataSet barDataSet = new BarDataSet(sessioni, "Km");
-
-
-                                            ArrayList<String> labels = new ArrayList<>();
-                                            labels.add("Lun");
-                                            labels.add("Mar");
-                                            labels.add("Mer");
-                                            labels.add("Gio");
-                                            labels.add("Ven");
-                                            labels.add("Sab");
-                                            labels.add("Dom");
-
-                                            barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
-                                            BarData data = new BarData(barDataSet);
-                                            barChart.setData(data);
-                                            barDataSet.setColors(Color.BLACK);
-                                            barDataSet.setValueTextColor(Color.BLACK);
-                                            barDataSet.setValueTextSize(16f);
-                                            barChart.getDescription().setText("Riepilogo Km settimanali");
-                                            barChart.getDescription().setTextSize(15f);
-                                            barChart.animateY(2000);
-
-
+                                                KmTotDomenica = KmTotDomenica + Km;
                                         }
-
-
                                     }
 
+                                    barChart.setVisibility(View.VISIBLE);
 
+                                    ArrayList<BarEntry> sessioni = new ArrayList<>();
 
+                                    sessioni.add(new BarEntry(0f,Float.parseFloat(String.valueOf(KmTotLunedi))));
+                                    sessioni.add(new BarEntry(1f,Float.parseFloat(String.valueOf(KmTotMartedi))));
+                                    sessioni.add(new BarEntry(2f,Float.parseFloat(String.valueOf(KmTotMercoledi))));
+                                    sessioni.add(new BarEntry(3f,Float.parseFloat(String.valueOf(KmTotGiovedi))));
+                                    sessioni.add(new BarEntry(4f,Float.parseFloat(String.valueOf(KmTotVenerdi))));
+                                    sessioni.add(new BarEntry(5f,Float.parseFloat(String.valueOf(KmTotSabato))));
+                                    sessioni.add(new BarEntry(6f,Float.parseFloat(String.valueOf(KmTotDomenica))));
+                                    BarDataSet barDataSet = new BarDataSet(sessioni, "Km");
+
+                                    ArrayList<String> labels = new ArrayList<>();
+                                    labels.add("Lun");
+                                    labels.add("Mar");
+                                    labels.add("Mer");
+                                    labels.add("Gio");
+                                    labels.add("Ven");
+                                    labels.add("Sab");
+                                    labels.add("Dom");
+
+                                    barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
+                                    BarData data = new BarData(barDataSet);
+                                    barChart.setData(data);
+                                    barChart.getAxisLeft().setDrawGridLines(false);
+                                    barChart.getAxisRight().setDrawGridLines(false);
+                                    barChart.getXAxis().setDrawGridLines(false);
+                                    barDataSet.setColors(Color.CYAN);
+                                    barDataSet.setValueTextColor(Color.BLACK);
+                                    barDataSet.setValueTextSize(16f);
+                                    barChart.getDescription().setText("Riepilogo Km settimanali");
+                                    barChart.getDescription().setTextSize(15f);
+                                    barChart.animateY(2000);
                                 }
 
                                 else
                                 {
                                     Log.d("database", "Error getting documents: ", task.getException());
                                 }
-
-
-
-
-
-
                             }
                         });
-
-                Log.d("descrizione", DescrizioneStatistiche[1]);
-
-
             }
             else {
                 Log.d("utenteid", "niente vuoto");
             }
-
-
-
     }
 
     @Override
