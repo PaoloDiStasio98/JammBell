@@ -194,7 +194,8 @@ public class ActivityFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull  MenuInflater inflater) {
-            inflater.inflate(R.menu.upbar_menu, menu);
+        menu.clear();
+        inflater.inflate(R.menu.upbar_menu, menu);
             this.menu = menu;
     }
 

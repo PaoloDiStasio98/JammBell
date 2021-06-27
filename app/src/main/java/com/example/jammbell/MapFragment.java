@@ -26,6 +26,8 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -85,6 +87,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
         });
 
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        menu.clear();
+
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override

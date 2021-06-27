@@ -128,7 +128,7 @@ public class EditDialogClass extends AppCompatDialogFragment {
                         ProfileFragment profilo = new ProfileFragment();
                         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                      //  fragmentTransaction.replace(R.id.FrammentoProfilo, profilo).commit();
+                        fragmentTransaction.replace(R.id.FrammentoProfilo, profilo).commit();
 
                     }
                 });

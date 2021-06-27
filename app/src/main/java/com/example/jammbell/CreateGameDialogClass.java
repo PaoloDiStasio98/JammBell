@@ -239,7 +239,7 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
 
                                     usernamecreatore = String.valueOf(document.get("Username"));
-
+                                    String idcreatore = currentUser.getUid();
                                 }
 
                                 gara.put("Datafine", datafine);
@@ -247,6 +247,7 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
                                 gara.put("Nome", nomepartita);
                                 gara.put("UsernameCreatore", usernamecreatore);
                                 gara.put("UsernamePartecipante", usernameamico);
+                                gara.put("IDcreatore", usernameamico);
 
                                 pushGara();
 
