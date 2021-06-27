@@ -1,5 +1,6 @@
 package com.example.jammbell;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -123,8 +124,12 @@ public class EditDialogClass extends AppCompatDialogFragment {
 
                         pushDatiDB();
 
-                        Intent intent = new Intent(getContext(), Main2Activity.class);
-                        startActivity(intent);
+                        Intent i = new Intent(getContext(), Main2Activity.class);
+                        startActivity(i);
+                      //  Intent intent = new Intent(getContext(), Main2Activity.class);
+                      //  startActivity(intent);
+                      //  getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent());
+
                     }
                 });
 
@@ -243,6 +248,7 @@ public class EditDialogClass extends AppCompatDialogFragment {
 
         return makeDateString(day, month, year);
     }
+
     private void initDatePicker()
     {
         DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener()

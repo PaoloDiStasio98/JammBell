@@ -220,9 +220,6 @@ public class ActivityFragment extends Fragment {
 
                     menu.getItem(1).setVisible(false);
                     PullDatiDatabaseStorico();
-                    if(StoricoKm.size() != 0) {
-                        filtroTextView.setText("Tutte le tue sessioni");
-                    }
                     filtroapplicato = false;
                     return true;
                 }
@@ -310,6 +307,7 @@ public class ActivityFragment extends Fragment {
                                 }
 
 
+
                                 MyAdapterStorico myAdapter = new MyAdapterStorico(getContext(), StoricoSessioneData, StoricoKm, StoricoTempo, StoricoCalorie, StoricoPassi, StoricoVelocitaMedia, StoricoValutazione, ArrayDocumentoID);
                                 recyclerViewStorico.setAdapter(myAdapter);
                                 recyclerViewStorico.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -383,6 +381,10 @@ public class ActivityFragment extends Fragment {
                                 if(StoricoKm.size() == 0) {
                                     Toast.makeText(getContext(), "Nessuna sessione trovata", Toast.LENGTH_SHORT).show();
                                     filtroTextView.setText("Nessuna sessione");
+
+                                }
+                                else {
+                                    filtroTextView.setText("Tutte le tue sessioni");
 
                                 }
 

@@ -69,6 +69,8 @@ import java.util.Locale;
 
 public class ProfileFragment extends Fragment {
 
+
+
     private FragmentActivity myContext;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth;
@@ -105,6 +107,8 @@ public class ProfileFragment extends Fragment {
     String data7giorni;
     String DateSessioni;
 
+
+
     @Override
     public void onViewCreated(View view,Bundle savedInstanceState) {
         ciaoNomeeCognomeTextView = (TextView) getView().findViewById(R.id.CiaoNomeCognomeText);
@@ -113,6 +117,8 @@ public class ProfileFragment extends Fragment {
         pesoTextView = (TextView) getView().findViewById(R.id.PesoProfiloTextView);
         altezzaTextView = (TextView) getView().findViewById(R.id.AltezzaProfiloTextView);
         ImageProfilo = (ImageView) getView().findViewById(R.id.Imageprofilo);
+
+
 
         setHasOptionsMenu(true);
 
@@ -229,9 +235,10 @@ public class ProfileFragment extends Fragment {
                                     barChart.getAxisLeft().setDrawGridLines(false);
                                     barChart.getAxisRight().setDrawGridLines(false);
                                     barChart.getXAxis().setDrawGridLines(false);
+                                    barChart.setScaleEnabled(false);
                                     barDataSet.setColors(Color.CYAN);
                                     barDataSet.setValueTextColor(Color.BLACK);
-                                    barDataSet.setValueTextSize(16f);
+                                    barDataSet.setValueTextSize(14f);
                                     barChart.getDescription().setText("Riepilogo Km settimanali");
                                     barChart.getDescription().setTextSize(15f);
                                     barChart.animateY(2000);
@@ -415,6 +422,8 @@ public class ProfileFragment extends Fragment {
 
 
     }
+
+
 
 
 }
