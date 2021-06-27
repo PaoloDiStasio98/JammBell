@@ -72,6 +72,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
 
     @Override
     public void onViewCreated(View view,Bundle savedInstanceState) {
+
+        setHasOptionsMenu(false);
         buttonSessioneVeloce = (FloatingActionButton) getView().findViewById(R.id.ButtonSessioneVeloce);
 
         buttonSessioneVeloce.setOnClickListener(new View.OnClickListener() {

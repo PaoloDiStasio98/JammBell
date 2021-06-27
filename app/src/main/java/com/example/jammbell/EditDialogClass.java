@@ -22,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -124,11 +125,10 @@ public class EditDialogClass extends AppCompatDialogFragment {
 
                         pushDatiDB();
 
-                        Intent i = new Intent(getContext(), Main2Activity.class);
-                        startActivity(i);
-                      //  Intent intent = new Intent(getContext(), Main2Activity.class);
-                      //  startActivity(intent);
-                      //  getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent());
+                        ProfileFragment profilo = new ProfileFragment();
+                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                      //  fragmentTransaction.replace(R.id.FrammentoProfilo, profilo).commit();
 
                     }
                 });
