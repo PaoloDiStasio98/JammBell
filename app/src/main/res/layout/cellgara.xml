@@ -89,7 +89,22 @@
                 android:id="@+id/RisultatoCellaTextView"
                 android:gravity="right"
                 android:textSize="15dp"
-                android:padding="3dp"/>
+                android:padding="3dp"
+                android:visibility="invisible"/>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="button"
+                android:id="@+id/ButtonConfermaRifiuta"
+                android:layout_alignParentRight="true"
+                android:visibility="invisible"/>
+
+            </RelativeLayout>
 
         </LinearLayout>
     </LinearLayout>
