@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -47,6 +49,8 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
         return new MyViewHolderChallenge(view);
     }
 
+
+
     @Override
     public void onBindViewHolder(@NonNull MyAdapterChallenge.MyViewHolderChallenge holder, int position) {
 
@@ -78,6 +82,7 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         Log.d("TAG", "DocumentSnapshot successfully updated!");
+
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
@@ -89,6 +94,7 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
 
                     }
                 });
+
             }
             else {
                 holder.UsernamePartecipanteTextView.setText("Invitato: " + data4.get(position));
@@ -103,6 +109,7 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         Log.d("Eliminato", "DocumentSnapshot successfully deleted!");
+
                                     }
 
                                 })
