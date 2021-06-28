@@ -248,6 +248,7 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
                                 gara.put("UsernameCreatore", usernamecreatore);
                                 gara.put("UsernamePartecipante", usernameamico);
                                 gara.put("IDcreatore", usernameamico);
+                                gara.put("Stato", "In attesa");
 
                                 pushGara();
 

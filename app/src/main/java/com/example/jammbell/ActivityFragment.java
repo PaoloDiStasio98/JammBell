@@ -93,7 +93,7 @@ public class ActivityFragment extends Fragment {
 
 
 
-
+        //eliminazione delle celle
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
             @Override
@@ -171,6 +171,8 @@ public class ActivityFragment extends Fragment {
 
 
     }
+
+
 
     public void EliminaDocumento(String documentID){
 
@@ -423,6 +425,7 @@ public class ActivityFragment extends Fragment {
         return h+":"+m+":"+s+"";
 
     }
+
     public ActivityFragment() {
         // Required empty public constructor
     }

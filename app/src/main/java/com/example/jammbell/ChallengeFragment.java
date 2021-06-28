@@ -1,6 +1,7 @@
 package com.example.jammbell;
 
 import android.app.Activity;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,6 +31,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -40,9 +43,23 @@ public class ChallengeFragment extends Fragment {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth;
 
+    ArrayList<String> ChallengeDataInizio = new ArrayList<String>();
+    ArrayList<String> ChallengeDataFine = new ArrayList<String>();
+    ArrayList<String> ChallengeNome = new ArrayList<String>();
+    ArrayList<String> ChallengeUsernamePartecipante = new ArrayList<String>();
+    ArrayList<String> ChallengeStato = new ArrayList<String>();
+
+    RecyclerView recyclerViewChallenge;
+
+
     @Override
     public void onViewCreated(@NonNull  View view, @Nullable  Bundle savedInstanceState) {
+        recyclerViewChallenge = (RecyclerView) getView().findViewById(R.id.recyclerViewChallenge);
+
         setHasOptionsMenu(true);
+
+        PullGare();
+
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -78,6 +95,7 @@ public class ChallengeFragment extends Fragment {
         CreateGameDialogClass createGameDialogClass = new CreateGameDialogClass();
         createGameDialogClass.show(myContext.getSupportFragmentManager(), "creategame");
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,10 +103,8 @@ public class ChallengeFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d("challenge", String.valueOf(main2Activity.Utente));
-        PullGare();
         return inflater.inflate(R.layout.fragment_challenge, container, false);
     }
 
@@ -113,7 +129,23 @@ public class ChallengeFragment extends Fragment {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
 
                                     Log.d("Challenge", "Trovato creatore");
+
+                                    ChallengeDataInizio.add("da " + String.valueOf(document.get("Datainizio")));
+                                    ChallengeDataFine.add("al " + String.valueOf(document.get("Datafine")));
+                                    ChallengeNome.add("Nome gara: " + String.valueOf(document.get("Nome")));
+                                    ChallengeStato.add(String.valueOf(document.get("Stato")));
+                                    ChallengeUsernamePartecipante.add(String.valueOf(document.get("UsernamePartecipante")));
+
+
+
+
                                 }
+
+                                MyAdapterChallenge myAdapter = new MyAdapterChallenge(getContext(), ChallengeDataInizio, ChallengeDataFine, ChallengeNome, ChallengeUsernamePartecipante, ChallengeStato);
+                                recyclerViewChallenge.setAdapter(myAdapter);
+                                recyclerViewChallenge.setLayoutManager(new LinearLayoutManager(getContext()));
+
+
 
                             }
 
@@ -135,7 +167,17 @@ public class ChallengeFragment extends Fragment {
 
                                 Log.d("Challenge", "Trovato partecipante");
 
+                                ChallengeDataInizio.add(String.valueOf(document.get("Datainizio")));
+                                ChallengeDataFine.add(String.valueOf(document.get("Datafine")));
+                                ChallengeNome.add(String.valueOf(document.get("Nome")));
+                                ChallengeStato.add(String.valueOf(document.get("Stato")));
+                                ChallengeUsernamePartecipante.add(String.valueOf(document.get("UsernameCreatore")));
+
                             }
+
+                            MyAdapterChallenge myAdapter = new MyAdapterChallenge(getContext(), ChallengeDataInizio, ChallengeDataFine, ChallengeNome, ChallengeUsernamePartecipante, ChallengeStato);
+                            recyclerViewChallenge.setAdapter(myAdapter);
+                            recyclerViewChallenge.setLayoutManager(new LinearLayoutManager(getContext()));
 
                         }
 
