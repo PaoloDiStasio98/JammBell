@@ -49,6 +49,8 @@ public class ChallengeFragment extends Fragment {
     ArrayList<String> ChallengeUsernamePartecipante = new ArrayList<String>();
     ArrayList<String> ChallengeUsernameCreatore = new ArrayList<String>();
     ArrayList<String> ChallengeStato = new ArrayList<String>();
+    ArrayList<String> ChallengeDocumento = new ArrayList<String>();
+
 
     RecyclerView recyclerViewChallenge;
 
@@ -137,13 +139,13 @@ public class ChallengeFragment extends Fragment {
                                     ChallengeStato.add(String.valueOf(document.get("Stato")));
                                     ChallengeUsernamePartecipante.add(String.valueOf(document.get("UsernamePartecipante")));
                                     ChallengeUsernameCreatore.add(String.valueOf(document.get("UsernameCreatore")));
-
+                                    ChallengeDocumento.add(String.valueOf(document.getId()));
 
 
 
                                 }
 
-                                MyAdapterChallenge myAdapter = new MyAdapterChallenge(getContext(), ChallengeDataInizio, ChallengeDataFine, ChallengeNome, ChallengeUsernamePartecipante, ChallengeStato, ChallengeUsernameCreatore);
+                                MyAdapterChallenge myAdapter = new MyAdapterChallenge(getContext(), ChallengeDataInizio, ChallengeDataFine, ChallengeNome, ChallengeUsernamePartecipante, ChallengeStato, ChallengeUsernameCreatore, ChallengeDocumento);
                                 recyclerViewChallenge.setAdapter(myAdapter);
                                 recyclerViewChallenge.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -173,13 +175,14 @@ public class ChallengeFragment extends Fragment {
                                 ChallengeDataFine.add(String.valueOf(document.get("Datafine")));
                                 ChallengeNome.add(String.valueOf(document.get("Nome")));
                                 ChallengeStato.add(String.valueOf(document.get("Stato")));
-                                ChallengeUsernamePartecipante.add(String.valueOf(document.get("UsernameCreatore")));
+                                ChallengeUsernamePartecipante.add(String.valueOf(document.get("UsernamePartecipante")));
                                 ChallengeUsernameCreatore.add(String.valueOf(document.get("UsernameCreatore")));
+                                ChallengeDocumento.add(String.valueOf(document.getId()));
 
 
                             }
 
-                            MyAdapterChallenge myAdapter = new MyAdapterChallenge(getContext(), ChallengeDataInizio, ChallengeDataFine, ChallengeNome, ChallengeUsernamePartecipante, ChallengeStato, ChallengeUsernameCreatore);
+                            MyAdapterChallenge myAdapter = new MyAdapterChallenge(getContext(), ChallengeDataInizio, ChallengeDataFine, ChallengeNome, ChallengeUsernamePartecipante, ChallengeStato, ChallengeUsernameCreatore, ChallengeDocumento);
                             recyclerViewChallenge.setAdapter(myAdapter);
                             recyclerViewChallenge.setLayoutManager(new LinearLayoutManager(getContext()));
 

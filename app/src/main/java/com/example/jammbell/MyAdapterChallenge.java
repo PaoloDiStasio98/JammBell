@@ -12,16 +12,22 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
 
 public class MyAdapterChallenge extends RecyclerView.Adapter<MyAdapterChallenge.MyViewHolderChallenge> {
 
-ArrayList<String> data1, data2, data3, data4, data5, data6;
+ArrayList<String> data1, data2, data3, data4, data5, data6, data7;
 Context context;
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 Main2Activity main2Activity = new Main2Activity();
 
-public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<String> DataFine, ArrayList<String> Nome, ArrayList<String> UsernamePartecipante, ArrayList<String> Stato, ArrayList<String> UsernameCreatore){
+public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<String> DataFine, ArrayList<String> Nome, ArrayList<String> UsernamePartecipante, ArrayList<String> Stato, ArrayList<String> UsernameCreatore, ArrayList<String> DocumentID){
     context = ct;
     data1 = DataInizio;
     data2 = DataFine;
@@ -29,6 +35,7 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
     data4 = UsernamePartecipante;
     data5 = Stato;
     data6 = UsernameCreatore;
+    data7 = DocumentID;
 
 }
 
@@ -53,13 +60,61 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
         if(data5.get(position).matches("In attesa")) {
             holder.itemView.setBackground(ContextCompat.getDrawable(context, R.drawable.boxinattesa));
             holder.ButtonConfermaRifiuta.setVisibility(View.VISIBLE);
-            Log.d("challenge4", String.valueOf(data4.get(position)));
-            Log.d("challenge6", String.valueOf(data6.get(position)));
+
             if(String.valueOf(main2Activity.Utente.get("Username")).matches(data4.get(position))){
                 holder.ButtonConfermaRifiuta.setText("Accetta");
+                holder.UsernamePartecipanteTextView.setText("Invitato da: " + data6.get(position));
+                holder.ButtonConfermaRifiuta.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        db.collection("Gara")
+                                .document(data7.get(position))
+                                .update(
+                                        "Stato", "Attiva"
+
+                                )
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d("TAG", "DocumentSnapshot successfully updated!");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w("TAG", "Error updating document", e);
+                                    }
+                                });
+
+                    }
+                });
             }
             else {
+                holder.UsernamePartecipanteTextView.setText("Invitato: " + data4.get(position));
                 holder.ButtonConfermaRifiuta.setText("Annulla");
+                holder.ButtonConfermaRifiuta.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        db.collection("Gara").document(data7.get(position))
+                                .delete()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d("Eliminato", "DocumentSnapshot successfully deleted!");
+                                    }
+
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // Log.w(TAG, "Error deleting document", e);
+                                    }
+                                });
+
+                    }
+                });
             }
         }
         if(data5.get(position).matches("Attiva")) {
@@ -72,6 +127,10 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
 
         }
 
+
+    }
+
+    public void cambioStato(){
 
     }
 
