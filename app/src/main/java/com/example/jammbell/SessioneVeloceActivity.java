@@ -160,7 +160,7 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
 
         PolylineOptions polylineOptions = new PolylineOptions();
         polylineOptions.color(Color.RED);
-        polylineOptions.width(10);
+        polylineOptions.width(12);
         gpsTrack = mMap.addPolyline(polylineOptions);
 
 

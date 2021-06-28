@@ -37,6 +37,8 @@ import java.util.HashMap;
 
 public class ChallengeFragment extends Fragment {
 
+    private static final String TAG = "ChallengeFragment";
+
     private FragmentActivity myContext;
 
     Main2Activity main2Activity = new Main2Activity();
@@ -69,11 +71,18 @@ public class ChallengeFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        menu.clear();
+
         inflater.inflate(R.menu.upbarchallenge_menu, menu);
 
     }
 
+    @Override
+    public void onPrepareOptionsMenu(@NonNull  Menu menu) {
+        menu.clear();
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.upbarchallenge_menu, menu);
+        super.onPrepareOptionsMenu(menu);
+    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

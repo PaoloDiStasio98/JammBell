@@ -9,5 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="greeen">#31A500</color>
     <color name="gold">#ffd700</color>
+    <color name="red">#FF0000</color>
 
 </resources>

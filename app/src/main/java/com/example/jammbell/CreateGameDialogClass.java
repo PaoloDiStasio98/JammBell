@@ -4,7 +4,10 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +20,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -43,6 +49,8 @@ import java.util.Map;
 
 public class CreateGameDialogClass extends AppCompatDialogFragment {
 
+
+
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth;
 
@@ -57,6 +65,7 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
     private TextView DatafineTextView;
     private EditText cercaAmicoEditText;
     private EditText nomePartitaEditText;
+    private TextView ErroreTextView;
 
     String usernameamico;
     String datainizio;
@@ -67,10 +76,13 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
 
     Map<String, Object> gara = new HashMap<>();
 
+    ChallengeFragment fragment = new ChallengeFragment();
+
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -81,6 +93,7 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
         DatafineTextView = view.findViewById(R.id.DatafineGaraTextView);
         cercaAmicoEditText = view.findViewById(R.id.cercaAmicoEditText);
         nomePartitaEditText = view.findViewById(R.id.NomePartitaEditText);
+        ErroreTextView = view.findViewById(R.id.ErroreTextView);
 
 
         //prendo data di inizio e la imposto come testo del picker
@@ -210,10 +223,17 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
                             nomepartita = nomePartitaEditText.getText().toString();
                             usernameamico = cercaAmicoEditText.getText().toString();
                             cercautenteDB(usernameamico);
+
+                              //  FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                              //  transaction.replace(R.id.FrammentoChallenge, fragment, "ChallengeFragment");
+
+
+
                             }
                             else {
                                 Log.d("amico", "controlla data");
-
+                                ErroreTextView.setVisibility(View.VISIBLE);
+                                ErroreTextView.setText("Controlla le date inserite");
                             }
                         }
                     }
@@ -222,6 +242,9 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
         return builder.create();
 
     }
+
+
+
 
     public void pullUsernameCreatore(){
 
@@ -280,6 +303,9 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
             {
                 Log.d("TAG", "DocumentSnapshot written with ID: " + documentReference.getId());
               //  startActivity(new Intent(RegistrazioneProfiloActivity.this, Main2Activity.class));
+
+
+
             }
         }).addOnFailureListener(new OnFailureListener()
         {
@@ -290,6 +316,9 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
             }
         });
     }
+
+
+
 
     public void cercautenteDB(String username){
 
@@ -308,9 +337,9 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
                                     amicotrovato = true;
                                     Log.d("amico", "amico trovato");
 
+                                    pullUsernameCreatore();
 
                                 }
-                                pullUsernameCreatore();
                             }
                             else
                             {
@@ -324,8 +353,11 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
             Log.d("utenteid", "niente vuoto");
         }
 
-        if(amicotrovato == false)
+        if(amicotrovato == false) {
             Log.d("amico", "amico non trovato");
+            ErroreTextView.setVisibility(View.VISIBLE);
+            ErroreTextView.setText("Nessun utente trovato con questo username, riprova");
+        }
 
 
     }
