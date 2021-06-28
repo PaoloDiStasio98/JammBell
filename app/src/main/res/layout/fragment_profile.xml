@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,128 +10,178 @@
     >
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="409dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginTop="0dp"
+            tools:layout_conversion_absoluteHeight="678dp"
+            tools:layout_conversion_absoluteWidth="411dp"
+            tools:layout_editor_absoluteX="1dp"
+            tools:layout_editor_absoluteY="0dp">
+
 
             <TextView
                 android:id="@+id/CiaoNomeCognomeText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="64dp"
                 android:text="Ciao,"
                 android:textColor="@color/black"
-                android:textSize="30dp" />
+                android:textSize="30dp"
+                app:layout_constraintBottom_toTopOf="@+id/Imageprofilo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_conversion_absoluteHeight="40dp"
+                tools:layout_conversion_absoluteWidth="66dp" />
 
+            <ImageView
+                android:id="@+id/Imageprofilo"
+                android:layout_width="162dp"
+                android:layout_height="171dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_baseline_person_24"
+                app:layout_constraintBottom_toTopOf="@+id/UsernameTextView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/CiaoNomeCognomeText"
+                tools:layout_conversion_absoluteHeight="136dp"
+                tools:layout_conversion_absoluteWidth="131dp" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="20dp">
-
-                <ImageView
-                    android:id="@+id/Imageprofilo"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/ic_baseline_person_24" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/UsernameTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="Username"
-                        android:textSize="20dp" />
-
-                    <TextView
-                        android:id="@+id/DataTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="Data di nascita"
-                        android:textSize="20dp" />
-
-                    <TextView
-                        android:id="@+id/AltezzaProfiloTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="Altezza"
-                        android:textSize="20dp" />
-
-                    <TextView
-                        android:id="@+id/PesoProfiloTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="Peso"
-                        android:textSize="20dp" />
-
-                </LinearLayout>
-
-            </LinearLayout>
 
             <TextView
+                android:id="@+id/UsernameTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="11dp"
+                android:layout_marginTop="52dp"
+                android:padding="5dp"
+                android:text="Username"
+                android:textSize="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/Imageprofilo"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_conversion_absoluteHeight="37dp"
+                tools:layout_conversion_absoluteWidth="101dp" />
+
+            <TextView
+                android:id="@+id/DataTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="11dp"
+                android:padding="5dp"
+                android:text="Data di nascita"
+                android:textSize="20dp"
+                app:layout_constraintBottom_toTopOf="@+id/AltezzaProfiloTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/Imageprofilo"
+                app:layout_constraintTop_toBottomOf="@+id/UsernameTextView"
+                tools:layout_conversion_absoluteHeight="37dp"
+                tools:layout_conversion_absoluteWidth="144dp" />
+
+            <TextView
+                android:id="@+id/AltezzaProfiloTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginStart="11dp"
+                android:padding="5dp"
+                android:text="Altezza"
+                android:textSize="20dp"
+                app:layout_constraintBottom_toTopOf="@+id/PesoProfiloTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/Imageprofilo"
+                app:layout_constraintTop_toBottomOf="@+id/DataTextView"
+                tools:layout_conversion_absoluteHeight="37dp"
+                tools:layout_conversion_absoluteWidth="76dp" />
+
+            <TextView
+                android:id="@+id/PesoProfiloTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="11dp"
+                android:padding="5dp"
+                android:text="Peso"
+                android:textSize="20dp"
+                app:layout_constraintBottom_toTopOf="@+id/textView4"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/Imageprofilo"
+                app:layout_constraintTop_toBottomOf="@+id/AltezzaProfiloTextView"
+                tools:layout_conversion_absoluteHeight="37dp"
+                tools:layout_conversion_absoluteWidth="55dp" />
+
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:text="Statistiche totali"
                 android:textColor="@color/black"
                 android:textSize="27dp"
-                android:textStyle="bold" />
-
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/recyclerViewStatistiche"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/PesoProfiloTextView"
+                tools:layout_conversion_absoluteHeight="36dp"
+                tools:layout_conversion_absoluteWidth="200dp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewStatistiche"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" />
+                android:orientation="horizontal"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintBottom_toTopOf="@+id/textView5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.043"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView4"
+                tools:layout_conversion_absoluteHeight="194dp"
+                tools:layout_conversion_absoluteWidth="40dp" />
 
             <TextView
+                android:id="@+id/textView5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="5dp"
-                android:text="Statistiche settimanali"
-                android:textColor="@color/black"
-                android:textSize="27dp"
-                android:textStyle="bold" />
-
-
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/graficoSettimanale"
-                android:layout_width="match_parent"
-                android:layout_height="230dp"
-                android:visibility="invisible"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="16dp"
                 android:text="Statistiche settimanali"
                 android:textColor="@color/black"
                 android:textSize="27dp"
                 android:textStyle="bold"
-                android:visibility="invisible"/>
+                app:layout_constraintBottom_toTopOf="@+id/graficoSettimanale"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/recyclerViewStatistiche"
+                tools:layout_conversion_absoluteHeight="36dp"
+                tools:layout_conversion_absoluteWidth="274dp" />
 
 
-        </LinearLayout>
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/graficoSettimanale"
+                android:layout_width="371dp"
+                android:layout_height="196dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/textView5"
+                app:layout_constraintTop_toBottomOf="@+id/textView5"
+                tools:layout_conversion_absoluteHeight="50dp"
+                tools:layout_conversion_absoluteWidth="50dp" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </ScrollView>
