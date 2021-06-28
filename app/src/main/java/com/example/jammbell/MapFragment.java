@@ -114,25 +114,30 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     @Override
     public void onMapReady(GoogleMap googleMap)
     {
+
+        Log.d("mappa", "entrato");
         mMap = googleMap;
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+
+            Log.d("mappa", "prova");
+
+            LatLngBounds ItaliaBounds = new LatLngBounds(
+                    new LatLng(42, 13), // SW bounds
+                    new LatLng(42, 13)  // NE bounds
+            );
+
+
+            Log.d("mappa", "valore: " + String.valueOf(ItaliaBounds));
+
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ItaliaBounds.getCenter(),10));
+
+
             return;
         }
-        mMap = googleMap;
 
-        LatLngBounds ItaliaBounds = new LatLngBounds(
-                new LatLng(42, 13), // SW bounds
-                new LatLng(42, 13)  // NE bounds
-        );
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ItaliaBounds.getCenter(),0));
+
+
 
         mMap.setMinZoomPreference(6.6f);
         mMap.setMaxZoomPreference(30f);
