@@ -99,6 +99,7 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
             else {
                 holder.UsernamePartecipanteTextView.setText("Invitato: " + data4.get(position));
                 holder.ButtonConfermaRifiuta.setText("Annulla");
+                holder.StatoChallengeTextView.setText("Stato gara: " + data5.get(position));
                 holder.ButtonConfermaRifiuta.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -127,6 +128,7 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
         if(data5.get(position).matches("Attiva")) {
             holder.itemView.setBackground(ContextCompat.getDrawable(context, R.drawable.boxattiva));
             holder.ButtonConfermaRifiuta.setVisibility(View.INVISIBLE);
+            holder.StatoChallengeTextView.setText("Stato gara: " + data5.get(position));
         }
         if(data5.get(position).matches("Terminata")) {
             holder.itemView.setBackground(ContextCompat.getDrawable(context, R.drawable.box1));

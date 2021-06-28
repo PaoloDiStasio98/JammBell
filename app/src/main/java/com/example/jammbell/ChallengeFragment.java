@@ -142,8 +142,8 @@ public class ChallengeFragment extends Fragment {
 
                                     Log.d("Challenge", "Trovato creatore");
 
-                                    ChallengeDataInizio.add("da " + String.valueOf(document.get("Datainizio")));
-                                    ChallengeDataFine.add("al " + String.valueOf(document.get("Datafine")));
+                                    ChallengeDataInizio.add("Inizio: " + String.valueOf(document.get("Datainizio")));
+                                    ChallengeDataFine.add(" fine: " + String.valueOf(document.get("Datafine")));
                                     ChallengeNome.add("Nome gara: " + String.valueOf(document.get("Nome")));
                                     ChallengeStato.add(String.valueOf(document.get("Stato")));
                                     ChallengeUsernamePartecipante.add(String.valueOf(document.get("UsernamePartecipante")));
@@ -157,7 +157,6 @@ public class ChallengeFragment extends Fragment {
                                 MyAdapterChallenge myAdapter = new MyAdapterChallenge(getContext(), ChallengeDataInizio, ChallengeDataFine, ChallengeNome, ChallengeUsernamePartecipante, ChallengeStato, ChallengeUsernameCreatore, ChallengeDocumento);
                                 recyclerViewChallenge.setAdapter(myAdapter);
                                 recyclerViewChallenge.setLayoutManager(new LinearLayoutManager(getContext()));
-
 
 
                             }
