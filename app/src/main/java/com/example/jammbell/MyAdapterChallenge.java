@@ -1,6 +1,7 @@
 package com.example.jammbell;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -149,6 +150,15 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
             else {
                 holder.UsernamePartecipanteTextView.setText("Invitato: " + data4.get(position));
             }
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), ResoContochallengeActivity.class);
+                    v.getContext().startActivity(intent);
+
+                }
+            });
         }
         if(data5.get(position).matches("Terminata")) {
             holder.itemView.setBackground(ContextCompat.getDrawable(context, R.drawable.box1));

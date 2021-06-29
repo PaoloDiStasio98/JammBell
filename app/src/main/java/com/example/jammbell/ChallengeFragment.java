@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -99,7 +100,9 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
         setHasOptionsMenu(true);
 
         PullGare();
-        //((MyAdapterChallenge)recyclerViewChallenge.getAdapter()).removeItem(position);
+
+
+
 
         super.onViewCreated(view, savedInstanceState);
     }
