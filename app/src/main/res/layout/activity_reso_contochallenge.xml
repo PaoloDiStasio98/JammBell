@@ -18,8 +18,9 @@
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:layout_weight="1">
-        <TextView
 
+        <TextView
+            android:id="@+id/NomeGaraTextView"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Nome gara"

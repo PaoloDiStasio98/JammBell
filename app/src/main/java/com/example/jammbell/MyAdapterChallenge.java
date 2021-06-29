@@ -155,6 +155,7 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), ResoContochallengeActivity.class);
+                    intent.putExtra("IDGara", data7.get(position));
                     v.getContext().startActivity(intent);
 
                 }
