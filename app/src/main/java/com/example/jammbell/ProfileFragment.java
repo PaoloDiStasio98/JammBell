@@ -142,7 +142,10 @@ public class ProfileFragment extends Fragment {
         calendar.setTime(date);
         Log.d("data", String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
         calendar.add(Calendar.DATE, -7);
-        Log.d("dataoggi", String.valueOf(formatter.format(date)));
+
+        SimpleDateFormat formattergiornosettimana = new SimpleDateFormat("EEEE");
+        Log.d("dataoggi", String.valueOf(formattergiornosettimana.format(date)));
+        String giornoSettimanaOggi = formattergiornosettimana.format(date);
         Log.d("data7giornifa", String.valueOf(formatter.format(calendar.getTime())));
 
         datacorrente = formatter.format(date);
@@ -221,13 +224,91 @@ public class ProfileFragment extends Fragment {
                                     BarDataSet barDataSet = new BarDataSet(sessioni, "Km");
 
                                     ArrayList<String> labels = new ArrayList<>();
-                                    labels.add("Lun");
-                                    labels.add("Mar");
-                                    labels.add("Mer");
-                                    labels.add("Gio");
-                                    labels.add("Ven");
-                                    labels.add("Sab");
-                                    labels.add("Dom");
+
+
+                                    switch (giornoSettimanaOggi)
+                                    {
+                                        case "Monday":
+                                            labels.add("Mar");
+                                            labels.add("Mer");
+                                            labels.add("Gio");
+                                            labels.add("Ven");
+                                            labels.add("Sab");
+                                            labels.add("Dom");
+                                            labels.add("Oggi");
+                                            break;
+
+                                        case "Tuesday":
+
+                                            labels.add("Mer");
+                                            labels.add("Gio");
+                                            labels.add("Ven");
+                                            labels.add("Sab");
+                                            labels.add("Dom");
+                                            labels.add("Lun");
+                                            labels.add("Oggi");
+                                            break;
+
+                                        case "Wednesday":
+
+                                            labels.add("Gio");
+                                            labels.add("Ven");
+                                            labels.add("Sab");
+                                            labels.add("Dom");
+                                            labels.add("Lun");
+                                            labels.add("Mar");
+                                            labels.add("Oggi");
+                                            break;
+
+                                        case "Thursday":
+
+
+                                            labels.add("Ven");
+                                            labels.add("Sab");
+                                            labels.add("Dom");
+                                            labels.add("Lun");
+                                            labels.add("Mar");
+                                            labels.add("Mer");
+                                            labels.add("Oggi");
+                                            break;
+
+                                        case "Friday":
+
+
+                                            labels.add("Sab");
+                                            labels.add("Dom");
+                                            labels.add("Lun");
+                                            labels.add("Mar");
+                                            labels.add("Mer");
+                                            labels.add("Gio");
+                                            labels.add("Oggi");
+                                            break;
+
+                                        case "Saturday":
+
+
+                                            labels.add("Dom");
+                                            labels.add("Lun");
+                                            labels.add("Mar");
+                                            labels.add("Mer");
+                                            labels.add("Gio");
+                                            labels.add("Ven");
+                                            labels.add("Oggi");
+                                            break;
+
+                                        case "Sunday":
+
+
+                                            labels.add("Lun");
+                                            labels.add("Mar");
+                                            labels.add("Mer");
+                                            labels.add("Gio");
+                                            labels.add("Ven");
+                                            labels.add("Sab");
+                                            labels.add("Oggi");
+                                            break;
+
+                                    }
 
                                     barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
                                     BarData data = new BarData(barDataSet);

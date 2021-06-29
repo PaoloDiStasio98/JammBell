@@ -75,7 +75,8 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
                     @Override
                     public void onClick(View v) {
 
-                        notifyDataSetChanged();
+                        data5.set(position, "Attiva");
+                        notifyItemChanged(position);
 
                         db.collection("Gara")
                                 .document(data7.get(position))
@@ -96,6 +97,8 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
                                         Log.w("TAG", "Error updating document", e);
                                     }
                                 });
+
+                        notifyDataSetChanged();
 
                     }
                 });
