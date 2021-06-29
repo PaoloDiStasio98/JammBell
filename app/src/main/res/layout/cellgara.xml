@@ -7,7 +7,7 @@
     android:padding="10dp"
     android:layout_gravity="center"
     app:layout_constraintCircleRadius="50dp"
-    android:background="@drawable/box1"
+    android:background="@drawable/boxinattesa"
     android:layout_margin="6dp"
     android:id="@+id/CellaGara">
 
@@ -119,10 +119,10 @@
             <Button
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="button"
+                android:text="Annulla"
                 android:id="@+id/ButtonConfermaRifiuta"
                 android:layout_alignParentRight="true"
-                android:visibility="invisible"/>
+                />
 
             </RelativeLayout>
 

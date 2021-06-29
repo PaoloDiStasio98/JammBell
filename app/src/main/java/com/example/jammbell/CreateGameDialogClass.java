@@ -1,7 +1,9 @@
 package com.example.jammbell;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -78,6 +80,11 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
 
     ChallengeFragment fragment = new ChallengeFragment();
 
+    public interface OnGameCreatedListener{
+        public void getUsername(String Datafine, String Datainizio, String IDcreatore, String Nome, String Stato, String UsernameCreatore, String UsernamePartecipante);
+    }
+
+    OnGameCreatedListener mOnGameCreatedListener;
 
     @NonNull
     @Override
@@ -224,10 +231,6 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
                             usernameamico = cercaAmicoEditText.getText().toString();
                             cercautenteDB(usernameamico);
 
-                              //  FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                              //  transaction.replace(R.id.FrammentoChallenge, fragment, "ChallengeFragment");
-
-
 
                             }
                             else {
@@ -243,8 +246,15 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
 
     }
 
-
-
+    @Override
+    public void onAttach(@NonNull Context context) {
+        try{
+        mOnGameCreatedListener = (OnGameCreatedListener) getTargetFragment();
+        } catch (ClassCastException e){
+            Log.d("amico", "problema nel try");
+        }
+        super.onAttach(context);
+    }
 
     public void pullUsernameCreatore(){
 
@@ -296,6 +306,9 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
 
     public void pushGara(){
         //pusho gara nel database
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
         db.collection("Gara").add(gara).addOnSuccessListener(new OnSuccessListener<DocumentReference>()
         {
             @Override
@@ -304,7 +317,7 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
                 Log.d("TAG", "DocumentSnapshot written with ID: " + documentReference.getId());
               //  startActivity(new Intent(RegistrazioneProfiloActivity.this, Main2Activity.class));
 
-
+                mOnGameCreatedListener.getUsername(datafine, datainizio, currentUser.getUid(), nomepartita, "In attesa", usernamecreatore, usernameamico);
 
             }
         }).addOnFailureListener(new OnFailureListener()

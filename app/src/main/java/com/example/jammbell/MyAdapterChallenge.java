@@ -29,6 +29,7 @@ Context context;
 
 Main2Activity main2Activity = new Main2Activity();
 
+
 public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<String> DataFine, ArrayList<String> Nome, ArrayList<String> UsernamePartecipante, ArrayList<String> Stato, ArrayList<String> UsernameCreatore, ArrayList<String> DocumentID){
     context = ct;
     data1 = DataInizio;
@@ -39,7 +40,9 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
     data6 = UsernameCreatore;
     data7 = DocumentID;
 
+
 }
+
 
     @NonNull
     @Override
@@ -49,11 +52,10 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
         return new MyViewHolderChallenge(view);
     }
 
-
-
     @Override
     public void onBindViewHolder(@NonNull MyAdapterChallenge.MyViewHolderChallenge holder, int position) {
 
+             Log.d("cella", "cella creata");
         holder.DataInizioTextView.setText(data1.get(position));
         holder.DataFineTextView.setText(data2.get(position));
         holder.NomeChallengeTextView.setText(data3.get(position));
@@ -65,7 +67,7 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
             holder.itemView.setBackground(ContextCompat.getDrawable(context, R.drawable.boxinattesa));
             holder.ButtonConfermaRifiuta.setVisibility(View.VISIBLE);
 
-            if(String.valueOf(main2Activity.Utente.get("Username")).matches(data4.get(position))){
+            if(String.valueOf(main2Activity.Utente.get("Username")).matches(data4.get(position))){ //l'utente connesso è il partecipante
                 holder.ButtonConfermaRifiuta.setText("Accetta");
                 holder.UsernamePartecipanteTextView.setText("Invitato da: " + data6.get(position));
                 holder.ButtonConfermaRifiuta.setOnClickListener(new View.OnClickListener() {
@@ -96,13 +98,17 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
                 });
 
             }
-            else {
+            else { //l'utente connesso è il creatore
                 holder.UsernamePartecipanteTextView.setText("Invitato: " + data4.get(position));
                 holder.ButtonConfermaRifiuta.setText("Annulla");
                 holder.StatoChallengeTextView.setText("Stato gara: " + data5.get(position));
                 holder.ButtonConfermaRifiuta.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                    Log.d("cella", "tasto cliccato");
+                            data3.remove(position);
+                            notifyItemRemoved(position);
+                            notifyItemRangeChanged(position, data3.size());
 
                         db.collection("Gara").document(data7.get(position))
                                 .delete()
@@ -110,6 +116,8 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         Log.d("Eliminato", "DocumentSnapshot successfully deleted!");
+
+
 
                                     }
 
@@ -129,6 +137,12 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
             holder.itemView.setBackground(ContextCompat.getDrawable(context, R.drawable.boxattiva));
             holder.ButtonConfermaRifiuta.setVisibility(View.INVISIBLE);
             holder.StatoChallengeTextView.setText("Stato gara: " + data5.get(position));
+            if(String.valueOf(main2Activity.Utente.get("Username")).matches(data4.get(position))){ //l'utente connesso è il partecipante
+                holder.UsernamePartecipanteTextView.setText("Invitato da: " + data6.get(position));
+            }
+            else {
+                holder.UsernamePartecipanteTextView.setText("Invitato: " + data4.get(position));
+            }
         }
         if(data5.get(position).matches("Terminata")) {
             holder.itemView.setBackground(ContextCompat.getDrawable(context, R.drawable.box1));
@@ -139,9 +153,6 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
 
     }
 
-    public void cambioStato(){
-
-    }
 
     @Override
     public int getItemCount() {
@@ -157,6 +168,7 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
         Button ButtonConfermaRifiuta;
 
         public  MyViewHolderChallenge(@NonNull View itemView){
+
             super(itemView);
             DataInizioTextView = itemView.findViewById(R.id.DataInizioCellaTextView);
             DataFineTextView = itemView.findViewById(R.id.DataFineCellaTextView);
