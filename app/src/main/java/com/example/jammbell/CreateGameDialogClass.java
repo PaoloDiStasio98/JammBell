@@ -44,6 +44,8 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -274,6 +276,14 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
                                     usernamecreatore = String.valueOf(document.get("Username"));
                                     gara.put("IDcreatore", currentUser.getUid());
 
+                                }
+
+                                DateTimeFormatter dtf = null;
+                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                                    dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                                    LocalDateTime now = LocalDateTime.now();
+                                    Log.d("data", dtf.format(now));
+                                    gara.put("Data", now);
                                 }
 
                                 gara.put("Datafine", datafine);
