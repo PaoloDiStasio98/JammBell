@@ -30,6 +30,8 @@ Context context;
 Main2Activity main2Activity = new Main2Activity();
 
 
+
+
 public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<String> DataFine, ArrayList<String> Nome, ArrayList<String> UsernamePartecipante, ArrayList<String> Stato, ArrayList<String> UsernameCreatore, ArrayList<String> DocumentID){
     context = ct;
     data1 = DataInizio;
@@ -42,7 +44,6 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
 
 
 }
-
 
     @NonNull
     @Override
@@ -73,6 +74,8 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
                 holder.ButtonConfermaRifiuta.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
+                        notifyDataSetChanged();
 
                         db.collection("Gara")
                                 .document(data7.get(position))
@@ -105,10 +108,10 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
                 holder.ButtonConfermaRifiuta.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                    Log.d("cella", "tasto cliccato");
+                    Log.d("cella", "tasto annulla cliccato");
                             data3.remove(position);
                             notifyItemRemoved(position);
-                            notifyItemRangeChanged(position, data3.size());
+                           // notifyItemRangeChanged(position, data3.size());
 
                         db.collection("Gara").document(data7.get(position))
                                 .delete()
