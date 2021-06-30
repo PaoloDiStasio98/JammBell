@@ -76,6 +76,7 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
     String datafine;
     String nomepartita;
     String usernamecreatore;
+    String IDamico;
     boolean amicotrovato;
 
     Map<String, Object> gara = new HashMap<>();
@@ -286,6 +287,7 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
                                     gara.put("Data", now);
                                 }
 
+                                gara.put("IDpartecipante", IDamico);
                                 gara.put("Datafine", datafine);
                                 gara.put("Datainizio", datainizio);
                                 gara.put("Nome", nomepartita);
@@ -357,6 +359,7 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
 
+                                    IDamico = String.valueOf(document.get("IDUtente"));
                                     amicotrovato = true;
                                     Log.d("amico", "amico trovato");
 

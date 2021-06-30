@@ -52,6 +52,7 @@
             app:tint="@color/red" />
 
            <TextView
+               android:id="@+id/Username1TextView"
                android:textColor="@color/red"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
@@ -91,6 +92,7 @@
                 app:tint="@color/blu"/>
 
             <TextView
+                android:id="@+id/Username2TextView"
                 android:textColor="@color/blu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

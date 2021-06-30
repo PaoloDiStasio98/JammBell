@@ -45,20 +45,30 @@ public class ResoContochallengeActivity extends AppCompatActivity {
 
 
     TextView nomeGaraTextView;
+    TextView username1TextView;
+    TextView username2TextView;
 
     ProgressBar KmProgressBar;
     ProgressBar CalorieProgressBar;
     ProgressBar VelocitaProgessBar;
 
 
-    Double KmTot = 0.0;
-    Double CalorieTot = 0.0;
-    Double Velocitamedia = 0.0;
+    Double KmTot1 = 0.0;
+    Double CalorieTot1 = 0.0;
+    Double Velocitamedia1 = 0.0;
+
+    Double KmTot2 = 0.0;
+    Double CalorieTot2 = 0.0;
+    Double Velocitamedia2 = 0.0;
+
     int countdocument = 0;
 
     ArrayList<String> StatisticheCreatore = new ArrayList<>();
     ArrayList<String> StatistichePartecipante = new ArrayList<>();
     int countStatistiche = 0;
+
+    String IDcreatore;
+    String IDpartecipante;
 
 
     @Override
@@ -69,6 +79,9 @@ public class ResoContochallengeActivity extends AppCompatActivity {
         KmProgressBar = findViewById(R.id.KmProgressBar);
         VelocitaProgessBar = findViewById(R.id.velocitaProgressBar);
         CalorieProgressBar = findViewById(R.id.CalorieProgressBar);
+
+        username1TextView = findViewById(R.id.Username1TextView);
+        username2TextView = findViewById(R.id.Username2TextView);
 
         String IDgara = getIntent().getStringExtra("IDGara");
 
@@ -106,15 +119,22 @@ public class ResoContochallengeActivity extends AppCompatActivity {
                   datafine = String.valueOf(document.get("Datafine"));
 
                   nomegara = String.valueOf(document.get("Nome"));
-                  Log.d("nomegara", nomegara);
                   usernameCreatore = String.valueOf(document.get("UsernameCreatore"));
                   usernamePartecipante = String.valueOf(document.get("UsernamePartecipante"));
                   stato = String.valueOf(document.get("Stato"));
+                  IDcreatore = String.valueOf(document.get("IDcreatore"));
+                  IDpartecipante = String.valueOf(document.get("IDpartecipante"));
 
+
+                  Log.d("STATISTICHE NOMI", IDcreatore + " " + IDpartecipante);
+
+                  username1TextView.setText(usernameCreatore);
+                  username2TextView.setText(usernamePartecipante);
                   nomeGaraTextView.setText("Nome gara: " + nomegara);
 
-                  PullIDUtente(usernameCreatore);
-                  PullIDUtente(usernamePartecipante);
+                  PullSessioniCreatore();
+                  PullSessioniPartecipante();
+
               }
               else {
 
@@ -168,21 +188,16 @@ public class ResoContochallengeActivity extends AppCompatActivity {
         return orarioMH;
     }
 
-    public ArrayList<String> PullSessioni(String username){
+    public void PullSessioniCreatore(){
 
         countdocument = 0;
-        KmTot = 0.0;
-        CalorieTot = 0.0;
-        Velocitamedia = 0.0;
-
+        KmTot1 = 0.0;
+        CalorieTot1 = 0.0;
+        Velocitamedia1 = 0.0;
 
         mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        ArrayList<String> Statistiche = new ArrayList<>();
-        Statistiche.clear();
-        if(currentUser != null){
             db.collection("SessioneVeloce")
-                    .whereEqualTo("UserID", username)
+                    .whereEqualTo("UserID", IDcreatore)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @RequiresApi(api = Build.VERSION_CODES.N)
@@ -199,7 +214,6 @@ public class ResoContochallengeActivity extends AppCompatActivity {
                                     String dataSessione = ConversioneDate(DatamapSessione);
 
 
-
                                     if(dataSessione.compareTo(datainizio) >= 0 && dataSessione.compareTo(datafine) <= 0) {
 
                                         String orarioFineSessione = getOrario(DatamapSessione);
@@ -208,17 +222,14 @@ public class ResoContochallengeActivity extends AppCompatActivity {
 
                                         Log.d("date", dataSessione + " poi  " + datainizio);
                                         if (dataSessione.equals(datainizio)) {
-                                            Log.d("date", "entrato");
-                                            Log.d("dateorario", orarioFineSessione);
-                                            Log.d("dateorario", orarioInizioGara);
                                             if (orarioFineSessione.compareTo(orarioInizioGara) >= 0) {
-                                                Log.d("date", "entrato nache qui");
-                                                //Statistiche Totali
-                                                KmTot = KmTot + (double) document.get("Km");
-                                                CalorieTot = CalorieTot + (long) document.get("Calorie");
-                                                Velocitamedia = (Velocitamedia + (double) document.get("Velocita"));
 
-                                                Log.d("statisticheKm", String.valueOf(KmTot));
+                                                //Statistiche Totali
+                                                KmTot1 = KmTot1 + (double) document.get("Km");
+                                                CalorieTot1 = CalorieTot1 + (long) document.get("Calorie");
+                                                Velocitamedia1 = (Velocitamedia1 + (double) document.get("Velocita"));
+
+                                                Log.d("gara2", "km: " + String.valueOf(KmTot1) + "Cal " + String.valueOf(CalorieTot1));
                                                 countdocument++;
 
 
@@ -226,114 +237,24 @@ public class ResoContochallengeActivity extends AppCompatActivity {
                                         }
                                         else {
 
-                                            KmTot = KmTot + (double) document.get("Km");
-                                            CalorieTot = CalorieTot + (long) document.get("Calorie");
-                                            Velocitamedia = (Velocitamedia + (double) document.get("Velocita"));
+                                            KmTot1 = KmTot1 + (double) document.get("Km");
+                                            CalorieTot1 = CalorieTot1 + (long) document.get("Calorie");
+                                            Velocitamedia1 = (Velocitamedia1 + (double) document.get("Velocita"));
 
-                                            Log.d("statisticheKm", String.valueOf(KmTot));
+                                            Log.d("gara2", "km: " + String.valueOf(KmTot1) + "Cal " + String.valueOf(CalorieTot1));
                                             countdocument++;
                                         }
                                     }
 
                                 }
 
-                                Statistiche.add(String.valueOf(KmTot));
-                                Statistiche.add(String.valueOf(CalorieTot));
-                                Statistiche.add(String.valueOf(Velocitamedia / countdocument));
+                                Log.d("gara3 countdocument", String.valueOf(countdocument));
 
+                                StatisticheCreatore.add(String.valueOf(KmTot1));
+                                StatisticheCreatore.add(String.valueOf(CalorieTot1));
+                                StatisticheCreatore.add(String.valueOf(Velocitamedia1 / countdocument));
 
-                                if(countStatistiche == 0) {
-                                    StatistichePartecipante.clear();
-                                    StatisticheCreatore.clear();
-
-                                    StatisticheCreatore = Statistiche;
-                                    Log.d("STATcreatore1", String.valueOf(StatisticheCreatore));
-
-                                    countStatistiche++;
-                                }
-                                else {
-                                    countStatistiche = 0;
-                                    StatistichePartecipante.clear();
-                                    StatistichePartecipante = Statistiche;
-
-                                    Log.d("STATcreatore", String.valueOf(StatisticheCreatore));
-                                    Log.d("STATpartecipante", String.valueOf(StatistichePartecipante));
-                                    Log.d("STATcreatore", String.valueOf(StatisticheCreatore.get(0)));
-                                    Log.d("STATpartecipante", String.valueOf(StatistichePartecipante.get(0)));
-
-
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                        KmProgressBar.setMin(0);
-                                        CalorieProgressBar.setMin(0);
-                                        VelocitaProgessBar.setMin(0);
-                                    }
-
-                                    String KmCreatoreString = StatisticheCreatore.get(0);
-                                    float KmCreatore = Float.parseFloat(KmCreatoreString);
-
-                                    String KmPartecipanteString = StatistichePartecipante.get(0);
-                                    float KmPartecipante = Float.parseFloat(KmPartecipanteString);
-
-                                    if((int) (KmCreatore + KmPartecipante) == 0) {
-                                        KmProgressBar.setMax(100);
-                                        KmProgressBar.setProgress(50, true);
-                                    }
-                                    else{
-                                        KmProgressBar.setMax((int) (KmCreatore + KmPartecipante));
-                                        KmProgressBar.setProgress((int) KmCreatore, true);
-
-                                    }
-
-                                    String VelocitaCreatoreString = StatisticheCreatore.get(2);
-                                    float VelocitaCreatore = Float.parseFloat(VelocitaCreatoreString);
-
-                                    String VelocitaPartecipanteString = StatistichePartecipante.get(2);
-                                    float VelocitaPartecipante = Float.parseFloat(VelocitaPartecipanteString);
-
-                                    if((int) (VelocitaCreatore + VelocitaPartecipante) == 0) {
-                                        VelocitaProgessBar.setMax(100);
-                                        VelocitaProgessBar.setProgress(50, true);
-                                    }
-                                    else{
-                                        VelocitaProgessBar.setMax((int) (VelocitaCreatore + VelocitaPartecipante));
-                                        VelocitaProgessBar.setProgress((int) VelocitaCreatore, true);
-
-                                    }
-
-                                    String CalorieCreatoreString = StatisticheCreatore.get(1);
-                                    float CalorieCreatore = Float.parseFloat(CalorieCreatoreString);
-
-                                    String CaloriePartecipanteString = StatistichePartecipante.get(1);
-                                    float CaloriePartecipante = Float.parseFloat(CaloriePartecipanteString);
-
-                                    if((int) (CalorieCreatore + CaloriePartecipante) == 0) {
-                                        CalorieProgressBar.setMax(100);
-                                        CalorieProgressBar.setProgress(50, true);
-                                        CalorieProgressBar.animate().setDuration(10000000);
-                                    }
-                                    else{
-                                        CalorieProgressBar.setMax((int) (CalorieCreatore + CaloriePartecipante));
-                                        CalorieProgressBar.setProgress((int) CalorieCreatore, true);
-
-                                    }
-
-
-
-                                    countStatistiche = 0;
-                                }
-
-
-
-
-
-
-
-                                countdocument = 0;
-                                KmTot = 0.0;
-                                CalorieTot = 0.0;
-                                Velocitamedia = 0.0;
-
-                                Log.d("statistiche", Statistiche.toString());
+                                Log.d("STATISTICHE CREATORE", String.valueOf(StatisticheCreatore));
 
 
                             }
@@ -342,72 +263,88 @@ public class ResoContochallengeActivity extends AppCompatActivity {
                             {
                                 Log.d("database", "Error getting documents: ", task.getException());
                             }
-
-
-
-
-
-
                         }
                     });
-
-
-        }
-        else {
-            Log.d("utenteid", "niente vuoto");
-        }
-
-        return Statistiche;
     }
 
+    public void PullSessioniPartecipante(){
+        countdocument = 0;
+        KmTot2 = 0.0;
+        CalorieTot2 = 0.0;
+        Velocitamedia2 = 0.0;
 
-    private void PullIDUtente(String username) {
         mAuth = FirebaseAuth.getInstance();
-        final String[] UsernameID = new String[1];
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
-        if(currentUser != null){
-            db.collection("Utente")
-                    .whereEqualTo("Username", username)
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-
-                                for (QueryDocumentSnapshot document : task.getResult()) {
+        db.collection("SessioneVeloce")
+                .whereEqualTo("UserID", IDpartecipante)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
 
 
-                                        UsernameID[0] = String.valueOf(document.get("IDUtente"));
-                                        Log.d("statisticheUsernamer", UsernameID[0]);
+                                DatamapSessione = (HashMap<String, String>) document.get("Data");
+                                Log.d("DatamapSessione", DatamapSessione.toString());
+                                Log.d("DatamapGara", DatamapGara.toString());
 
-                                        PullSessioni(UsernameID[0]);
+                                String dataSessione = ConversioneDate(DatamapSessione);
 
 
+                                if(dataSessione.compareTo(datainizio) >= 0 && dataSessione.compareTo(datafine) <= 0) {
+
+                                    String orarioFineSessione = getOrario(DatamapSessione);
+                                    String orarioInizioGara = getOrario(DatamapGara);
+
+
+                                    Log.d("date", dataSessione + " poi  " + datainizio);
+                                    if (dataSessione.equals(datainizio)) {
+                                        if (orarioFineSessione.compareTo(orarioInizioGara) >= 0) {
+
+                                            //Statistiche Totali
+                                            KmTot2 = KmTot2 + (double) document.get("Km");
+                                            CalorieTot2 = CalorieTot2 + (long) document.get("Calorie");
+                                            Velocitamedia2 = (Velocitamedia2 + (double) document.get("Velocita"));
+
+                                            Log.d("gara2", "km: " + String.valueOf(KmTot2) + "Cal " + String.valueOf(CalorieTot2));
+                                            countdocument++;
+
+
+                                        }
+                                    }
+                                    else {
+
+                                        KmTot2 = KmTot2 + (double) document.get("Km");
+                                        CalorieTot2 = CalorieTot2 + (long) document.get("Calorie");
+                                        Velocitamedia2 = (Velocitamedia2 + (double) document.get("Velocita"));
+
+                                        Log.d("gara2", "km: " + String.valueOf(KmTot2) + "Cal " + String.valueOf(CalorieTot2));
+                                        countdocument++;
+                                    }
                                 }
 
                             }
 
-                            else
-                            {
-                                Log.d("database", "Error getting documents: ", task.getException());
-                            }
+                            Log.d("STATISTICHE DATI", String.valueOf(KmTot2) + " " + String.valueOf(CalorieTot2));
 
 
+                            StatistichePartecipante.add(String.valueOf(KmTot2));
+                            StatistichePartecipante.add(String.valueOf(CalorieTot2));
+                            StatistichePartecipante.add(String.valueOf(Velocitamedia2 / countdocument));
 
-
-
+                            Log.d("STATISTICHE PARTECIPANTE", String.valueOf(StatistichePartecipante));
 
                         }
-                    });
 
-
-        }
-        else {
-            Log.d("utenteid", "niente vuoto");
-        }
-
+                        else
+                        {
+                            Log.d("database", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
     }
+
 
 
     public boolean onOptionsItemSelected(MenuItem item){
