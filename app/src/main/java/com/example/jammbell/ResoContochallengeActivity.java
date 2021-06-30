@@ -4,11 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.icu.util.LocaleData;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -79,6 +82,8 @@ public class ResoContochallengeActivity extends AppCompatActivity {
     String IDcreatore;
     String IDpartecipante;
 
+    Button SessioneVeloceButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +97,7 @@ public class ResoContochallengeActivity extends AppCompatActivity {
         username1TextView = findViewById(R.id.Username1TextView);
         username2TextView = findViewById(R.id.Username2TextView);
         contoRovesciaTextView = findViewById(R.id.ContoRovesciaGaraTextView);
+        SessioneVeloceButton = findViewById(R.id.SessioneVeloceButton);
 
         String IDgara = getIntent().getStringExtra("IDGara");
 
@@ -102,6 +108,13 @@ public class ResoContochallengeActivity extends AppCompatActivity {
         PullGara(IDgara);
 
 
+        SessioneVeloceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), SessioneVeloceActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
 

@@ -189,8 +189,26 @@
         />
 
 
+    <TextView
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Corri a vincere!"
+        android:gravity="center"
+        android:textSize="25dp"/>
+
+    <Button
+        android:id="@+id/SessioneVeloceButton"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Avvia Sessione veloce"
+        />
+
+
+
 
 
 </LinearLayout>
+
 
 </RelativeLayout>
