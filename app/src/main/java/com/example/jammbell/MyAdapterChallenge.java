@@ -19,6 +19,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class MyAdapterChallenge extends RecyclerView.Adapter<MyAdapterChallenge.MyViewHolderChallenge> {
@@ -79,25 +81,35 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
                         data5.set(position, "Attiva");
                         notifyItemChanged(position);
 
-                        db.collection("Gara")
-                                .document(data7.get(position))
-                                .update(
-                                        "Stato", "Attiva"
+                        DateTimeFormatter dtf = null;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                            LocalDateTime now = LocalDateTime.now();
+                            Log.d("data", dtf.format(now));
 
-                                )
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d("TAG", "DocumentSnapshot successfully updated!");
 
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.w("TAG", "Error updating document", e);
-                                    }
-                                });
+                            db.collection("Gara")
+                                    .document(data7.get(position))
+                                    .update(
+                                            "Stato", "Attiva",
+                                            "Data", now
+
+                                    )
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Log.d("TAG", "DocumentSnapshot successfully updated!");
+
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.w("TAG", "Error updating document", e);
+                                        }
+                                    });
+
+                        }
 
                         notifyDataSetChanged();
 

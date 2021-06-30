@@ -111,6 +111,7 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view,Bundle savedInstanceState) {
+
         ciaoNomeeCognomeTextView = (TextView) getView().findViewById(R.id.CiaoNomeCognomeText);
         usernameTextView = (TextView) getView().findViewById(R.id.UsernameTextView);
         datadinascitaTextView = (TextView) getView().findViewById(R.id.DataTextView);
@@ -187,6 +188,8 @@ public class ProfileFragment extends Fragment {
                                             DateSessioni = String.valueOf(Datamap1.get("year")) + "-" + String.valueOf(Datamap1.get("monthValue")) + "-0" +  String.valueOf(Datamap1.get("dayOfMonth"));
                                         if(mese < 10 && giorno < 10)
                                             DateSessioni = String.valueOf(Datamap1.get("year")) + "-0" + String.valueOf(Datamap1.get("monthValue")) + "-0" +  String.valueOf(Datamap1.get("dayOfMonth"));
+                                        if(mese > 10 && giorno > 10)
+                                            DateSessioni = String.valueOf(Datamap1.get("year")) + "-" + String.valueOf(Datamap1.get("monthValue")) + "-" +  String.valueOf(Datamap1.get("dayOfMonth"));
 
                                         if(data7giorni.compareTo(DateSessioni) < 0 && datacorrente.compareTo(DateSessioni) >= 0)
                                         {
