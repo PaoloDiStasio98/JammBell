@@ -47,6 +47,7 @@ public class ResoContochallengeActivity extends AppCompatActivity {
     TextView nomeGaraTextView;
     TextView username1TextView;
     TextView username2TextView;
+    TextView risultatoTextView;
 
     ProgressBar KmProgressBar;
     ProgressBar CalorieProgressBar;
@@ -62,6 +63,8 @@ public class ResoContochallengeActivity extends AppCompatActivity {
     Double Velocitamedia2 = 0.0;
 
     int countdocument = 0;
+    int countrisultatocreatore = 0;
+    int countrisultatopartecipante = 0;
 
     ArrayList<String> StatisticheCreatore = new ArrayList<>();
     ArrayList<String> StatistichePartecipante = new ArrayList<>();
@@ -79,7 +82,7 @@ public class ResoContochallengeActivity extends AppCompatActivity {
         KmProgressBar = findViewById(R.id.KmProgressBar);
         VelocitaProgessBar = findViewById(R.id.velocitaProgressBar);
         CalorieProgressBar = findViewById(R.id.CalorieProgressBar);
-
+        risultatoTextView = findViewById(R.id.RisultatoTextView);
         username1TextView = findViewById(R.id.Username1TextView);
         username2TextView = findViewById(R.id.Username2TextView);
 
@@ -97,6 +100,13 @@ public class ResoContochallengeActivity extends AppCompatActivity {
 
     }
 
+    public interface FirestoreCallback {
+        void onPullCreatoreCallback();
+    }
+
+    public interface FirestoreCallback1 {
+        void onPullSessioniCallback();
+    }
 
     public void PullGara(String idgara) {
 
@@ -132,8 +142,40 @@ public class ResoContochallengeActivity extends AppCompatActivity {
                   username2TextView.setText(usernamePartecipante);
                   nomeGaraTextView.setText("Nome gara: " + nomegara);
 
-                  PullSessioniCreatore();
-                  PullSessioniPartecipante();
+
+                  PullSessioniCreatore(new FirestoreCallback() {
+                      @Override
+                      public void onPullCreatoreCallback() {
+
+                          Log.d("gara3 countdocument", String.valueOf(countdocument));
+
+                          StatisticheCreatore.add(String.valueOf(KmTot1));
+                          StatisticheCreatore.add(String.valueOf(CalorieTot1));
+                          StatisticheCreatore.add(String.valueOf(Velocitamedia1 / countdocument));
+
+                          Log.d("STATISTICHE CREATORE", String.valueOf(StatisticheCreatore));
+
+
+
+                          PullSessioniPartecipante(new FirestoreCallback1() {
+                              @RequiresApi(api = Build.VERSION_CODES.N)
+                              @Override
+                              public void onPullSessioniCallback() {
+
+                                  Log.d("STATISTICHE DATI", String.valueOf(KmTot2) + " " + String.valueOf(CalorieTot2));
+
+
+                                  StatistichePartecipante.add(String.valueOf(KmTot2));
+                                  StatistichePartecipante.add(String.valueOf(CalorieTot2));
+                                  StatistichePartecipante.add(String.valueOf(Velocitamedia2 / countdocument));
+
+                                  Log.d("STATISTICHE PARTECIPANT", String.valueOf(StatistichePartecipante));
+
+                                  popolaProgressBar();
+                              }
+                          });
+                      }
+                  });
 
               }
               else {
@@ -188,7 +230,7 @@ public class ResoContochallengeActivity extends AppCompatActivity {
         return orarioMH;
     }
 
-    public void PullSessioniCreatore(){
+    public void PullSessioniCreatore(FirestoreCallback firestoreCallback){
 
         countdocument = 0;
         KmTot1 = 0.0;
@@ -247,15 +289,7 @@ public class ResoContochallengeActivity extends AppCompatActivity {
                                     }
 
                                 }
-
-                                Log.d("gara3 countdocument", String.valueOf(countdocument));
-
-                                StatisticheCreatore.add(String.valueOf(KmTot1));
-                                StatisticheCreatore.add(String.valueOf(CalorieTot1));
-                                StatisticheCreatore.add(String.valueOf(Velocitamedia1 / countdocument));
-
-                                Log.d("STATISTICHE CREATORE", String.valueOf(StatisticheCreatore));
-
+                                firestoreCallback.onPullCreatoreCallback();
 
                             }
 
@@ -267,7 +301,7 @@ public class ResoContochallengeActivity extends AppCompatActivity {
                     });
     }
 
-    public void PullSessioniPartecipante(){
+    public void PullSessioniPartecipante(FirestoreCallback1 firestoreCallback){
         countdocument = 0;
         KmTot2 = 0.0;
         CalorieTot2 = 0.0;
@@ -325,15 +359,11 @@ public class ResoContochallengeActivity extends AppCompatActivity {
                                 }
 
                             }
+                            firestoreCallback.onPullSessioniCallback();
 
-                            Log.d("STATISTICHE DATI", String.valueOf(KmTot2) + " " + String.valueOf(CalorieTot2));
 
 
-                            StatistichePartecipante.add(String.valueOf(KmTot2));
-                            StatistichePartecipante.add(String.valueOf(CalorieTot2));
-                            StatistichePartecipante.add(String.valueOf(Velocitamedia2 / countdocument));
 
-                            Log.d("STATISTICHE PARTECIPANTE", String.valueOf(StatistichePartecipante));
 
                         }
 
@@ -341,8 +371,93 @@ public class ResoContochallengeActivity extends AppCompatActivity {
                         {
                             Log.d("database", "Error getting documents: ", task.getException());
                         }
+
+
                     }
+
+
                 });
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void popolaProgressBar(){
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            KmProgressBar.setMin(0);
+            CalorieProgressBar.setMin(0);
+            VelocitaProgessBar.setMin(0);
+        }
+
+        String KmCreatoreString = StatisticheCreatore.get(0);
+        float KmCreatore = Float.parseFloat(KmCreatoreString);
+
+        String KmPartecipanteString = StatistichePartecipante.get(0);
+        float KmPartecipante = Float.parseFloat(KmPartecipanteString);
+
+        if((int) (KmCreatore + KmPartecipante) == 0) {
+            KmProgressBar.setMax(100);
+            KmProgressBar.setProgress(50, true);
+        }
+        else{
+            KmProgressBar.setMax((int) (KmCreatore + KmPartecipante));
+            KmProgressBar.setProgress((int) KmCreatore, true);
+
+        }
+
+        String VelocitaCreatoreString = StatisticheCreatore.get(2);
+        float VelocitaCreatore = Float.parseFloat(VelocitaCreatoreString);
+
+        String VelocitaPartecipanteString = StatistichePartecipante.get(2);
+        float VelocitaPartecipante = Float.parseFloat(VelocitaPartecipanteString);
+
+        if((int) (VelocitaCreatore + VelocitaPartecipante) == 0) {
+            VelocitaProgessBar.setMax(100);
+            VelocitaProgessBar.setProgress(50, true);
+        }
+        else{
+            VelocitaProgessBar.setMax((int) (VelocitaCreatore + VelocitaPartecipante));
+            VelocitaProgessBar.setProgress((int) VelocitaCreatore, true);
+
+        }
+
+        String CalorieCreatoreString = StatisticheCreatore.get(1);
+        float CalorieCreatore = Float.parseFloat(CalorieCreatoreString);
+
+        String CaloriePartecipanteString = StatistichePartecipante.get(1);
+        float CaloriePartecipante = Float.parseFloat(CaloriePartecipanteString);
+
+        if((int) (CalorieCreatore + CaloriePartecipante) == 0) {
+            CalorieProgressBar.setMax(100);
+            CalorieProgressBar.setProgress(50, true);
+            CalorieProgressBar.animate().setDuration(10000000);
+        }
+        else{
+            CalorieProgressBar.setMax((int) (CalorieCreatore + CaloriePartecipante));
+            CalorieProgressBar.setProgress((int) CalorieCreatore, true);
+
+        }
+
+        if((int) KmCreatore > KmPartecipante) {
+            countrisultatocreatore++;
+        }
+        else if((int) KmCreatore < KmPartecipante)
+           countrisultatopartecipante++;
+
+        if((int) VelocitaCreatore > VelocitaPartecipante) {
+            countrisultatocreatore++;
+        }
+        else if((int) VelocitaCreatore < VelocitaPartecipante)
+            countrisultatopartecipante++;
+
+        if((int) CalorieCreatore > CaloriePartecipante) {
+            countrisultatocreatore++;
+        }
+        else if((int) CalorieCreatore < CaloriePartecipante)
+            countrisultatopartecipante++;
+
+        risultatoTextView.setText(countrisultatocreatore + "-" + countrisultatopartecipante);
+
     }
 
 
