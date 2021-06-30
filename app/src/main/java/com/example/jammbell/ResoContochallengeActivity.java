@@ -23,7 +23,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 
@@ -48,6 +53,7 @@ public class ResoContochallengeActivity extends AppCompatActivity {
     TextView username1TextView;
     TextView username2TextView;
     TextView risultatoTextView;
+    TextView contoRovesciaTextView;
 
     ProgressBar KmProgressBar;
     ProgressBar CalorieProgressBar;
@@ -85,6 +91,7 @@ public class ResoContochallengeActivity extends AppCompatActivity {
         risultatoTextView = findViewById(R.id.RisultatoTextView);
         username1TextView = findViewById(R.id.Username1TextView);
         username2TextView = findViewById(R.id.Username2TextView);
+        contoRovesciaTextView = findViewById(R.id.ContoRovesciaGaraTextView);
 
         String IDgara = getIntent().getStringExtra("IDGara");
 
@@ -457,6 +464,62 @@ public class ResoContochallengeActivity extends AppCompatActivity {
             countrisultatopartecipante++;
 
         risultatoTextView.setText(countrisultatocreatore + "-" + countrisultatopartecipante);
+
+        DateTimeFormatter dtf = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            LocalDateTime now = LocalDateTime.now();
+            Log.d("data", dtf.format(now));
+
+            datainizio = datainizio + " 00:00";
+            Log.d("datainiziomodificata", datainizio);
+
+            datafine = datafine + " 23:59";
+            Log.d("datafinemodificata", datainizio);
+
+            if(datainizio.compareTo(dtf.format(now)) < 0 && datafine.compareTo(dtf.format(now)) >  0 ){
+                Date datefine = null;
+                try {
+                    datefine = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(datafine);
+                    Log.d("datafinemodificata2", String.valueOf(datefine));
+                    int milliseconds = (int) (datefine.getTime() - System.currentTimeMillis());
+                    Log.d("datafine", String.valueOf(datefine.getTime() - System.currentTimeMillis()));
+                    Log.d("millisecondi", String.valueOf(milliseconds));
+
+                    int days = milliseconds / (1000 * 60 * 60 * 24);
+                    int hour = (milliseconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60);
+
+                    if(milliseconds < 0){
+                        contoRovesciaTextView.setText("Manca ancora molto al termine della gara");
+                    }
+                    else {
+                        if(days > 1 && hour > 1)
+                            contoRovesciaTextView.setText(String.valueOf(days) + " giorni e " + String.valueOf(hour) + " ore");
+                        if(days == 1)
+                        contoRovesciaTextView.setText(String.valueOf(days) + " giorno e " + String.valueOf(hour) + " ore");
+                        if(days < 1 && hour == 1)
+                            contoRovesciaTextView.setText(String.valueOf(hour) + " ora");
+                        if (days < 1 && hour > 1)
+                            contoRovesciaTextView.setText(String.valueOf(hour) + " ore");
+                        if (days < 1 && hour < 1)
+                            contoRovesciaTextView.setText("Manca meno di un'ora");
+
+
+
+
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+            else {
+                contoRovesciaTextView.setText("La gara ancora deve iniziare");
+            }
+
+        }
+
 
     }
 
