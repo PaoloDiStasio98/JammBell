@@ -142,6 +142,7 @@ public class ProfileFragment extends Fragment {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         Log.d("data", String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
+        Log.d("dataGiorno", String.valueOf(calendar.get(Calendar.DAY_OF_WEEK)));
         calendar.add(Calendar.DATE, -7);
 
         SimpleDateFormat formattergiornosettimana = new SimpleDateFormat("EEEE");
@@ -220,9 +221,11 @@ public class ProfileFragment extends Fragment {
 
                                     ArrayList<String> labels = new ArrayList<>();
 
-                                    switch (giornoSettimanaOggi)
+                                    Log.d("giornosettimana", giornoSettimanaOggi);
+                                    int oggi = calendar.get(Calendar.DAY_OF_WEEK);
+                                    switch (oggi)
                                     {
-                                        case "Monday":
+                                        case Calendar.MONDAY:
 
                                             String[] giornisettimana = {"Mar", "Mer", "Gio", "Ven", "Sab", "Dom", "Oggi"};
                                             Double[] KmGiorni = {KmTotMartedi, KmTotMercoledi, KmTotGiovedi, KmTotVenerdi, KmTotSabato, KmTotDomenica, KmTotLunedi};
@@ -233,7 +236,7 @@ public class ProfileFragment extends Fragment {
                                             }
                                             break;
 
-                                        case "Tuesday":
+                                        case Calendar.TUESDAY:
 
                                             Log.d("grafico", "entrato");
                                             String[] giornisettimana1 = { "Mer", "Gio", "Ven", "Sab", "Dom", "Lun", "Oggi"};
@@ -247,7 +250,7 @@ public class ProfileFragment extends Fragment {
                                             }
                                             break;
 
-                                        case "Wednesday":
+                                        case Calendar.WEDNESDAY:
 
                                             Log.d("grafico", "entrato");
                                             String[] giornisettimana2 = { "Gio", "Ven", "Sab", "Dom", "Lun",  "Mar", "Oggi"};
@@ -261,7 +264,7 @@ public class ProfileFragment extends Fragment {
                                             }
                                             break;
 
-                                        case "Thursday":
+                                        case Calendar.THURSDAY:
 
                                             String[] giornisettimana3 = {"Ven", "Sab", "Dom", "Lun",  "Mar", "Mer", "Oggi"};
                                             Double[] KmGiorni3 = {KmTotVenerdi, KmTotSabato, KmTotDomenica, KmTotLunedi, KmTotMartedi, KmTotMercoledi, KmTotGiovedi};
@@ -274,7 +277,7 @@ public class ProfileFragment extends Fragment {
                                             }
                                             break;
 
-                                        case "Friday":
+                                        case Calendar.FRIDAY:
 
                                             String[] giornisettimana4 = {"Sab", "Dom", "Lun",  "Mar", "Mer", "Gio", "Oggi"};
                                             Double[] KmGiorni4 = {KmTotSabato, KmTotDomenica, KmTotLunedi, KmTotMartedi, KmTotMercoledi, KmTotGiovedi, KmTotVenerdi};
@@ -287,7 +290,7 @@ public class ProfileFragment extends Fragment {
                                             }
                                             break;
 
-                                        case "Saturday":
+                                        case Calendar.SATURDAY:
 
                                             String[] giornisettimana5 = {"Dom", "Lun",  "Mar", "Mer", "Gio", "Ven", "Oggi"};
                                             Double[] KmGiorni5 = { KmTotDomenica, KmTotLunedi, KmTotMartedi, KmTotMercoledi, KmTotGiovedi, KmTotVenerdi, KmTotSabato};
@@ -300,7 +303,7 @@ public class ProfileFragment extends Fragment {
                                             }
                                             break;
 
-                                        case "Sunday":
+                                        case Calendar.SUNDAY:
 
                                             String[] giornisettimana6 = {"Lun",  "Mar", "Mer", "Gio", "Ven", "Sab", "Oggi"};
                                             Double[] KmGiorni6 = {KmTotLunedi, KmTotMartedi, KmTotMercoledi, KmTotGiovedi, KmTotVenerdi, KmTotSabato, KmTotDomenica};
