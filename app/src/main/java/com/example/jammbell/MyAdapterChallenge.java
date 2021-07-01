@@ -102,6 +102,7 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
     public MyViewHolderChallenge onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.cellgara, parent, false);
+
         return new MyViewHolderChallenge(view);
     }
 

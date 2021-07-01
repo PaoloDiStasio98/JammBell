@@ -69,6 +69,7 @@ import java.util.Locale;
 
 public class ProfileFragment extends Fragment {
 
+    Main2Activity main2Activity = new Main2Activity();
 
 
     private FragmentActivity myContext;
@@ -96,8 +97,8 @@ public class ProfileFragment extends Fragment {
 
     HashMap<String, String> Datamap1 = new HashMap<>();
 
-    String TitoliStatistiche[] = {"Km percorsi", "Passi", "Calorie", "Ore totali"};
-    String DescrizioneStatistiche[] = {"0", "0", "0", "0"};
+    String TitoliStatistiche[] = {"Km percorsi", "Passi", "Calorie", "Ore totali", "Gare", "Gare vinte"};
+    String DescrizioneStatistiche[] = {"0", "0", "0", "0", "0", "0"};
 
     RecyclerView recyclerViewStatistiche;
 
@@ -107,6 +108,8 @@ public class ProfileFragment extends Fragment {
     String data7giorni;
     String DateSessioni;
 
+    int numGare = 0;
+    int numGareVinte = 0;
 
 
     @Override
@@ -427,13 +430,12 @@ public class ProfileFragment extends Fragment {
                                DescrizioneStatistiche[2] = String.valueOf(CalorieTot + " Kcal");
                                DescrizioneStatistiche[3] = String.valueOf(TempoTot/3600 + " h");
 
-                               MyAdapter myAdapter = new MyAdapter(getContext(), TitoliStatistiche, DescrizioneStatistiche);
-                               recyclerViewStatistiche.setAdapter(myAdapter);
-                               recyclerViewStatistiche.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+
+                               StatisticheGare();
+
 
 
                                    graficogenerate();
-
 
                            }
 
@@ -441,12 +443,6 @@ public class ProfileFragment extends Fragment {
                                {
                                Log.d("database", "Error getting documents: ", task.getException());
                            }
-
-
-
-
-
-
                        }
                    });
 
@@ -457,6 +453,101 @@ public class ProfileFragment extends Fragment {
        else {
            Log.d("utenteid", "niente vuoto");
        }
+    }
+
+    public void StatisticheGare(){
+        numGare = 0;
+
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        //Controllo prima il numero di gare a cui ha partecipato l'utente
+
+
+        db.collection("Gara")
+                .whereEqualTo("IDcreatore", currentUser.getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("Statistica", "trovata una gara come creatore");
+                                numGare++;
+
+                            }
+
+                            StatisticheGarePartecipante(currentUser);
+
+                        }
+                        else
+                        {
+                            Log.d("database", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+
+
+    }
+
+    public void StatisticheGarePartecipante(FirebaseUser currentUser) {
+        db.collection("Gara")
+                .whereEqualTo("IDpartecipante", currentUser.getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("Statistica", "trovata una gara come partecipante");
+                                numGare++;
+                            }
+
+                            Log.d("Statistica", "numero di gare" + numGare);
+
+                            StatisticheGareVinte();
+
+                        }
+                        else
+                        {
+                            Log.d("database", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+    }
+
+    public void StatisticheGareVinte(){
+        numGareVinte = 0;
+        db.collection("Gara")
+                .whereEqualTo("UsernameVincitore", main2Activity.Utente.get("Username"))
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("Statistica", "trovata una gara come partecipante");
+                                numGareVinte++;
+                            }
+
+                            Log.d("Statistica", "numero di gare vinte" + numGareVinte);
+
+                            DescrizioneStatistiche[4] = String.valueOf(numGare);
+                            DescrizioneStatistiche[5] = String.valueOf(numGareVinte);
+
+                            MyAdapter myAdapter = new MyAdapter(getContext(), TitoliStatistiche, DescrizioneStatistiche);
+                            recyclerViewStatistiche.setAdapter(myAdapter);
+                            recyclerViewStatistiche.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+
+
+                        }
+                        else
+                        {
+                            Log.d("database", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
     }
 
     @Override
