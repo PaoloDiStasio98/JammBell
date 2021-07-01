@@ -1,7 +1,9 @@
 package com.example.jammbell;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -42,6 +44,8 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -72,12 +76,18 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
     String datafine;
     String nomepartita;
     String usernamecreatore;
+    String IDamico;
     boolean amicotrovato;
 
     Map<String, Object> gara = new HashMap<>();
 
     ChallengeFragment fragment = new ChallengeFragment();
 
+    public interface OnGameCreatedListener{
+        public void getUsername(String Datafine, String Datainizio, String IDcreatore, String Nome, String Stato, String UsernameCreatore, String UsernamePartecipante);
+    }
+
+    OnGameCreatedListener mOnGameCreatedListener;
 
     @NonNull
     @Override
@@ -224,10 +234,6 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
                             usernameamico = cercaAmicoEditText.getText().toString();
                             cercautenteDB(usernameamico);
 
-                              //  FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                              //  transaction.replace(R.id.FrammentoChallenge, fragment, "ChallengeFragment");
-
-
 
                             }
                             else {
@@ -243,8 +249,15 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
 
     }
 
-
-
+    @Override
+    public void onAttach(@NonNull Context context) {
+        try{
+        mOnGameCreatedListener = (OnGameCreatedListener) getTargetFragment();
+        } catch (ClassCastException e){
+            Log.d("amico", "problema nel try");
+        }
+        super.onAttach(context);
+    }
 
     public void pullUsernameCreatore(){
 
@@ -266,6 +279,15 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
 
                                 }
 
+                                DateTimeFormatter dtf = null;
+                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                                    dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                                    LocalDateTime now = LocalDateTime.now();
+                                    Log.d("data", dtf.format(now));
+                                    gara.put("Data", now);
+                                }
+
+                                gara.put("IDpartecipante", IDamico);
                                 gara.put("Datafine", datafine);
                                 gara.put("Datainizio", datainizio);
                                 gara.put("Nome", nomepartita);
@@ -296,6 +318,9 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
 
     public void pushGara(){
         //pusho gara nel database
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
         db.collection("Gara").add(gara).addOnSuccessListener(new OnSuccessListener<DocumentReference>()
         {
             @Override
@@ -304,7 +329,7 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
                 Log.d("TAG", "DocumentSnapshot written with ID: " + documentReference.getId());
               //  startActivity(new Intent(RegistrazioneProfiloActivity.this, Main2Activity.class));
 
-
+                mOnGameCreatedListener.getUsername(datafine, datainizio, currentUser.getUid(), nomepartita, "In attesa", usernamecreatore, usernameamico);
 
             }
         }).addOnFailureListener(new OnFailureListener()
@@ -334,6 +359,7 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
 
+                                    IDamico = String.valueOf(document.get("IDUtente"));
                                     amicotrovato = true;
                                     Log.d("amico", "amico trovato");
 

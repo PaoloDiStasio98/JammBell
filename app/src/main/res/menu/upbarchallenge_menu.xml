@@ -11,4 +11,11 @@
         app:showAsAction="ifRoom" />
 
 
+    <item
+        android:title="refresh"
+        android:id="@+id/refresh_button"
+        android:icon="@drawable/ic_baseline_refresh_24"
+        app:showAsAction="ifRoom" />
+
+
 </menu>

@@ -112,6 +112,7 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view,Bundle savedInstanceState) {
+
         ciaoNomeeCognomeTextView = (TextView) getView().findViewById(R.id.CiaoNomeCognomeText);
         usernameTextView = (TextView) getView().findViewById(R.id.UsernameTextView);
         datadinascitaTextView = (TextView) getView().findViewById(R.id.DataTextView);
@@ -143,7 +144,10 @@ public class ProfileFragment extends Fragment {
         calendar.setTime(date);
         Log.d("data", String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
         calendar.add(Calendar.DATE, -7);
-        Log.d("dataoggi", String.valueOf(formatter.format(date)));
+
+        SimpleDateFormat formattergiornosettimana = new SimpleDateFormat("EEEE");
+        Log.d("dataoggi", String.valueOf(formattergiornosettimana.format(date)));
+        String giornoSettimanaOggi = formattergiornosettimana.format(date);
         Log.d("data7giornifa", String.valueOf(formatter.format(calendar.getTime())));
 
         datacorrente = formatter.format(date);
@@ -185,6 +189,8 @@ public class ProfileFragment extends Fragment {
                                             DateSessioni = String.valueOf(Datamap1.get("year")) + "-" + String.valueOf(Datamap1.get("monthValue")) + "-0" +  String.valueOf(Datamap1.get("dayOfMonth"));
                                         if(mese < 10 && giorno < 10)
                                             DateSessioni = String.valueOf(Datamap1.get("year")) + "-0" + String.valueOf(Datamap1.get("monthValue")) + "-0" +  String.valueOf(Datamap1.get("dayOfMonth"));
+                                        if(mese > 10 && giorno > 10)
+                                            DateSessioni = String.valueOf(Datamap1.get("year")) + "-" + String.valueOf(Datamap1.get("monthValue")) + "-" +  String.valueOf(Datamap1.get("dayOfMonth"));
 
                                         if(data7giorni.compareTo(DateSessioni) < 0 && datacorrente.compareTo(DateSessioni) >= 0)
                                         {
@@ -212,23 +218,105 @@ public class ProfileFragment extends Fragment {
 
                                     ArrayList<BarEntry> sessioni = new ArrayList<>();
 
-                                    sessioni.add(new BarEntry(0f,Float.parseFloat(String.valueOf(KmTotLunedi))));
-                                    sessioni.add(new BarEntry(1f,Float.parseFloat(String.valueOf(KmTotMartedi))));
-                                    sessioni.add(new BarEntry(2f,Float.parseFloat(String.valueOf(KmTotMercoledi))));
-                                    sessioni.add(new BarEntry(3f,Float.parseFloat(String.valueOf(KmTotGiovedi))));
-                                    sessioni.add(new BarEntry(4f,Float.parseFloat(String.valueOf(KmTotVenerdi))));
-                                    sessioni.add(new BarEntry(5f,Float.parseFloat(String.valueOf(KmTotSabato))));
-                                    sessioni.add(new BarEntry(6f,Float.parseFloat(String.valueOf(KmTotDomenica))));
-                                    BarDataSet barDataSet = new BarDataSet(sessioni, "Km");
 
                                     ArrayList<String> labels = new ArrayList<>();
-                                    labels.add("Lun");
-                                    labels.add("Mar");
-                                    labels.add("Mer");
-                                    labels.add("Gio");
-                                    labels.add("Ven");
-                                    labels.add("Sab");
-                                    labels.add("Dom");
+
+                                    switch (giornoSettimanaOggi)
+                                    {
+                                        case "Monday":
+
+                                            String[] giornisettimana = {"Mar", "Mer", "Gio", "Ven", "Sab", "Dom", "Oggi"};
+                                            Double[] KmGiorni = {KmTotMartedi, KmTotMercoledi, KmTotGiovedi, KmTotVenerdi, KmTotSabato, KmTotDomenica, KmTotLunedi};
+
+                                            for(int i = 0; i < 7; i++){
+                                                labels.add(giornisettimana[i]);
+                                                sessioni.add(new BarEntry(Float.parseFloat(String.valueOf(i)), Float.parseFloat(String.valueOf(KmGiorni[i]))));
+                                            }
+                                            break;
+
+                                        case "Tuesday":
+
+                                            Log.d("grafico", "entrato");
+                                            String[] giornisettimana1 = { "Mer", "Gio", "Ven", "Sab", "Dom", "Lun", "Oggi"};
+                                            Double[] KmGiorni1 = {KmTotMercoledi, KmTotGiovedi, KmTotVenerdi, KmTotSabato, KmTotDomenica, KmTotLunedi, KmTotMartedi};
+
+                                            for(int i = 0; i < 7; i++){
+
+                                                sessioni.add(new BarEntry(Float.parseFloat(String.valueOf(i)), Float.parseFloat(String.valueOf(KmGiorni1[i]))));
+                                                labels.add(giornisettimana1[i]);
+
+                                            }
+                                            break;
+
+                                        case "Wednesday":
+
+                                            Log.d("grafico", "entrato");
+                                            String[] giornisettimana2 = { "Gio", "Ven", "Sab", "Dom", "Lun",  "Mar", "Oggi"};
+                                            Double[] KmGiorni2 = {KmTotGiovedi, KmTotVenerdi, KmTotSabato, KmTotDomenica, KmTotLunedi, KmTotMartedi, KmTotMercoledi};
+
+                                            for(int i = 0; i < 7; i++){
+
+                                                sessioni.add(new BarEntry(Float.parseFloat(String.valueOf(i)), Float.parseFloat(String.valueOf(KmGiorni2[i]))));
+                                                labels.add(giornisettimana2[i]);
+
+                                            }
+                                            break;
+
+                                        case "Thursday":
+
+                                            String[] giornisettimana3 = {"Ven", "Sab", "Dom", "Lun",  "Mar", "Mer", "Oggi"};
+                                            Double[] KmGiorni3 = {KmTotVenerdi, KmTotSabato, KmTotDomenica, KmTotLunedi, KmTotMartedi, KmTotMercoledi, KmTotGiovedi};
+
+                                            for(int i = 0; i < 7; i++){
+
+                                                sessioni.add(new BarEntry(Float.parseFloat(String.valueOf(i)), Float.parseFloat(String.valueOf(KmGiorni3[i]))));
+                                                labels.add(giornisettimana3[i]);
+
+                                            }
+                                            break;
+
+                                        case "Friday":
+
+                                            String[] giornisettimana4 = {"Sab", "Dom", "Lun",  "Mar", "Mer", "Gio", "Oggi"};
+                                            Double[] KmGiorni4 = {KmTotSabato, KmTotDomenica, KmTotLunedi, KmTotMartedi, KmTotMercoledi, KmTotGiovedi, KmTotVenerdi};
+
+                                            for(int i = 0; i < 7; i++){
+
+                                                sessioni.add(new BarEntry(Float.parseFloat(String.valueOf(i)), Float.parseFloat(String.valueOf(KmGiorni4[i]))));
+                                                labels.add(giornisettimana4[i]);
+
+                                            }
+                                            break;
+
+                                        case "Saturday":
+
+                                            String[] giornisettimana5 = {"Dom", "Lun",  "Mar", "Mer", "Gio", "Ven", "Oggi"};
+                                            Double[] KmGiorni5 = { KmTotDomenica, KmTotLunedi, KmTotMartedi, KmTotMercoledi, KmTotGiovedi, KmTotVenerdi, KmTotSabato};
+
+                                            for(int i = 0; i < 7; i++){
+
+                                                sessioni.add(new BarEntry(Float.parseFloat(String.valueOf(i)), Float.parseFloat(String.valueOf(KmGiorni5[i]))));
+                                                labels.add(giornisettimana5[i]);
+
+                                            }
+                                            break;
+
+                                        case "Sunday":
+
+                                            String[] giornisettimana6 = {"Lun",  "Mar", "Mer", "Gio", "Ven", "Sab", "Oggi"};
+                                            Double[] KmGiorni6 = {KmTotLunedi, KmTotMartedi, KmTotMercoledi, KmTotGiovedi, KmTotVenerdi, KmTotSabato, KmTotDomenica};
+
+                                            for(int i = 0; i < 7; i++){
+
+                                                sessioni.add(new BarEntry(Float.parseFloat(String.valueOf(i)), Float.parseFloat(String.valueOf(KmGiorni6[i]))));
+                                                labels.add(giornisettimana6[i]);
+
+                                            }
+                                            break;
+
+                                    }
+
+                                    BarDataSet barDataSet = new BarDataSet(sessioni, "Km");
 
                                     barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
                                     BarData data = new BarData(barDataSet);
