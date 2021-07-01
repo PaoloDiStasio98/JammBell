@@ -19,13 +19,18 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.w3c.dom.Text;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MyAdapterChallenge extends RecyclerView.Adapter<MyAdapterChallenge.MyViewHolderChallenge> {
 
-ArrayList<String> data1, data2, data3, data4, data5, data6, data7;
+ArrayList<String> data1, data2, data3, data4, data5, data6, data7, data8, data9;
 Context context;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -35,7 +40,7 @@ Main2Activity main2Activity = new Main2Activity();
 
 
 
-public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<String> DataFine, ArrayList<String> Nome, ArrayList<String> UsernamePartecipante, ArrayList<String> Stato, ArrayList<String> UsernameCreatore, ArrayList<String> DocumentID){
+public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<String> DataFine, ArrayList<String> Nome, ArrayList<String> UsernamePartecipante, ArrayList<String> Stato, ArrayList<String> UsernameCreatore, ArrayList<String> DocumentID, ArrayList<String> Risultato, ArrayList<String> UsernameVincitore){
     context = ct;
     data1 = DataInizio;
     data2 = DataFine;
@@ -44,15 +49,78 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
     data5 = Stato;
     data6 = UsernameCreatore;
     data7 = DocumentID;
+    data8 = Risultato;
+    data9 = UsernameVincitore;
 
 
 }
+
+
+    private void CheckGaraFinita() {
+
+        DateTimeFormatter dtf = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDateTime now = LocalDateTime.now();
+            Log.d("data1", dtf.format(now));
+            Log.d("data1", String.valueOf(data2));
+
+            for(int i = 0; i < data2.size(); i++){
+                if(data2.get(i).compareTo(dtf.format(now)) < 0){
+                    Log.d("data1", "La gara  " + data3.get(i) + "  in data " + data2.get(i) + " è terminata" );
+                    data5.set(i, "Terminata");
+                    db.collection("Gara")
+                            .document(data7.get(i))
+                            .update(
+                                    "Stato", "Terminata"
+                            )
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d("TAG", "DocumentSnapshot successfully updated!");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w("TAG", "Error updating document", e);
+                                }
+                            });
+                }
+
+            }
+           // data2 = data2 + " 23:59";
+/*
+            if(datainizio.compareTo(dtf.format(now)) < 0 && datafine.compareTo(dtf.format(now)) >  0 ){
+                Date datefine = null;
+                try {
+                    datefine = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(datafine);
+                    Log.d("datafinemodificata2", String.valueOf(datefine));
+                    int milliseconds = (int) (datefine.getTime() - System.currentTimeMillis());
+                    Log.d("datafine", String.valueOf(datefine.getTime() - System.currentTimeMillis()));
+                    Log.d("millisecondi", String.valueOf(milliseconds));
+
+                    int days = milliseconds / (1000 * 60 * 60 * 24);
+                    int hour = (milliseconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60);
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+            */
+        }
+
+    }
+
 
     @NonNull
     @Override
     public MyViewHolderChallenge onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.cellgara, parent, false);
+        CheckGaraFinita();
         return new MyViewHolderChallenge(view);
     }
 
@@ -60,9 +128,9 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
     public void onBindViewHolder(@NonNull MyAdapterChallenge.MyViewHolderChallenge holder, int position) {
 
              Log.d("cella", "cella creata");
-        holder.DataInizioTextView.setText(data1.get(position));
-        holder.DataFineTextView.setText(data2.get(position));
-        holder.NomeChallengeTextView.setText(data3.get(position));
+        holder.DataInizioTextView.setText("Inizio: " + data1.get(position));
+        holder.DataFineTextView.setText(" fine: " + data2.get(position));
+        holder.NomeChallengeTextView.setText("Nome gara: " + data3.get(position));
         holder.UsernamePartecipanteTextView.setText(data4.get(position));
         holder.StatoChallengeTextView.setText(data5.get(position));
 
@@ -168,6 +236,7 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), ResoContochallengeActivity.class);
                     intent.putExtra("IDGara", data7.get(position));
+                    intent.putExtra("STATO", "Attiva");
                     v.getContext().startActivity(intent);
 
                 }
@@ -176,7 +245,18 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
         if(data5.get(position).matches("Terminata")) {
             holder.itemView.setBackground(ContextCompat.getDrawable(context, R.drawable.box1));
             holder.ButtonConfermaRifiuta.setVisibility(View.INVISIBLE);
+            holder.RisultatoChallengeTextView.setVisibility(View.VISIBLE);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), ResoContochallengeActivity.class);
+                    intent.putExtra("IDGara", data7.get(position));
+                    intent.putExtra("STATO", "Terminata");
+                    v.getContext().startActivity(intent);
 
+                }
+            });
+            holder.RisultatoChallengeTextView.setText("Risultato: " + data8.get(position) + "\n Vincitore: " + data9.get(position));
         }
 
 
@@ -194,6 +274,7 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
         TextView NomeChallengeTextView;
         TextView UsernamePartecipanteTextView;
         TextView StatoChallengeTextView;
+        TextView RisultatoChallengeTextView;
         Button ButtonConfermaRifiuta;
 
         public  MyViewHolderChallenge(@NonNull View itemView){
@@ -205,6 +286,7 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
             UsernamePartecipanteTextView = itemView.findViewById(R.id.UsernameAmicoCellaTextView);
             StatoChallengeTextView = itemView.findViewById(R.id.StatoCellaTextView);
             ButtonConfermaRifiuta = itemView.findViewById(R.id.ButtonConfermaRifiuta);
+            RisultatoChallengeTextView = itemView.findViewById(R.id.RisultatoCellaTextView);
         }
 
 

@@ -33,7 +33,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 
@@ -56,6 +61,9 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
     ArrayList<String> ChallengeUsernameCreatore = new ArrayList<String>();
     ArrayList<String> ChallengeStato = new ArrayList<String>();
     ArrayList<String> ChallengeDocumento = new ArrayList<String>();
+    ArrayList<String> ChallengeRisultato = new ArrayList<String>();
+    ArrayList<String> ChallengeUsernameVincitore = new ArrayList<String>();
+
 
 
 
@@ -100,7 +108,6 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
         setHasOptionsMenu(true);
 
         PullGare();
-
 
 
 
@@ -197,19 +204,29 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
 
                                     Log.d("Challenge", "Trovato creatore");
 
-                                    ChallengeDataInizio.add("Inizio: " + String.valueOf(document.get("Datainizio")));
-                                    ChallengeDataFine.add(" fine: " + String.valueOf(document.get("Datafine")));
-                                    ChallengeNome.add("Nome gara: " + String.valueOf(document.get("Nome")));
+                                    ChallengeDataInizio.add(String.valueOf(document.get("Datainizio")));
+                                    ChallengeDataFine.add(String.valueOf(document.get("Datafine")));
+                                    ChallengeNome.add(String.valueOf(document.get("Nome")));
                                     ChallengeStato.add(String.valueOf(document.get("Stato")));
                                     ChallengeUsernamePartecipante.add(String.valueOf(document.get("UsernamePartecipante")));
                                     ChallengeUsernameCreatore.add(String.valueOf(document.get("UsernameCreatore")));
                                     ChallengeDocumento.add(String.valueOf(document.getId()));
 
+                                    if(document.get("Stato").equals("Terminata")) {
+                                        ChallengeUsernameVincitore.add(String.valueOf(document.get("UsernameVincitore")));
+                                        ChallengeRisultato.add(String.valueOf(document.get("Risultato")));
+                                    }
+                                    else {
+                                        ChallengeUsernameVincitore.add("Nessuno");
+                                        ChallengeRisultato.add("0-0");
+                                    }
+
+
 
 
                                 }
 
-                                MyAdapterChallenge myAdapter = new MyAdapterChallenge(getContext(), ChallengeDataInizio, ChallengeDataFine, ChallengeNome, ChallengeUsernamePartecipante, ChallengeStato, ChallengeUsernameCreatore, ChallengeDocumento);
+                                MyAdapterChallenge myAdapter = new MyAdapterChallenge(getContext(), ChallengeDataInizio, ChallengeDataFine, ChallengeNome, ChallengeUsernamePartecipante, ChallengeStato, ChallengeUsernameCreatore, ChallengeDocumento, ChallengeRisultato, ChallengeUsernameVincitore);
                                 recyclerViewChallenge.setAdapter(myAdapter);
                                 recyclerViewChallenge.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -234,18 +251,27 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
 
                                 Log.d("Challenge", "Trovato partecipante");
 
-                                ChallengeDataInizio.add("Inizio: " + String.valueOf(document.get("Datainizio")));
-                                ChallengeDataFine.add(" fine: " + String.valueOf(document.get("Datafine")));
-                                ChallengeNome.add("Nome gara: " + String.valueOf(document.get("Nome")));
+                                ChallengeDataInizio.add(String.valueOf(document.get("Datainizio")));
+                                ChallengeDataFine.add(String.valueOf(document.get("Datafine")));
+                                ChallengeNome.add(String.valueOf(document.get("Nome")));
                                 ChallengeStato.add(String.valueOf(document.get("Stato")));
                                 ChallengeUsernamePartecipante.add(String.valueOf(document.get("UsernamePartecipante")));
                                 ChallengeUsernameCreatore.add(String.valueOf(document.get("UsernameCreatore")));
                                 ChallengeDocumento.add(String.valueOf(document.getId()));
 
+                                if(document.get("Stato").equals("Terminata")) {
+                                    ChallengeUsernameVincitore.add(String.valueOf(document.get("UsernameVincitore")));
+                                    ChallengeRisultato.add(String.valueOf(document.get("Risultato")));
+                                }
+                                else {
+                                    ChallengeUsernameVincitore.add("Nessuno");
+                                    ChallengeRisultato.add("0-0");
+                                }
+
 
                             }
 
-                            MyAdapterChallenge myAdapter = new MyAdapterChallenge(getContext(), ChallengeDataInizio, ChallengeDataFine, ChallengeNome, ChallengeUsernamePartecipante, ChallengeStato, ChallengeUsernameCreatore, ChallengeDocumento);
+                            MyAdapterChallenge myAdapter = new MyAdapterChallenge(getContext(), ChallengeDataInizio, ChallengeDataFine, ChallengeNome, ChallengeUsernamePartecipante, ChallengeStato, ChallengeUsernameCreatore, ChallengeDocumento, ChallengeRisultato, ChallengeUsernameVincitore);
                             recyclerViewChallenge.setAdapter(myAdapter);
                             recyclerViewChallenge.setLayoutManager(new LinearLayoutManager(getContext()));
 

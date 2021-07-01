@@ -14,11 +14,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -57,6 +61,7 @@ public class ResoContochallengeActivity extends AppCompatActivity {
     TextView username2TextView;
     TextView risultatoTextView;
     TextView contoRovesciaTextView;
+    TextView messaggioVincitoreTextView;
 
     ProgressBar KmProgressBar;
     ProgressBar CalorieProgressBar;
@@ -84,6 +89,8 @@ public class ResoContochallengeActivity extends AppCompatActivity {
 
     Button SessioneVeloceButton;
 
+    String StatoGara;
+    String IDDocumentoGara;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,14 +105,18 @@ public class ResoContochallengeActivity extends AppCompatActivity {
         username2TextView = findViewById(R.id.Username2TextView);
         contoRovesciaTextView = findViewById(R.id.ContoRovesciaGaraTextView);
         SessioneVeloceButton = findViewById(R.id.SessioneVeloceButton);
+        messaggioVincitoreTextView = findViewById(R.id.MessaggioFineTextView);
 
         String IDgara = getIntent().getStringExtra("IDGara");
+        StatoGara = getIntent().getStringExtra("STATO");
+
 
         Log.d("gara", IDgara);
 
         nomeGaraTextView = findViewById(R.id.NomeGaraTextView);
 
         PullGara(IDgara);
+
 
 
         SessioneVeloceButton.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +127,7 @@ public class ResoContochallengeActivity extends AppCompatActivity {
             }
         });
 
+        IDDocumentoGara = IDgara;
 
 
     }
@@ -490,49 +502,98 @@ public class ResoContochallengeActivity extends AppCompatActivity {
             datafine = datafine + " 23:59";
             Log.d("datafinemodificata", datainizio);
 
-            if(datainizio.compareTo(dtf.format(now)) < 0 && datafine.compareTo(dtf.format(now)) >  0 ){
-                Date datefine = null;
-                try {
-                    datefine = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(datafine);
-                    Log.d("datafinemodificata2", String.valueOf(datefine));
-                    int milliseconds = (int) (datefine.getTime() - System.currentTimeMillis());
-                    Log.d("datafine", String.valueOf(datefine.getTime() - System.currentTimeMillis()));
-                    Log.d("millisecondi", String.valueOf(milliseconds));
+            if(StatoGara.matches("Attiva")) {
+                if (datainizio.compareTo(dtf.format(now)) < 0 && datafine.compareTo(dtf.format(now)) > 0) {
+                    Date datefine = null;
+                    try {
+                        datefine = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(datafine);
+                        Log.d("datafinemodificata2", String.valueOf(datefine));
+                        int milliseconds = (int) (datefine.getTime() - System.currentTimeMillis());
+                        Log.d("datafine", String.valueOf(datefine.getTime() - System.currentTimeMillis()));
+                        Log.d("millisecondi", String.valueOf(milliseconds));
 
-                    int days = milliseconds / (1000 * 60 * 60 * 24);
-                    int hour = (milliseconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60);
+                        int days = milliseconds / (1000 * 60 * 60 * 24);
+                        int hour = (milliseconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60);
 
-                    if(milliseconds < 0){
-                        contoRovesciaTextView.setText("Manca ancora molto al termine della gara");
+                        if (milliseconds < 0) {
+                            contoRovesciaTextView.setText("Manca ancora molto al termine della gara");
+                        } else {
+                            if (days > 1 && hour > 1)
+                                contoRovesciaTextView.setText(String.valueOf(days) + " giorni e " + String.valueOf(hour) + " ore");
+                            if (days == 1)
+                                contoRovesciaTextView.setText(String.valueOf(days) + " giorno e " + String.valueOf(hour) + " ore");
+                            if (days < 1 && hour == 1)
+                                contoRovesciaTextView.setText(String.valueOf(hour) + " ora");
+                            if (days < 1 && hour > 1)
+                                contoRovesciaTextView.setText(String.valueOf(hour) + " ore");
+                            if (days < 1 && hour < 1)
+                                contoRovesciaTextView.setText("Manca meno di un'ora");
+
+
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
                     }
-                    else {
-                        if(days > 1 && hour > 1)
-                            contoRovesciaTextView.setText(String.valueOf(days) + " giorni e " + String.valueOf(hour) + " ore");
-                        if(days == 1)
-                        contoRovesciaTextView.setText(String.valueOf(days) + " giorno e " + String.valueOf(hour) + " ore");
-                        if(days < 1 && hour == 1)
-                            contoRovesciaTextView.setText(String.valueOf(hour) + " ora");
-                        if (days < 1 && hour > 1)
-                            contoRovesciaTextView.setText(String.valueOf(hour) + " ore");
-                        if (days < 1 && hour < 1)
-                            contoRovesciaTextView.setText("Manca meno di un'ora");
 
 
-
-
-                    }
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                } else {
+                    contoRovesciaTextView.setText("La gara ancora deve iniziare");
                 }
-
-
             }
             else {
-                contoRovesciaTextView.setText("La gara ancora deve iniziare");
-            }
+                contoRovesciaTextView.setText("La gara è finita");
 
+
+                if(countrisultatocreatore > countrisultatopartecipante) {
+                    messaggioVincitoreTextView.setText("Il vincitore della gara è " + usernameCreatore + "!");
+                    String risultato = countrisultatocreatore + "-" + countrisultatopartecipante;
+                    pushRisultato(risultato, usernameCreatore);
+                }
+                if(countrisultatocreatore < countrisultatopartecipante) {
+                    messaggioVincitoreTextView.setText("Il vincitore della gara è " + usernamePartecipante + "!");
+                    String risultato = countrisultatopartecipante + "-" + countrisultatocreatore;
+                    pushRisultato(risultato, usernamePartecipante);
+                }
+                if(countrisultatocreatore == countrisultatopartecipante) {
+                    messaggioVincitoreTextView.setText("La gara è finita in pareggio!");
+                    String risultato = countrisultatopartecipante + "-" + countrisultatocreatore;
+                    pushRisultato(risultato, "Pareggio");
+                }
+
+                SessioneVeloceButton.setText("Torna alla home");
+                SessioneVeloceButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getBaseContext(), Main2Activity.class);
+                        startActivity(intent);
+                    }
+                });
+            }
         }
 
+
+    }
+
+    public void pushRisultato(String risultato, String vincitore){
+
+        db.collection("Gara")
+                .document(IDDocumentoGara)
+                .update(
+                        "Risultato", risultato,
+                        "UsernameVincitore", vincitore
+                )
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("TAG", "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("TAG", "Error updating document", e);
+                    }
+                });
 
     }
 
