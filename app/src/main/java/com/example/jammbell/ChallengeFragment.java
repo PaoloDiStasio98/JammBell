@@ -181,6 +181,8 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
         ChallengeStato.clear();
         ChallengeUsernameCreatore.clear();
         ChallengeUsernamePartecipante.clear();
+        ChallengeRisultato.clear();
+        ChallengeUsernameVincitore.clear();
     }
 
     public void PullGare() {
@@ -212,19 +214,23 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
                                     ChallengeUsernameCreatore.add(String.valueOf(document.get("UsernameCreatore")));
                                     ChallengeDocumento.add(String.valueOf(document.getId()));
 
-                                    if(document.get("Stato").equals("Terminata")) {
-                                        ChallengeUsernameVincitore.add(String.valueOf(document.get("UsernameVincitore")));
-                                        ChallengeRisultato.add(String.valueOf(document.get("Risultato")));
-                                    }
-                                    else {
+
+                                    if (document.get("Stato").equals("In attesa") || document.get("Stato").equals("Attiva")){
+                                        Log.d("stato", String.valueOf(document.get("Stato")));
                                         ChallengeUsernameVincitore.add("Nessuno");
                                         ChallengeRisultato.add("0-0");
                                     }
-
-
+                                    else {
+                                        ChallengeUsernameVincitore.add(String.valueOf(document.get("UsernameVincitore")));
+                                        ChallengeRisultato.add(String.valueOf(document.get("Risultato")));
+                                    }
 
 
                                 }
+
+                                Log.d("PASSATO", String.valueOf(ChallengeRisultato));
+                                Log.d("PASSATO", String.valueOf(ChallengeUsernameVincitore));
+                                Log.d("PASSATO", String.valueOf(ChallengeStato));
 
                                 MyAdapterChallenge myAdapter = new MyAdapterChallenge(getContext(), ChallengeDataInizio, ChallengeDataFine, ChallengeNome, ChallengeUsernamePartecipante, ChallengeStato, ChallengeUsernameCreatore, ChallengeDocumento, ChallengeRisultato, ChallengeUsernameVincitore);
                                 recyclerViewChallenge.setAdapter(myAdapter);
@@ -259,17 +265,23 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
                                 ChallengeUsernameCreatore.add(String.valueOf(document.get("UsernameCreatore")));
                                 ChallengeDocumento.add(String.valueOf(document.getId()));
 
-                                if(document.get("Stato").equals("Terminata")) {
-                                    ChallengeUsernameVincitore.add(String.valueOf(document.get("UsernameVincitore")));
-                                    ChallengeRisultato.add(String.valueOf(document.get("Risultato")));
-                                }
-                                else {
+
+                                if (document.get("Stato").equals("In attesa") || document.get("Stato").equals("Attiva")){
+                                    Log.d("stato", String.valueOf(document.get("Stato")));
                                     ChallengeUsernameVincitore.add("Nessuno");
                                     ChallengeRisultato.add("0-0");
+                                }
+                                else {
+                                    ChallengeUsernameVincitore.add(String.valueOf(document.get("UsernameVincitore")));
+                                    ChallengeRisultato.add(String.valueOf(document.get("Risultato")));
                                 }
 
 
                             }
+
+                            Log.d("PASSATO1", String.valueOf(ChallengeRisultato));
+                            Log.d("PASSATO1", String.valueOf(ChallengeUsernameVincitore));
+                            Log.d("PASSATO1", String.valueOf(ChallengeStato));
 
                             MyAdapterChallenge myAdapter = new MyAdapterChallenge(getContext(), ChallengeDataInizio, ChallengeDataFine, ChallengeNome, ChallengeUsernamePartecipante, ChallengeStato, ChallengeUsernameCreatore, ChallengeDocumento, ChallengeRisultato, ChallengeUsernameVincitore);
                             recyclerViewChallenge.setAdapter(myAdapter);

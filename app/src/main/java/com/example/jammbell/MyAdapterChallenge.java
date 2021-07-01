@@ -3,6 +3,7 @@ package com.example.jammbell;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.util.Printer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +57,9 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
 }
 
 
-    private void CheckGaraFinita() {
+
+
+    private void CheckGaraFinita(int position) {
 
         DateTimeFormatter dtf = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -65,12 +68,11 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
             Log.d("data1", dtf.format(now));
             Log.d("data1", String.valueOf(data2));
 
-            for(int i = 0; i < data2.size(); i++){
-                if(data2.get(i).compareTo(dtf.format(now)) < 0){
-                    Log.d("data1", "La gara  " + data3.get(i) + "  in data " + data2.get(i) + " è terminata" );
-                    data5.set(i, "Terminata");
+             if(data2.get(position).compareTo(dtf.format(now)) < 0){
+                    Log.d("data1", "La gara  " + data3.get(position) + "  in data " + data2.get(position) + " è terminata" );
+                    data5.set(position, "Terminata");
                     db.collection("Gara")
-                            .document(data7.get(i))
+                            .document(data7.get(position))
                             .update(
                                     "Stato", "Terminata"
                             )
@@ -86,30 +88,10 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
                                     Log.w("TAG", "Error updating document", e);
                                 }
                             });
-                }
-
-            }
-           // data2 = data2 + " 23:59";
-/*
-            if(datainizio.compareTo(dtf.format(now)) < 0 && datafine.compareTo(dtf.format(now)) >  0 ){
-                Date datefine = null;
-                try {
-                    datefine = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(datafine);
-                    Log.d("datafinemodificata2", String.valueOf(datefine));
-                    int milliseconds = (int) (datefine.getTime() - System.currentTimeMillis());
-                    Log.d("datafine", String.valueOf(datefine.getTime() - System.currentTimeMillis()));
-                    Log.d("millisecondi", String.valueOf(milliseconds));
-
-                    int days = milliseconds / (1000 * 60 * 60 * 24);
-                    int hour = (milliseconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60);
-
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
 
 
             }
-            */
+
         }
 
     }
@@ -120,7 +102,6 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
     public MyViewHolderChallenge onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.cellgara, parent, false);
-        CheckGaraFinita();
         return new MyViewHolderChallenge(view);
     }
 
@@ -134,6 +115,8 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
         holder.UsernamePartecipanteTextView.setText(data4.get(position));
         holder.StatoChallengeTextView.setText(data5.get(position));
 
+        CheckGaraFinita(position);
+
 
         if(data5.get(position).matches("In attesa")) {
             holder.itemView.setBackground(ContextCompat.getDrawable(context, R.drawable.boxinattesa));
@@ -141,6 +124,35 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
 
             if(String.valueOf(main2Activity.Utente.get("Username")).matches(data4.get(position))){ //l'utente connesso è il partecipante
                 holder.ButtonConfermaRifiuta.setText("Accetta");
+                holder.ButtonRifiutaGara.setText("Rifiuta");
+                holder.ButtonRifiutaGara.setVisibility(View.VISIBLE);
+                holder.ButtonRifiutaGara.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        data3.remove(position);
+                        notifyItemRemoved(position);
+
+                        db.collection("Gara").document(data7.get(position))
+                                .delete()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d("Eliminato", "DocumentSnapshot successfully deleted!");
+
+
+
+                                    }
+
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // Log.w(TAG, "Error deleting document", e);
+                                    }
+                                });
+                    }
+                });
                 holder.UsernamePartecipanteTextView.setText("Invitato da: " + data6.get(position));
                 holder.ButtonConfermaRifiuta.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -223,6 +235,7 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
         if(data5.get(position).matches("Attiva")) {
             holder.itemView.setBackground(ContextCompat.getDrawable(context, R.drawable.boxattiva));
             holder.ButtonConfermaRifiuta.setVisibility(View.INVISIBLE);
+            holder.ButtonRifiutaGara.setVisibility(View.INVISIBLE);
             holder.StatoChallengeTextView.setText("Stato gara: " + data5.get(position));
             if(String.valueOf(main2Activity.Utente.get("Username")).matches(data4.get(position))){ //l'utente connesso è il partecipante
                 holder.UsernamePartecipanteTextView.setText("Invitato da: " + data6.get(position));
@@ -243,6 +256,17 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
             });
         }
         if(data5.get(position).matches("Terminata")) {
+            Log.d("StatoTerminato", String.valueOf(position));
+            Log.d("StatoTerminato", String.valueOf(data5.get(position)));
+            Log.d("StatoTerminato", String.valueOf(data8.get(position)));
+            Log.d("StatoTerminato", String.valueOf(data9.get(position)));
+            Log.d("StatoTerminato", String.valueOf(data8));
+            Log.d("StatoTerminato", String.valueOf(data9));
+            Log.d("StatoTerminato", String.valueOf(data5));
+
+            holder.StatoChallengeTextView.setText("Stato gara: " + data5.get(position));
+            holder.UsernamePartecipanteTextView.setVisibility(View.INVISIBLE);
+
             holder.itemView.setBackground(ContextCompat.getDrawable(context, R.drawable.box1));
             holder.ButtonConfermaRifiuta.setVisibility(View.INVISIBLE);
             holder.RisultatoChallengeTextView.setVisibility(View.VISIBLE);
@@ -276,6 +300,7 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
         TextView StatoChallengeTextView;
         TextView RisultatoChallengeTextView;
         Button ButtonConfermaRifiuta;
+        Button ButtonRifiutaGara;
 
         public  MyViewHolderChallenge(@NonNull View itemView){
 
@@ -287,6 +312,7 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
             StatoChallengeTextView = itemView.findViewById(R.id.StatoCellaTextView);
             ButtonConfermaRifiuta = itemView.findViewById(R.id.ButtonConfermaRifiuta);
             RisultatoChallengeTextView = itemView.findViewById(R.id.RisultatoCellaTextView);
+            ButtonRifiutaGara = itemView.findViewById(R.id.ButtonRifiutaGara);
         }
 
 
