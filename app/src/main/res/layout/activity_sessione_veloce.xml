@@ -1,163 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context=".SessioneVeloceActivity">
 
+
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:id="@+id/linearLayout4"
+        android:layout_width="fill_parent"
+        android:layout_height="204dp"
+        android:background="@drawable/box"
+        android:orientation="horizontal"
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintStart_toStartOf="parent"
+        map:layout_constraintTop_toTopOf="parent">
 
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="200dp"
-          android:background="@drawable/box"
-          android:orientation="horizontal">
-
-       <LinearLayout
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:orientation="vertical">
-
-          <TextView
-              android:textStyle="bold"
-              android:layout_marginTop="30dp"
-              android:layout_marginLeft="20dp"
-              android:textSize="20dp"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:text="Tempo"
-              android:textColor="@color/black"/>
-
-          <Chronometer
-              android:id="@+id/Cronometro"
-              android:layout_marginTop="5dp"
-              android:layout_marginLeft="25dp"
-              android:textSize="15dp"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              />
-
-          <TextView
-              android:textStyle="bold"
-              android:layout_marginTop="30dp"
-              android:layout_marginLeft="20dp"
-              android:textSize="20dp"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:text="Calorie"
-              android:textColor="@color/black"/>
-
-          <TextView
-              android:id="@+id/CalorieTextView"
-              android:layout_marginTop="5dp"
-              android:layout_marginLeft="25dp"
-              android:textSize="15dp"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:text="0 kcal"
-              />
-       </LinearLayout>
-
-          <LinearLayout
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical"
-              android:layout_marginLeft="130dp">
-
-              <TextView
-                  android:textStyle="bold"
-                  android:layout_marginTop="30dp"
-                  android:layout_marginLeft="20dp"
-                  android:textSize="20dp"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:text="Km percorsi"
-                  android:textColor="@color/black"/>
-
-              <TextView
-                  android:id="@+id/KmTextView"
-                  android:layout_marginTop="5dp"
-                  android:layout_marginLeft="25dp"
-                  android:textSize="15dp"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:text="0.0 Km"
-                  />
-
-              <TextView
-                  android:textStyle="bold"
-                  android:layout_marginTop="30dp"
-                  android:layout_marginLeft="20dp"
-                  android:textSize="20dp"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:text="Velocità"
-                  android:textColor="@color/black"/>
-
-              <TextView
-                  android:id="@+id/VelocitaTextView"
-                  android:layout_marginTop="5dp"
-                  android:layout_marginLeft="25dp"
-                  android:textSize="15dp"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:text="0.0 Km/h"
-                  />
-          </LinearLayout>
-      </LinearLayout>
-
-
-        <fragment
-            xmlns:map="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/linearLayout6"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".MapsActivity" />
+            map:layout_constraintBottom_toBottomOf="@+id/Cronometro"
+            map:layout_constraintTop_toBottomOf="@+id/Cronometro">
 
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="48dp"
+                android:layout_marginTop="32dp"
+                android:text="Tempo"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                map:layout_constraintStart_toStartOf="parent"
+                map:layout_constraintTop_toTopOf="parent" />
 
+            <Chronometer
+                android:id="@+id/Cronometro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="54dp"
+                android:layout_marginTop="8dp"
+                android:textSize="15dp"
+                map:layout_constraintStart_toStartOf="parent"
+                map:layout_constraintTop_toBottomOf="@+id/textView" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="48dp"
+                android:layout_marginTop="24dp"
+                android:text="Calorie"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                map:layout_constraintStart_toStartOf="parent"
+                map:layout_constraintTop_toBottomOf="@+id/Cronometro" />
+
+            <TextView
+                android:id="@+id/CalorieTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="58dp"
+                android:layout_marginTop="8dp"
+                android:text="0 kcal"
+                android:textSize="15dp"
+                map:layout_constraintStart_toStartOf="parent"
+                map:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="130dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="48dp"
+                android:text="Km percorsi"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                map:layout_constraintEnd_toEndOf="parent"
+                map:layout_constraintStart_toEndOf="@+id/textView"
+                map:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/KmTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="80dp"
+                android:text="0.0 Km"
+                android:textSize="15dp"
+                map:layout_constraintEnd_toEndOf="parent"
+                map:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="150dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="68dp"
+                android:text="Velocità"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                map:layout_constraintEnd_toEndOf="parent"
+                map:layout_constraintStart_toEndOf="@+id/textView2"
+                map:layout_constraintTop_toBottomOf="@+id/KmTextView" />
+
+            <TextView
+                android:id="@+id/VelocitaTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="70dp"
+                android:text="0.0 Km/h"
+                android:textSize="15dp"
+                map:layout_constraintEnd_toEndOf="parent"
+                map:layout_constraintTop_toBottomOf="@+id/textView6" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 
 
-        <LinearLayout
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        map:layout_constraintBottom_toBottomOf="parent"
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintStart_toStartOf="parent"
+        map:layout_constraintTop_toBottomOf="@+id/linearLayout4"
+        tools:context=".MapsActivity" />
 
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="70dp">
+    <Button
+        android:id="@+id/ButtonPausa"
+        android:layout_width="97dp"
+        android:layout_height="68dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="80dp"
+        android:alpha="0"
+        android:background="@drawable/ic_baseline_pause_24"
+        android:onClick="clickButton"
+        map:layout_constraintBottom_toBottomOf="parent"
+        map:layout_constraintEnd_toStartOf="@+id/ButtonStart"
+        map:layout_constraintHorizontal_bias="0.545"
+        map:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/ButtonStart"
+        android:layout_width="96dp"
+        android:layout_height="76dp"
+        android:layout_marginBottom="75dp"
+        android:background="@drawable/ic_baseline_play_arrow_24"
+        android:onClick="clickButton"
+        map:layout_constraintBottom_toBottomOf="@+id/map"
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintStart_toStartOf="parent"
+        map:layout_constraintTop_toBottomOf="@+id/linearLayout4"
+        map:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/ButtonStop"
+        android:layout_width="86dp"
+        android:layout_height="68dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="80dp"
+        android:alpha="0"
+        android:background="@drawable/ic_baseline_stop_24"
+        android:onClick="clickButton"
+        map:layout_constraintBottom_toBottomOf="parent"
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintHorizontal_bias="0.51"
+        map:layout_constraintStart_toEndOf="@+id/ButtonStart" />
 
 
-
-            <Button
-                android:id="@+id/ButtonPausa"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:onClick="clickButton"
-                android:background="@drawable/ic_baseline_pause_24"
-                android:alpha="0"/>
-
-            <Button
-                android:id="@+id/ButtonStart"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:onClick="clickButton"
-                android:background="@drawable/ic_baseline_play_arrow_24"/>
-
-            <Button
-                android:id="@+id/ButtonStop"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:onClick="clickButton"
-                android:background="@drawable/ic_baseline_stop_24"
-                android:alpha="0"/>
-
-        </LinearLayout>
-
-    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

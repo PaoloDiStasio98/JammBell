@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.ContactsContract;
+import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -570,7 +571,7 @@ public class ProfileFragment extends Fragment {
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     usernameTextView.setText("Username: " + document.get("Username").toString());
-                                    ciaoNomeeCognomeTextView.setText("Ciao, " + document.get("Nome").toString() + " " + document.get("Cognome").toString());
+                                    ciaoNomeeCognomeTextView.setText(Html.fromHtml("Ciao, " +"<b>"+ document.get("Nome").toString() + " " + document.get("Cognome").toString() + "</b>"));
                                     datadinascitaTextView.setText("Data di nascita: " + document.get("Data di nascita").toString());
                                     pesoTextView.setText("Peso: " + document.get("Peso").toString());
                                     altezzaTextView.setText("Altezza: " + document.get("Altezza").toString());

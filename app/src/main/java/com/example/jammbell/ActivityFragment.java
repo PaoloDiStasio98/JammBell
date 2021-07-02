@@ -314,7 +314,7 @@ public class ActivityFragment extends Fragment {
                                 if(StoricoKm.size() == 0) {
                                     Toast.makeText(getContext(), "Nessuna sessione trovata", Toast.LENGTH_SHORT).show();
                                     filtroTextView.setText("Nessuna sessione");
-                                    filtroTextView.setGravity(Gravity.CENTER);
+
 
                                 }
 
