@@ -41,18 +41,19 @@
                 tools:layout_conversion_absoluteHeight="40dp"
                 tools:layout_conversion_absoluteWidth="66dp" />
 
+
             <ImageView
                 android:id="@+id/Imageprofilo"
-                android:layout_width="162dp"
-                android:layout_height="171dp"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="28dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/ic_baseline_person_24"
+                android:src="@drawable/profilo_persona"
                 app:layout_constraintBottom_toTopOf="@+id/UsernameTextView"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/CiaoNomeCognomeText"
                 tools:layout_conversion_absoluteHeight="136dp"
                 tools:layout_conversion_absoluteWidth="131dp" />
-
 
             <TextView
                 android:id="@+id/UsernameTextView"
@@ -61,6 +62,7 @@
                 android:layout_marginStart="11dp"
                 android:layout_marginTop="52dp"
                 android:padding="5dp"
+                android:textColor="@color/neroapp"
                 android:text="Username"
                 android:textSize="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -76,6 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="11dp"
                 android:padding="5dp"
+                android:textColor="@color/neroapp"
                 android:text="Data di nascita"
                 android:textSize="20dp"
                 app:layout_constraintBottom_toTopOf="@+id/AltezzaProfiloTextView"
@@ -92,6 +95,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="11dp"
                 android:padding="5dp"
+                android:textColor="@color/neroapp"
                 android:text="Altezza"
                 android:textSize="20dp"
                 app:layout_constraintBottom_toTopOf="@+id/PesoProfiloTextView"
@@ -110,6 +114,7 @@
                 android:padding="5dp"
                 android:text="Peso"
                 android:textSize="20dp"
+                android:textColor="@color/neroapp"
                 app:layout_constraintBottom_toTopOf="@+id/textView4"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -124,6 +129,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 android:text="Statistiche totali"
                 android:textColor="@color/black"
                 android:textSize="27dp"
@@ -154,6 +160,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginBottom="16dp"
                 android:text="Statistiche settimanali"
                 android:textColor="@color/black"
@@ -170,7 +177,7 @@
                 android:id="@+id/graficoSettimanale"
                 android:layout_width="371dp"
                 android:layout_height="196dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"

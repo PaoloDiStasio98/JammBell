@@ -234,7 +234,6 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
                             usernameamico = cercaAmicoEditText.getText().toString();
                             cercautenteDB(usernameamico);
 
-
                             }
                             else {
                                 Log.d("amico", "controlla data");
@@ -258,6 +257,8 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
         }
         super.onAttach(context);
     }
+
+
 
     public void pullUsernameCreatore(){
 

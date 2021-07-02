@@ -2,16 +2,23 @@ package com.example.jammbell;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.SystemClock;
@@ -88,13 +95,24 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
 
     private LocationCallback locationCallback;
 
+    NotificationManagerCompat notificationManager;
+
+    NotificationCompat.Builder builderNotification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-
         setContentView(R.layout.activity_sessione_veloce);
+
+        notificationManager = NotificationManagerCompat.from(this);
+        createNotificationChannel();
+        builderNotification = new NotificationCompat.Builder(this, "lembuit")
+                .setSmallIcon(R.drawable.ic_baseline_directions_run_24)
+                .setContentTitle("Sessione Veloce")
+                .setContentText("Sessione in corso...")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        builderNotification.setOngoing(true);
+
 
         ButtonStart = findViewById(R.id.ButtonStart);
         ButtonPause = findViewById(R.id.ButtonPausa);
@@ -124,6 +142,25 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
 
 
 
+
+
+
+    }
+
+    private void createNotificationChannel(){
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
+            CharSequence name = "CIAOOOO";
+            String description = "DESCRIZIONEEEEEE";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = null;
+            channel = new NotificationChannel("lembuit", name, importance);
+
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     private void accessodatabase() {
@@ -328,6 +365,8 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
             Log.d("pesocalo", String.valueOf(calorie));
 
             CalorieTextView.setText(String.valueOf(df1.format(calorie)) + " " + "Kcal");
+
+
         }
         
         points.add(lastKnownLatLng);
@@ -346,6 +385,8 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
                     Cronometro.start();
                     CronometroRunning = true;
                 }
+
+                notificationManager.notify(100, builderNotification.build());
 
                 ButtonStart.setAlpha(0);
                 ButtonPause.setAlpha(1);
@@ -378,7 +419,7 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
                 long tempo = (SystemClock.elapsedRealtime() - Cronometro.getBase())/1000;
                 float km = risultato/1000;
 
-
+               notificationManager.cancel(100);
                 Log.d("buttonstop", String.valueOf(tempo));
                 Log.d("buttonstop", String.valueOf(km));
                 Log.d("buttonstop", String.valueOf(calorie));

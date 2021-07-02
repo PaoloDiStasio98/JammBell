@@ -147,9 +147,6 @@ public class ActivityFragment extends Fragment {
                 monthprova = month;
                 yearprova = year;
 
-                if(StoricoKm.size() != 0)
-                filtroTextView.setText("Filtro, giorno: " + day + "/" + month + "/" + year);
-
                 filtroapplicato = true;
                 menu.getItem(1).setVisible(true);
 
@@ -314,9 +311,11 @@ public class ActivityFragment extends Fragment {
                                 if(StoricoKm.size() == 0) {
                                     Toast.makeText(getContext(), "Nessuna sessione trovata", Toast.LENGTH_SHORT).show();
                                     filtroTextView.setText("Nessuna sessione");
-
-
+                                } else {
+                                    filtroTextView.setText("Filtro, giorno: " + day + "/" + month + "/" + year);
                                 }
+
+
 
 
 

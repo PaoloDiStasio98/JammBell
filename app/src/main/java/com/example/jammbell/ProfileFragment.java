@@ -70,6 +70,7 @@ import java.util.Locale;
 
 public class ProfileFragment extends Fragment {
 
+    Main2Activity main2Activity = new Main2Activity();
 
 
     private FragmentActivity myContext;
@@ -97,8 +98,8 @@ public class ProfileFragment extends Fragment {
 
     HashMap<String, String> Datamap1 = new HashMap<>();
 
-    String TitoliStatistiche[] = {"Km percorsi", "Passi", "Calorie", "Ore totali"};
-    String DescrizioneStatistiche[] = {"0", "0", "0", "0"};
+    String TitoliStatistiche[] = {"Km percorsi", "Passi", "Calorie", "Ore totali", "Gare", "Gare vinte"};
+    String DescrizioneStatistiche[] = {"0", "0", "0", "0", "0", "0"};
 
     RecyclerView recyclerViewStatistiche;
 
@@ -108,6 +109,8 @@ public class ProfileFragment extends Fragment {
     String data7giorni;
     String DateSessioni;
 
+    int numGare = 0;
+    int numGareVinte = 0;
 
 
     @Override
@@ -320,6 +323,7 @@ public class ProfileFragment extends Fragment {
                                     }
 
                                     BarDataSet barDataSet = new BarDataSet(sessioni, "Km");
+                                    barDataSet.setColor(Color.parseColor("#0B4F6C"));
 
                                     barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
                                     BarData data = new BarData(barDataSet);
@@ -327,8 +331,9 @@ public class ProfileFragment extends Fragment {
                                     barChart.getAxisLeft().setDrawGridLines(false);
                                     barChart.getAxisRight().setDrawGridLines(false);
                                     barChart.getXAxis().setDrawGridLines(false);
+                                    barChart.setTouchEnabled(false);
                                     barChart.setScaleEnabled(false);
-                                    barDataSet.setColors(Color.CYAN);
+                                    barDataSet.setColors(Color.parseColor("#0B4F6C"));
                                     barDataSet.setValueTextColor(Color.BLACK);
                                     barDataSet.setValueTextSize(14f);
                                     barChart.getDescription().setText("Riepilogo Km settimanali");
@@ -428,13 +433,12 @@ public class ProfileFragment extends Fragment {
                                DescrizioneStatistiche[2] = String.valueOf(CalorieTot + " Kcal");
                                DescrizioneStatistiche[3] = String.valueOf(TempoTot/3600 + " h");
 
-                               MyAdapter myAdapter = new MyAdapter(getContext(), TitoliStatistiche, DescrizioneStatistiche);
-                               recyclerViewStatistiche.setAdapter(myAdapter);
-                               recyclerViewStatistiche.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+
+                               StatisticheGare();
+
 
 
                                    graficogenerate();
-
 
                            }
 
@@ -442,12 +446,6 @@ public class ProfileFragment extends Fragment {
                                {
                                Log.d("database", "Error getting documents: ", task.getException());
                            }
-
-
-
-
-
-
                        }
                    });
 
@@ -458,6 +456,101 @@ public class ProfileFragment extends Fragment {
        else {
            Log.d("utenteid", "niente vuoto");
        }
+    }
+
+    public void StatisticheGare(){
+        numGare = 0;
+
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        //Controllo prima il numero di gare a cui ha partecipato l'utente
+
+
+        db.collection("Gara")
+                .whereEqualTo("IDcreatore", currentUser.getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("Statistica", "trovata una gara come creatore");
+                                numGare++;
+
+                            }
+
+                            StatisticheGarePartecipante(currentUser);
+
+                        }
+                        else
+                        {
+                            Log.d("database", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+
+
+    }
+
+    public void StatisticheGarePartecipante(FirebaseUser currentUser) {
+        db.collection("Gara")
+                .whereEqualTo("IDpartecipante", currentUser.getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("Statistica", "trovata una gara come partecipante");
+                                numGare++;
+                            }
+
+                            Log.d("Statistica", "numero di gare" + numGare);
+
+                            StatisticheGareVinte();
+
+                        }
+                        else
+                        {
+                            Log.d("database", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+    }
+
+    public void StatisticheGareVinte(){
+        numGareVinte = 0;
+        db.collection("Gara")
+                .whereEqualTo("UsernameVincitore", main2Activity.Utente.get("Username"))
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("Statistica", "trovata una gara come partecipante");
+                                numGareVinte++;
+                            }
+
+                            Log.d("Statistica", "numero di gare vinte" + numGareVinte);
+
+                            DescrizioneStatistiche[4] = String.valueOf(numGare);
+                            DescrizioneStatistiche[5] = String.valueOf(numGareVinte);
+
+                            MyAdapter myAdapter = new MyAdapter(getContext(), TitoliStatistiche, DescrizioneStatistiche);
+                            recyclerViewStatistiche.setAdapter(myAdapter);
+                            recyclerViewStatistiche.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+
+
+                        }
+                        else
+                        {
+                            Log.d("database", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
     }
 
     @Override
@@ -482,15 +575,15 @@ public class ProfileFragment extends Fragment {
                                     usernameTextView.setText("Username: " + document.get("Username").toString());
                                     ciaoNomeeCognomeTextView.setText(Html.fromHtml("Ciao, " +"<b>"+ document.get("Nome").toString() + " " + document.get("Cognome").toString() + "</b>"));
                                     datadinascitaTextView.setText("Data di nascita: " + document.get("Data di nascita").toString());
-                                    pesoTextView.setText("Peso: " + document.get("Peso").toString());
-                                    altezzaTextView.setText("Altezza: " + document.get("Altezza").toString());
+                                    pesoTextView.setText("Peso: " + document.get("Peso").toString() + " Kg");
+                                    altezzaTextView.setText("Altezza: " + document.get("Altezza").toString() + " cm");
 
                                     if(document.get("Sesso").toString().equals("Maschio")){
-                                        int blu = Color.parseColor("#1e90ff");
+                                        int blu = Color.parseColor("#01BAEF");
                                         ImageProfilo.setColorFilter(blu);
                                     }
                                     if(document.get("Sesso").toString().equals("Femmina")){
-                                        int rosa = Color.parseColor("#ef35fc");
+                                        int rosa = Color.parseColor("#E16684");
                                         ImageProfilo.setColorFilter(rosa);
                                     }
 

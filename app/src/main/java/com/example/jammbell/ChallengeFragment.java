@@ -38,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -195,8 +196,10 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
+
             db.collection("Gara")
                     .whereEqualTo("UsernameCreatore", main2Activity.Utente.get("Username"))
+                    .orderBy("Datafine")
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -248,6 +251,8 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
 
         db.collection("Gara")
                 .whereEqualTo("UsernamePartecipante", main2Activity.Utente.get("Username"))
+                .orderBy("Datafine")
+                .orderBy("Stato")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
