@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/CellaStorico"
     android:layout_width="350dp"
     android:layout_height="200dp"
@@ -16,14 +17,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:paddingTop="5dp"
+        android:paddingTop="3dp"
         android:text="Sessione: DATA"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="20dp"
+
         android:textStyle="bold" />
 
     <LinearLayout
+        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -39,6 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:padding="3dp"
+                android:textColor="@color/neroapp"
                 android:text="Tempo"
                 android:textSize="15dp" />
 
@@ -48,6 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:padding="3dp"
+                android:textColor="@color/neroapp"
                 android:text="Calorie"
                 android:textSize="15dp" />
 
@@ -56,6 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
+                android:textColor="@color/neroapp"
                 android:padding="3dp"
                 android:text="Km percorsi"
                 android:textSize="15dp" />
@@ -64,6 +70,7 @@
                 android:id="@+id/PassiCellaTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/neroapp"
                 android:layout_gravity="left"
                 android:padding="3dp"
                 android:text="Passi"
@@ -74,6 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
+                android:textColor="@color/neroapp"
                 android:padding="3dp"
                 android:text="Velocità media"
                 android:textSize="15dp" />
@@ -83,12 +91,14 @@
         <TextView
             android:id="@+id/ValutazioneCellaTextView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:layout_marginRight="30dp"
-            android:gravity="right"
-            android:padding="3dp"
-            android:text="0/5"
-            android:textSize="30dp" />
+            android:layout_height="40dp"
+            android:layout_margin="5dp"
+            android:gravity="center_vertical"
+            android:textAlignment="textEnd"
+            android:text="Valutazione"
+            app:drawableRightCompat="@drawable/ic_baseline_star_24"
+            tools:ignore="RtlCompat" />
+
+
     </LinearLayout>
 </LinearLayout>

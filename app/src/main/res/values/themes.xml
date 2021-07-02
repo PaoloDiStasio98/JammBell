@@ -4,7 +4,7 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/bluapp</item>
         <item name="colorPrimaryDark">@color/bluappscuro</item>
-        <item name="colorAccent">@color/arancioneapp</item>
+        <item name="colorAccent">@color/bluapp</item>
         <!-- Customize your theme here. -->
     </style>
 </resources>

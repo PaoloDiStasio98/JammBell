@@ -24,6 +24,8 @@
        android:layout_marginLeft="16dp"
        android:layout_marginBottom="8dp"
        app:fab_expandDirection="up"
+       app:fab_addButtonColorNormal="@color/azzurroapp"
+       app:fab_addButtonColorPressed="@color/azzurroapp"
        app:fab_labelStyle="@style/LabelStyle"
        app:fab_labelsPosition="left"
        app:layout_constraintBottom_toBottomOf="parent"
@@ -38,7 +40,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           app:fab_colorNormal="#FFF"
-          app:fab_icon="@drawable/ic_baseline_play_arrow_24"
+          app:fab_icon="@drawable/uomo_corre_azzurro"
           app:fab_size="mini"
           app:fab_title="Sessione veloce" />
 
@@ -46,9 +48,8 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           app:fab_colorNormal="#FFF"
-          app:fab_icon="@drawable/ic_baseline_weekend_24"
+          app:fab_icon="@drawable/timer_azzurro"
           app:fab_size="mini"
-
           app:fab_title="Sessione guidata" />
    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 

@@ -9,8 +9,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
-
 public class MyAdapter  extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     String data1[], data2[];
@@ -26,7 +24,7 @@ public class MyAdapter  extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-       View view = inflater.inflate(R.layout.cell_layout, parent, false);
+       View view = inflater.inflate(R.layout.cell_layout_statisticheprofilo, parent, false);
         return new MyViewHolder(view);
     }
 

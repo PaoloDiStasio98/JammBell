@@ -12,12 +12,13 @@
     <color name="red">#FF0000</color>
     <color name="blu">#92005EFF</color>
 
-    <color name="neroapp">#0A0908</color>
-    <color name="bluapp">#33658A</color>
-    <color name="bluappscuro">#274C68</color>
-    <color name="biancoapp">#F7F7FF</color>
-    <color name="verdeapp">#02CA66</color>
-    <color name="arancioneapp">#F26419</color>
+    <color name="neroapp">#040F16</color>
+    <color name="grigioapp">#AEAAA4</color>
+    <color name="bluapp">#0B4F6C</color>
+    <color name="bluappscuro">#07364A</color>
+    <color name="biancoapp">#FBFBFF</color>
+    <color name="rossoapp">#F41915</color>
+    <color name="azzurroapp">#01BAEF</color>
 
 
 
