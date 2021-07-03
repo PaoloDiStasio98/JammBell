@@ -5,40 +5,102 @@
     android:id="@+id/linearLayout3"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SignupActivity">
+    tools:context=".SignupActivity"
+    android:background="@drawable/gradient">
+
+    <TextView
+        android:id="@+id/Fase1TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fase 1"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/biancoapp"
+        android:gravity="center"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/DescrizioneFase1TextView"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Inserisci una mail valida e crea una password"
+        android:textSize="20dp"
+        android:layout_marginTop="50dp"
+        android:textColor="@color/biancoapp"
+        android:gravity="center"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/Fase1TextView"/>
 
     <EditText
         android:id="@+id/EditTextMailSignUp"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="30dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="148dp"
+        android:layout_marginTop="48dp"
         android:layout_marginEnd="32dp"
         android:hint="Mail"
+        android:textSize="16dp"
+        android:textColorHint="@color/biancoapp"
+        android:textColor="@color/biancoapp"
+        android:drawableLeft="@drawable/persona_login"
+        android:drawableTint="@color/biancoapp"
+        android:textAlignment="center"
+        android:background="#11000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/DescrizioneFase1TextView"/>
 
     <EditText
         android:id="@+id/EditTextPasswordSignUp"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="30dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
+        android:textAlignment="center"
         android:hint="Password"
+        android:drawableLeft="@drawable/lucchetto_login"
+        android:drawableTint="@color/biancoapp"
+        android:textColorHint="@color/biancoapp"
+        android:textColor="@color/biancoapp"
         android:inputType="textPassword"
+        android:textSize="16dp"
+        android:background="#11000000"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/EditTextMailSignUp" />
 
+    <TextView
+        android:id="@+id/ErroreSignUp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="140dp"
+        android:layout_marginTop="30dp"
+        android:textAlignment="center"
+        android:textColor="@color/rossoapp"
+        android:layout_marginEnd="140dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/EditTextPasswordSignUp"
+        android:visibility="invisible"/>
+
+
+
     <Button
         android:id="@+id/ButtonSignUp"
-        android:layout_width="140dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="76dp"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="100dp"
         android:text="Registrati"
+        android:background="@drawable/custom_button"
+        android:textColor="@color/biancoapp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/EditTextPasswordSignUp" />

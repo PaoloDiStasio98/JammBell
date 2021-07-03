@@ -110,8 +110,11 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
     public void onBindViewHolder(@NonNull MyAdapterChallenge.MyViewHolderChallenge holder, int position) {
 
              Log.d("cella", "cella creata");
-        holder.DataInizioTextView.setText("Inizio: " + data1.get(position));
-        holder.DataFineTextView.setText(" fine: " + data2.get(position));
+        String datainizioModificata = changeFormatData(data1.get(position));
+        String datafineModificata = changeFormatData(data2.get(position));
+
+        holder.DataInizioTextView.setText("Inizio: " + datainizioModificata);
+        holder.DataFineTextView.setText(" fine: " + datafineModificata);
         holder.NomeChallengeTextView.setText("Nome gara: " + data3.get(position));
         holder.UsernamePartecipanteTextView.setText(data4.get(position));
         holder.StatoChallengeTextView.setText(data5.get(position));
@@ -285,6 +288,14 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
         }
 
 
+    }
+
+    private String changeFormatData(String data) {
+        String giorno = data.substring(8, 10);
+        String mese = data.substring(5, 7);
+        String anno = data.substring(0, 4);
+        String datamodificata = giorno + "/" + mese + "/" + anno;
+        return datamodificata;
     }
 
 
