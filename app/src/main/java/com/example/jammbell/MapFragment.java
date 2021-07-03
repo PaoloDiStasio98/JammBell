@@ -90,8 +90,6 @@ public class MapFragment extends Fragment {
                     getCurrentLocation(map);
 
                 }
-
-
             }
         });
 
@@ -230,9 +228,22 @@ public class MapFragment extends Fragment {
 
                                 PosizioneCorrente = new LatLng(location1.getLatitude(), location1.getLongitude());
 
+                                supportMapFragment.getMapAsync(new OnMapReadyCallback() {
+                                    @Override
+                                    public void onMapReady(GoogleMap map) {
+                                        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                                                ContextCompat.checkSelfPermission(getContext(),Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                                            getCurrentLocation(map);
+                                        }
+                                    }
+                                });
+                                map.setMyLocationEnabled(true);
+                                map.moveCamera(CameraUpdateFactory.newLatLng(PosizioneCorrente));
+                                map.moveCamera(CameraUpdateFactory.newLatLngZoom(PosizioneCorrente, 16.6f));
+                                map.setMinZoomPreference(6.6f);
+                                map.setMaxZoomPreference(20.20f);
                             }
                         };
-
                         client.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
                     }
                 }
@@ -242,11 +253,5 @@ public class MapFragment extends Fragment {
             startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                     .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
         }
-
-
     }
-
-
-
-
 }
