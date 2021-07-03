@@ -30,6 +30,9 @@ public class LoginActivity extends AppCompatActivity {
     TextView SignupButton;
     TextView ErroreTextView;
 
+    FirebaseUser currentUser;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,24 +65,30 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else {
                     Log.d("accesso", "dentroooooo:success");
+                        mAuth.signInWithEmailAndPassword(MailEditText.getText().toString(), PasswordEditText.getText().toString())
+                                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful()) {
+                                            // Sign in success, update UI with the signed-in user's information
+                                            Log.d("TAG", "signInWithEmail:success");
+                                            FirebaseUser user = mAuth.getCurrentUser();
+                                            if(user.isEmailVerified() == true)
+                                            startActivity(new Intent(LoginActivity.this, Main2Activity.class));
+                                            else{
+                                                ErroreTextView.setVisibility(View.VISIBLE);
+                                                ErroreTextView.setText("Controlla di aver verificato la mail di registrazione");
+                                            }
+                                        } else {
+                                            // If sign in fails, display a message to the user.
+                                            Log.w("TAG", "signInWithEmail:failure", task.getException());
+                                            ErroreTextView.setVisibility(View.VISIBLE);
+                                            ErroreTextView.setText("Autenticazione fallita, ricontrolla mail e/o password");
 
-                    mAuth.signInWithEmailAndPassword(MailEditText.getText().toString(), PasswordEditText.getText().toString())
-                            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        // Sign in success, update UI with the signed-in user's information
-                                        Log.d("TAG", "signInWithEmail:success");
-                                        FirebaseUser user = mAuth.getCurrentUser();
-                                        startActivity(new Intent(LoginActivity.this, Main2Activity.class));
-                                    } else {
-                                        // If sign in fails, display a message to the user.
-                                        Log.w("TAG", "signInWithEmail:failure", task.getException());
-                                        ErroreTextView.setVisibility(View.VISIBLE);
-                                        ErroreTextView.setText("Autenticazione fallita, ricontrolla mail e/o password");
+                                        }
                                     }
-                                }
-                            });
+                                });
+
                 }
 
             }
@@ -102,12 +111,19 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-            Log.d("utente", currentUser.getEmail());
+        currentUser = mAuth.getCurrentUser();
 
-            startActivity(new Intent(LoginActivity.this, Main2Activity.class));
+        // Check if user is signed in (non-null) and update UI accordingly.
+        if(currentUser != null) {
+            if (currentUser.isEmailVerified() == true) {
+                Log.d("utente", currentUser.getEmail());
+
+                startActivity(new Intent(LoginActivity.this, Main2Activity.class));
+            } else {
+                Log.d("utente", currentUser.getEmail());
+                ErroreTextView.setVisibility(View.VISIBLE);
+                ErroreTextView.setText("Controlla di aver verificato la mail di registrazione");
+            }
         }
     }
 

@@ -5,12 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".RegistrazioneProfiloActivity"
+    android:background="@drawable/gradient"
     android:padding="15dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="center">
 
         <TextView
             android:layout_width="match_parent"
@@ -19,14 +21,20 @@
             android:text="*Inserisci username"
             android:textSize="15dp"
             android:visibility="invisible"
-            android:textColor="#ff0000"/>
+            android:textColor="@color/rossoapp"/>
 
         <EditText
-            android:paddingTop="5dp"
             android:id="@+id/UsernameEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Username" />
+            android:layout_width="250dp"
+            android:layout_height="30dp"
+            android:background="#11000000"
+            android:gravity="center"
+            android:hint="Username"
+            android:paddingTop="5dp"
+            android:textAlignment="center"
+            android:textColor="@color/biancoapp"
+            android:textColorHint="@color/biancoapp"
+            android:textSize="16dp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -35,14 +43,20 @@
             android:text="*Inserisci nome"
             android:textSize="15dp"
             android:visibility="invisible"
-            android:textColor="#ff0000"/>
+            android:textColor="@color/rossoapp"/>
 
         <EditText
-            android:paddingTop="10dp"
             android:id="@+id/NomeEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Nome" />
+            android:layout_width="250dp"
+            android:layout_height="30dp"
+            android:background="#11000000"
+            android:gravity="center"
+            android:hint="Nome"
+            android:paddingTop="5dp"
+            android:textAlignment="center"
+            android:textColor="@color/biancoapp"
+            android:textColorHint="@color/biancoapp"
+            android:textSize="16dp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -51,14 +65,20 @@
             android:text="*Inserisci cognome"
             android:textSize="15dp"
             android:visibility="invisible"
-            android:textColor="#ff0000"/>
+            android:textColor="@color/rossoapp"/>
 
         <EditText
-            android:paddingTop="10dp"
             android:id="@+id/CognomeEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Cognome" />
+            android:layout_width="250dp"
+            android:layout_height="30dp"
+            android:background="#11000000"
+            android:gravity="center"
+            android:hint="Cognome"
+            android:paddingTop="5dp"
+            android:textAlignment="center"
+            android:textColor="@color/biancoapp"
+            android:textColorHint="@color/biancoapp"
+            android:textSize="16dp" />
 
 
         <TextView
@@ -73,7 +93,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -81,14 +102,14 @@
                 android:text="Data di nascita: "
                 android:textSize="20dp"
                 android:textStyle="bold"
-                android:textColor="@color/neroapp"/>
+                android:textColor="@color/biancoapp"/>
 
             <Button
                 android:id="@+id/ButtonSelectData"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20dp"
-                android:textColor="@color/neroapp"
+                android:textColor="@color/biancoapp"
                 android:text="JAN 01 2020"
                 style="?android:spinnerStyle"
                 android:onClick="openDatePicker"/>
@@ -108,26 +129,12 @@
                 android:textStyle="bold"
                 android:paddingTop="20dp"
                 android:textSize="20dp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/biancoapp"/>
 
-            <Button
-                android:layout_marginLeft="5dp"
-                android:id="@+id/ButtonSelectSesso"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:textColor="@color/neroapp"
-                android:text="Maschio"
-                style="?android:spinnerStyle"
-                android:onClick="openSessoPicker"/>
-
-
-            <NumberPicker
-                android:orientation="vertical"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:id="@+id/SessoNumberPicker"/>
-
+           <Spinner
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:id="@+id/SessoSpinner" />
 
         </LinearLayout>
 
@@ -135,21 +142,31 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingTop="20dp">
+    >
 
     <TextView
         android:id="@+id/PesoTextView"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:text="Peso"
-        android:paddingTop="35dp"
+        android:textColor="@color/biancoapp"
+        android:textStyle="bold"
+        android:paddingTop="20dp"
         android:textSize="20dp"
-        android:textColor="@color/black"/>
+        />
 
-    <NumberPicker
+    <Button
+
+        android:layout_marginLeft="5dp"
+        android:id="@+id/ButtonSelectPeso"
         android:layout_width="wrap_content"
-        android:layout_height="100dp"
-        android:id="@+id/PesoNumberPicker"/>
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:textColor="@color/biancoapp"
+        android:text="85"
+        style="?android:spinnerStyle"
+        android:onClick="showNumberPickerPeso"/>
+
 
     <TextView
         android:layout_width="match_parent"
@@ -157,7 +174,7 @@
         android:text="kg"
         android:paddingTop="35dp"
         android:textSize="20dp"
-        android:textColor="@color/black"/>
+        android:textColor="@color/biancoapp"/>
 
 
 </LinearLayout>
@@ -175,14 +192,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:text="Altezza"
+                android:textStyle="bold"
                 android:paddingTop="35dp"
                 android:textSize="20dp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/biancoapp"/>
 
-            <NumberPicker
+            <Button
+                android:layout_marginLeft="5dp"
+                android:id="@+id/ButtonSelectAltezza"
                 android:layout_width="wrap_content"
-                android:layout_height="100dp"
-                android:id="@+id/altezzaNumberPicker"/>
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textColor="@color/biancoapp"
+                android:text="85"
+                style="?android:spinnerStyle"
+                android:onClick="showNumberPickerAltezza"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -190,7 +214,7 @@
                 android:text="cm"
                 android:paddingTop="35dp"
                 android:textSize="20dp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/biancoapp"/>
 
 
         </LinearLayout>
@@ -198,10 +222,11 @@
 
         <Button
             android:id="@+id/buttonConferma"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="125dp"
-            android:layout_marginTop="10dp"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:background="@drawable/custom_button"
+            android:textColor="@color/biancoapp"
             android:text="Conferma" />
     </LinearLayout>
 

@@ -21,7 +21,7 @@
 
     <EditText
         android:id="@+id/EditTextMail"
-        android:layout_width="200dp"
+        android:layout_width="250dp"
         android:layout_height="30dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="180dp"
@@ -41,7 +41,7 @@
     <EditText
         android:textAlignment="center"
         android:id="@+id/EditTextPassword"
-        android:layout_width="200dp"
+        android:layout_width="250dp"
         android:layout_height="30dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="48dp"

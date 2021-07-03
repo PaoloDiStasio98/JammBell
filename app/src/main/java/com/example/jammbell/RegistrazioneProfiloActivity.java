@@ -5,13 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.NumberPicker;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,23 +30,24 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RegistrazioneProfiloActivity extends AppCompatActivity
+public class RegistrazioneProfiloActivity extends AppCompatActivity implements NumberPicker.OnValueChangeListener
 {
 
     private DatePickerDialog datePickerDialog;
     private Button dateButton;
 
-    private DatePickerDialog sessoPickerDialog;
     private Button sessoButton;
+    private Button altezzaButton;
+    private Button pesoButton;
+    private Spinner sessoSpinner;
 
     private TextView pesoTextView;
-    private NumberPicker pesoNumberPicker;
 
     private TextView altezzaTextView;
-    private NumberPicker altezzaNumberPicker;
 
     private NumberPicker sessoNumberPicker;
 
@@ -60,6 +64,9 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity
     String date;
 
     int isValid = 0;
+
+    Boolean AltezzaCliccato = false;
+    Boolean PesoCliccato = false;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -84,38 +91,31 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+
+        getSupportActionBar().hide();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registrazione_profilo);
 
-        //settaggio
+        String[] SessoArray = {"Maschio, Femmina, Altro"};
+
+        //settaggio picker per il peso
+        sessoSpinner = (Spinner) findViewById(R.id.SessoSpinner);
+        pesoTextView = findViewById(R.id.PesoTextView);
+
+        altezzaButton = findViewById(R.id.ButtonSelectAltezza);
+        pesoButton = findViewById(R.id.ButtonSelectPeso);
 
         //settaggio date picker
         initDatePicker();
         dateButton = findViewById(R.id.ButtonSelectData);
         dateButton.setText(getTodayDate());
 
-        //settaggio picker per il peso
-        pesoTextView = findViewById(R.id.PesoTextView);
-        pesoNumberPicker = findViewById(R.id.PesoNumberPicker);
-        pesoNumberPicker.setMaxValue(210);
-        pesoNumberPicker.setMinValue(40);
-        pesoNumberPicker.setValue(80);
-        initPesoPicker();
+
 
         //settaggio picker per l'altezza
         altezzaTextView = findViewById(R.id.altezzaTextView);
-        altezzaNumberPicker = findViewById(R.id.altezzaNumberPicker);
-        altezzaNumberPicker.setMaxValue(220);
-        altezzaNumberPicker.setMinValue(120);
-        altezzaNumberPicker.setValue(175);
-        initAltezzaPicker();
 
-        //settaggio picker per il sesso
-        sessoNumberPicker = findViewById(R.id.SessoNumberPicker);
-        String[] sesso = {"Maschio", "Femmina", "Altro"};
-        sessoNumberPicker.setMaxValue(2);
-        sessoNumberPicker.setMinValue(0);
-        sessoNumberPicker.setDisplayedValues(sesso);
 
         //set button conferma
         confermaButton = findViewById(R.id.buttonConferma);
@@ -133,6 +133,12 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity
         erroreDataDiNascitaTextView = findViewById(R.id.ErroreDataDiNascita);
 
         String userId = getIntent().getStringExtra("USER_ID");
+
+        ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(RegistrazioneProfiloActivity.this,
+                R.layout.spinner_style, getResources().getStringArray(R.array.sesso_array));
+        myAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sessoSpinner.setAdapter(myAdapter);
+
 
         confermaButton.setOnClickListener(new View.OnClickListener()
         {
@@ -192,9 +198,9 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity
                                 utente.put("Nome", nomeTextView.getText().toString());
                                 utente.put("Cognome", cognomeTextView.getText().toString());
                                 utente.put("Data di nascita", date);
-                                utente.put("Sesso", sesso[sessoNumberPicker.getValue()]);
-                                utente.put("Peso", pesoNumberPicker.getValue());
-                                utente.put("Altezza", altezzaNumberPicker.getValue());
+                                utente.put("Sesso", sessoSpinner.getSelectedItem().toString());
+                                utente.put("Peso", (int) Integer.parseInt(pesoButton.getText().toString()));
+                                utente.put("Altezza", Integer.parseInt(altezzaButton.getText().toString()));
 
                                 Log.d("utente", String.valueOf(utente));
 
@@ -205,7 +211,23 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity
                                     public void onSuccess(DocumentReference documentReference)
                                     {
                                         Log.d("TAG", "DocumentSnapshot written with ID: " + documentReference.getId());
-                                        startActivity(new Intent(RegistrazioneProfiloActivity.this, Main2Activity.class));
+
+                                        user.sendEmailVerification()
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()) {
+                                                            Log.d("TAG", "Email sent.");
+                                                            startActivity(new Intent(RegistrazioneProfiloActivity.this, Main2Activity.class));
+                                                        }
+                                                        else {
+                                                            Log.d("TAG", String.valueOf(task.getException()));
+                                                        }
+                                                    }
+                                                });
+
+
+
                                     }
                                 }).addOnFailureListener(new OnFailureListener()
                                 {
@@ -231,29 +253,34 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity
         });
     }
 
-    private void initAltezzaPicker()
-    {
-        altezzaNumberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener()
-        {
-            @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal)
-            {
-
-            }
-        });
+    public void showNumberPickerAltezza(View view) {
+        AltezzaCliccato = true;
+        PesoCliccato = false;
+        NumberPickerDialog newFragment = new NumberPickerDialog(120, 220);
+        newFragment.setValueChangeListener(this);
+        newFragment.show(getSupportFragmentManager(), "time picker");
     }
 
-    private void initPesoPicker()
-    {
-        pesoNumberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener()
-        {
-            @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal)
-            {
-
-            }
-        });
+    public void showNumberPickerPeso(View view) {
+        AltezzaCliccato = false;
+        PesoCliccato = true;
+        NumberPickerDialog newFragment = new NumberPickerDialog(40, 210);
+        newFragment.setValueChangeListener(this);
+        newFragment.show(getSupportFragmentManager(), "time picker");
     }
+
+    @Override
+    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+        if(AltezzaCliccato == true){
+            altezzaButton.setText(String.valueOf(newVal));
+        }
+        else {
+            pesoButton.setText(String.valueOf(newVal));
+        }
+
+    }
+
+
 
     private String getTodayDate()
     {
@@ -342,6 +369,6 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity
         datePickerDialog.show();
     }
 
-    public void openSessoPicker(View view) {
-    }
+
+
 }
