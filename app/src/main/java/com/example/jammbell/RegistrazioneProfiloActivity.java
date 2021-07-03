@@ -36,6 +36,9 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity
     private DatePickerDialog datePickerDialog;
     private Button dateButton;
 
+    private DatePickerDialog sessoPickerDialog;
+    private Button sessoButton;
+
     private TextView pesoTextView;
     private NumberPicker pesoNumberPicker;
 
@@ -63,9 +66,8 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
+        Log.d("user", "on destroy");
         super.onDestroy();
-        Log.d("userMailDestroy", user.getEmail());
-
         user.delete()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -75,6 +77,8 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity
                         }
                     }
                 });
+
+        Log.d("userMailDestroy", "dopo");
     }
 
     @Override
@@ -82,6 +86,8 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registrazione_profilo);
+
+        //settaggio
 
         //settaggio date picker
         initDatePicker();
@@ -334,5 +340,8 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity
     public void openDatePicker(View view)
     {
         datePickerDialog.show();
+    }
+
+    public void openSessoPicker(View view) {
     }
 }
