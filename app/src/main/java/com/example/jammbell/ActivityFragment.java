@@ -352,8 +352,10 @@ public class ActivityFragment extends Fragment {
 
                     db.collection("SessioneVeloce")
                      .whereEqualTo("UserID", currentUser.getUid())
-                            .orderBy("Data", Query.Direction.DESCENDING)
-                    .get()
+                            .orderBy("Data.dayOfMonth", Query.Direction.DESCENDING)
+                            .orderBy("Data.monthValue", Query.Direction.DESCENDING)
+
+                            .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
