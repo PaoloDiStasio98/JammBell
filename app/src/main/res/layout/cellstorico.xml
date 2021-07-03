@@ -25,80 +25,98 @@
 
         android:textStyle="bold" />
 
-    <LinearLayout
-        android:layout_marginTop="5dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/linearLayout7"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginTop="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/CalorieCellaTextView"
+        app:layout_constraintTop_toTopOf="@+id/CalorieCellaTextView">
 
-        <LinearLayout
+
+        <TextView
+            android:id="@+id/TempoCellaTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginStart="10dp"
+            android:padding="3dp"
+            android:text="Tempo"
+            android:textColor="@color/neroapp"
+            android:textSize="15dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/TempoCellaTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:padding="3dp"
-                android:textColor="@color/neroapp"
-                android:text="Tempo"
-                android:textSize="15dp" />
+        <TextView
+            android:id="@+id/CalorieCellaTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="4dp"
+            android:padding="3dp"
+            android:text="Calorie"
+            android:textColor="@color/neroapp"
+            android:textSize="15dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/TempoCellaTextView" />
 
-            <TextView
-                android:id="@+id/CalorieCellaTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:padding="3dp"
-                android:textColor="@color/neroapp"
-                android:text="Calorie"
-                android:textSize="15dp" />
+        <TextView
+            android:id="@+id/KmCellaTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="4dp"
+            android:padding="3dp"
+            android:text="Km percorsi"
+            android:textColor="@color/neroapp"
+            android:textSize="15dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/CalorieCellaTextView" />
 
-            <TextView
-                android:id="@+id/KmCellaTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:textColor="@color/neroapp"
-                android:padding="3dp"
-                android:text="Km percorsi"
-                android:textSize="15dp" />
+        <TextView
+            android:id="@+id/PassiCellaTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="4dp"
+            android:padding="3dp"
+            android:text="Passi"
+            android:textColor="@color/neroapp"
+            android:textSize="15dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/KmCellaTextView" />
 
-            <TextView
-                android:id="@+id/PassiCellaTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/neroapp"
-                android:layout_gravity="left"
-                android:padding="3dp"
-                android:text="Passi"
-                android:textSize="15dp" />
+        <TextView
+            android:id="@+id/VelocitaCellaTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="4dp"
+            android:padding="3dp"
+            android:text="Velocità media"
+            android:textColor="@color/neroapp"
+            android:textSize="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/PassiCellaTextView" />
 
-            <TextView
-                android:id="@+id/VelocitaCellaTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:textColor="@color/neroapp"
-                android:padding="3dp"
-                android:text="Velocità media"
-                android:textSize="15dp" />
-
-        </LinearLayout>
 
         <TextView
             android:id="@+id/ValutazioneCellaTextView"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_margin="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="116dp"
+            android:layout_marginTop="122dp"
+            android:layout_marginEnd="3dp"
             android:gravity="center_vertical"
-            android:textAlignment="textEnd"
             android:text="Valutazione"
+            android:textAlignment="textEnd"
             app:drawableRightCompat="@drawable/ic_baseline_star_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/VelocitaCellaTextView"
+            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="RtlCompat" />
 
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
