@@ -190,7 +190,7 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity implements N
                                                 }
                                                 else
                                                 {
-                                                    Log.d("TAG", "Errore documento non trovato: ", task.getException());
+                                                    Log.d("ERROREUSERNAME", "Errore documento non trovato: ", task.getException());
                                                 }
 
                                                 if(isValid == 0)
@@ -251,6 +251,9 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity implements N
                                             }
                                         });
 
+                                    }
+                                    else{
+                                        Log.d("ERROREMAILPASSWORD", String.valueOf(task.getException()));
                                     }
                                 }
                             });
