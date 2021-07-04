@@ -12,50 +12,49 @@
         android:id="@+id/Fase1TextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
         android:text="Fase 1"
+        android:textAlignment="center"
+        android:textColor="@color/biancoapp"
         android:textSize="30dp"
         android:textStyle="bold"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:textColor="@color/biancoapp"
-        android:gravity="center"
-        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/DescrizioneFase1TextView"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text="Inserisci una mail valida e crea una password"
-        android:textSize="20dp"
-        android:layout_marginTop="50dp"
-        android:textColor="@color/biancoapp"
+        android:layout_marginTop="60dp"
         android:gravity="center"
+        android:text="Inserisci una mail valida e crea una password"
         android:textAlignment="center"
+        android:textColor="@color/biancoapp"
+        android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/Fase1TextView"/>
+        app:layout_constraintTop_toTopOf="@+id/Fase1TextView" />
 
     <EditText
         android:id="@+id/EditTextMailSignUp"
         android:layout_width="250dp"
         android:layout_height="30dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="60dp"
         android:layout_marginEnd="32dp"
-        android:hint="Mail"
-        android:textSize="16dp"
-        android:textColorHint="@color/biancoapp"
-        android:textColor="@color/biancoapp"
+        android:background="#11000000"
         android:drawableLeft="@drawable/persona_login"
         android:drawableTint="@color/biancoapp"
+        android:hint="Mail"
         android:textAlignment="center"
-        android:background="#11000000"
+        android:textColor="@color/biancoapp"
+        android:textColorHint="@color/biancoapp"
+        android:textSize="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/DescrizioneFase1TextView"/>
+        app:layout_constraintTop_toBottomOf="@+id/DescrizioneFase1TextView" />
 
     <EditText
         android:id="@+id/EditTextPasswordSignUp"
