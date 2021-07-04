@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -68,25 +69,9 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity implements N
     Boolean AltezzaCliccato = false;
     Boolean PesoCliccato = false;
 
+    private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-    @Override
-    protected void onDestroy() {
-        Log.d("user", "on destroy");
-        super.onDestroy();
-        user.delete()
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d("onDestroy", "User account deleted.");
-                        }
-                    }
-                });
-
-        Log.d("userMailDestroy", "dopo");
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -96,6 +81,9 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity implements N
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registrazione_profilo);
+
+        mAuth = FirebaseAuth.getInstance();
+
 
         String[] SessoArray = {"Maschio, Femmina, Altro"};
 
@@ -132,7 +120,11 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity implements N
         erroreCognomeTextView       = findViewById(R.id.ErroreCognome);
         erroreDataDiNascitaTextView = findViewById(R.id.ErroreDataDiNascita);
 
-        String userId = getIntent().getStringExtra("USER_ID");
+        String userMail = getIntent().getStringExtra("USER_MAIL");
+        String userPassword = getIntent().getStringExtra("USER_PASSWORD");
+
+        Log.d("userDati", userMail);
+        Log.d("userDati", userPassword);
 
         ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(RegistrazioneProfiloActivity.this,
                 R.layout.spinner_style, getResources().getStringArray(R.array.sesso_array));
@@ -173,80 +165,96 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity implements N
                 }
                 else if(!usernameTextView.getText().toString().matches("") && !nomeTextView.getText().toString().matches("") && !cognomeTextView.getText().toString().matches("")  || date != null)
                 {
-                    db.collection("Utente").whereEqualTo("Username", usernameTextView.getText().toString()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
-                    {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task)
-                        {
-                            if(task.isSuccessful())
-                            {
-                                for(QueryDocumentSnapshot document : task.getResult())
-                                {
-                                    isValid = 1;
-                                }
-                            }
-                            else
-                            {
-                                Log.d("TAG", "Errore documento non trovato: ", task.getException());
-                            }
 
-                            if(isValid == 0)
-                            {
-                                //Prendo le informazioni e le metto in utente
-                                utente.put("IDUtente", userId);
-                                utente.put("Username", usernameTextView.getText().toString());
-                                utente.put("Nome", nomeTextView.getText().toString());
-                                utente.put("Cognome", cognomeTextView.getText().toString());
-                                utente.put("Data di nascita", date);
-                                utente.put("Sesso", sessoSpinner.getSelectedItem().toString());
-                                utente.put("Peso", (int) Integer.parseInt(pesoButton.getText().toString()));
-                                utente.put("Altezza", Integer.parseInt(altezzaButton.getText().toString()));
+                    mAuth.createUserWithEmailAndPassword(userMail, userPassword)
+                            .addOnCompleteListener(RegistrazioneProfiloActivity.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        // Sign in success, update UI with the signed-in user's information
+                                        Log.d("TAG", "createUserWithEmail:success");
+                                        FirebaseUser user = mAuth.getCurrentUser();
 
-                                Log.d("utente", String.valueOf(utente));
 
-                                //pusho utente nel database
-                                db.collection("Utente").add(utente).addOnSuccessListener(new OnSuccessListener<DocumentReference>()
-                                {
-                                    @Override
-                                    public void onSuccess(DocumentReference documentReference)
-                                    {
-                                        Log.d("TAG", "DocumentSnapshot written with ID: " + documentReference.getId());
-
-                                        user.sendEmailVerification()
-                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                        if (task.isSuccessful()) {
-                                                            Log.d("TAG", "Email sent.");
-                                                            startActivity(new Intent(RegistrazioneProfiloActivity.this, Main2Activity.class));
-                                                        }
-                                                        else {
-                                                            Log.d("TAG", String.valueOf(task.getException()));
-                                                        }
+                                        db.collection("Utente").whereEqualTo("Username", usernameTextView.getText().toString()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                                        {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task)
+                                            {
+                                                if(task.isSuccessful())
+                                                {
+                                                    for(QueryDocumentSnapshot document : task.getResult())
+                                                    {
+                                                        isValid = 1;
                                                     }
-                                                });
+                                                }
+                                                else
+                                                {
+                                                    Log.d("TAG", "Errore documento non trovato: ", task.getException());
+                                                }
+
+                                                if(isValid == 0)
+                                                {
+                                                    //Prendo le informazioni e le metto in utente
+                                                    utente.put("IDUtente", user.getUid());
+                                                    utente.put("Username", usernameTextView.getText().toString());
+                                                    utente.put("Nome", nomeTextView.getText().toString());
+                                                    utente.put("Cognome", cognomeTextView.getText().toString());
+                                                    utente.put("Data di nascita", date);
+                                                    utente.put("Sesso", sessoSpinner.getSelectedItem().toString());
+                                                    utente.put("Peso", (int) Integer.parseInt(pesoButton.getText().toString()));
+                                                    utente.put("Altezza", Integer.parseInt(altezzaButton.getText().toString()));
+
+                                                    Log.d("utente", String.valueOf(utente));
+
+                                                    //pusho utente nel database
+                                                    db.collection("Utente").add(utente).addOnSuccessListener(new OnSuccessListener<DocumentReference>()
+                                                    {
+                                                        @Override
+                                                        public void onSuccess(DocumentReference documentReference)
+                                                        {
+                                                            Log.d("TAG", "DocumentSnapshot written with ID: " + documentReference.getId());
+
+                                                            user.sendEmailVerification()
+                                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                            if (task.isSuccessful()) {
+                                                                                Log.d("TAG", "Email sent.");
+                                                                                startActivity(new Intent(RegistrazioneProfiloActivity.this, LoginActivity.class));
+                                                                            }
+                                                                            else {
+                                                                                Log.d("TAG", String.valueOf(task.getException()));
+                                                                            }
+                                                                        }
+                                                                    });
 
 
+
+                                                        }
+                                                    }).addOnFailureListener(new OnFailureListener()
+                                                    {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e)
+                                                        {
+                                                            Log.w("TAG", "Error adding document", e);
+                                                        }
+                                                    });
+                                                }
+                                                else
+                                                {
+                                                    Toast.makeText(RegistrazioneProfiloActivity.this, "Username già esistente", Toast.LENGTH_LONG).show();
+                                                    erroreUsernameTextView.setVisibility(View.VISIBLE);
+                                                    erroreUsernameTextView.setText("Username già esistente");
+                                                }
+                                                isValid = 0;
+                                            }
+                                        });
 
                                     }
-                                }).addOnFailureListener(new OnFailureListener()
-                                {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e)
-                                    {
-                                        Log.w("TAG", "Error adding document", e);
-                                    }
-                                });
-                            }
-                            else
-                            {
-                                Toast.makeText(RegistrazioneProfiloActivity.this, "Username già esistente", Toast.LENGTH_LONG).show();
-                                erroreUsernameTextView.setVisibility(View.VISIBLE);
-                                erroreUsernameTextView.setText("Username già esistente");
-                            }
-                            isValid = 0;
-                        }
-                    });
+                                }
+                            });
+
                 }
             }
 

@@ -14,7 +14,7 @@
         android:layout_width="120dp"
         android:layout_height="150dp"
         android:foregroundGravity="center_vertical"
-        android:src="@drawable/logo"
+        android:src="@drawable/icon_app_nobackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

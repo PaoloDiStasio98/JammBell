@@ -45,35 +45,19 @@ public class SignupActivity extends AppCompatActivity {
                     ErroreSignUpTextView.setText("Inserisci tutti i dati");
             } else {
 
-                    mAuth.createUserWithEmailAndPassword(MailEditText.getText().toString(), PasswordEditText.getText().toString())
-                            .addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        // Sign in success, update UI with the signed-in user's information
-                                        Log.d("TAG", "createUserWithEmail:success");
-                                        FirebaseUser user = mAuth.getCurrentUser();
-                                        Log.d("id", user.getUid());
-                                        idTransfer(user);
-
-                                    } else {
-                                        // If sign in fails, display a message to the user.
-                                        Log.w("TAG", "createUserWithEmail:failure", task.getException());
-                                        ErroreSignUpTextView.setVisibility(View.VISIBLE);
-                                        ErroreSignUpTextView.setText("Registrazione fallita, controlla di aver inserito una mail valida e che la " +
-                                                "password abbia almeno 6 caratteri tra cui un numero");
-                                    }
-                                }
-                            });
+                    String mail = MailEditText.getText().toString();
+                    String password = PasswordEditText.getText().toString();
+                    idTransfer(mail, password);
                 }
             }
         });
 
 
     }
-    public void idTransfer(FirebaseUser user) {
+    public void idTransfer(String userMail, String userPassword) {
         Intent intent = new Intent(getBaseContext(), RegistrazioneProfiloActivity.class);
-        intent.putExtra("USER_ID", user.getUid());
+        intent.putExtra("USER_MAIL", userMail);
+        intent.putExtra("USER_PASSWORD", userPassword);
         startActivity(intent);
     }
 }
