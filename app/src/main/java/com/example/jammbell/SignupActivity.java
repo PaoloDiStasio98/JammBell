@@ -18,6 +18,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class SignupActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
@@ -40,40 +43,64 @@ public class SignupActivity extends AppCompatActivity {
         SignupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(MailEditText.getText().toString().matches("") || PasswordEditText.getText().toString().matches("")){
+                if(MailEditText.getText().toString().matches("") || PasswordEditText.getText().toString().matches("")) {
                     ErroreSignUpTextView.setVisibility(View.VISIBLE);
                     ErroreSignUpTextView.setText("Inserisci tutti i dati");
-            } else {
-
-                    mAuth.createUserWithEmailAndPassword(MailEditText.getText().toString(), PasswordEditText.getText().toString())
-                            .addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        // Sign in success, update UI with the signed-in user's information
-                                        Log.d("TAG", "createUserWithEmail:success");
-                                        FirebaseUser user = mAuth.getCurrentUser();
-                                        Log.d("id", user.getUid());
-                                        idTransfer(user);
-
-                                    } else {
-                                        // If sign in fails, display a message to the user.
-                                        Log.w("TAG", "createUserWithEmail:failure", task.getException());
-                                        ErroreSignUpTextView.setVisibility(View.VISIBLE);
-                                        ErroreSignUpTextView.setText("Registrazione fallita, controlla di aver inserito una mail valida e che la " +
-                                                "password abbia almeno 6 caratteri tra cui un numero");
-                                    }
-                                }
-                            });
                 }
-            }
+                else if(isEmailValid(MailEditText.getText().toString()) == false){
+                        ErroreSignUpTextView.setVisibility(View.VISIBLE);
+                        ErroreSignUpTextView.setText("Controlla di aver inserito una mail corretta");
+                    }
+             else if (PasswordEditText.getText().length() < 6) {
+                    ErroreSignUpTextView.setVisibility(View.VISIBLE);
+                    ErroreSignUpTextView.setText("La password deve contenere più di 6 caratteri");
+                }
+
+                else if(isValidPassword(PasswordEditText.getText().toString()) == false){
+                    ErroreSignUpTextView.setVisibility(View.VISIBLE);
+                    ErroreSignUpTextView.setText("Controlla che la password abbia almeno una lettera minuscola, una lettera maiuscola" +
+                            "e un numero");
+                }
+
+                else {
+                    String mail = MailEditText.getText().toString();
+                    String password = PasswordEditText.getText().toString();
+                    idTransfer(mail, password);
+                }
+
+
+                }
+
         });
 
 
     }
-    public void idTransfer(FirebaseUser user) {
+
+    public boolean isValidPassword(final String password) {
+
+        Pattern pattern;
+        Matcher matcher;
+
+        final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{4,}$";
+
+        pattern = Pattern.compile(PASSWORD_PATTERN);
+        matcher = pattern.matcher(password);
+
+        return matcher.matches();
+
+    }
+
+    public static boolean isEmailValid(String email) {
+        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
+    public void idTransfer(String userMail, String userPassword) {
         Intent intent = new Intent(getBaseContext(), RegistrazioneProfiloActivity.class);
-        intent.putExtra("USER_ID", user.getUid());
+        intent.putExtra("USER_MAIL", userMail);
+        intent.putExtra("USER_PASSWORD", userPassword);
         startActivity(intent);
     }
 }

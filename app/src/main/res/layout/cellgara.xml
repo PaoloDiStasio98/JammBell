@@ -117,29 +117,28 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal" >
 
-            <Button
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="Rifiuta"
-                android:id="@+id/ButtonRifiutaGara"
-                android:visibility="invisible"
-                />
-
-            <RelativeLayout
+                <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:gravity="right">
 
 
             <Button
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="Annulla"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/icona_x_rosso"
                 android:id="@+id/ButtonConfermaRifiuta"
                 android:layout_alignParentRight="true"
                 />
 
-            </RelativeLayout>
+                    <Button
+                        android:id="@+id/ButtonRifiutaGara"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/icona_x_rosso"
+                        android:visibility="invisible" />
+
+                </RelativeLayout>
 
             </LinearLayout>
 

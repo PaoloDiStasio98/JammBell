@@ -127,8 +127,8 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
             holder.ButtonConfermaRifiuta.setVisibility(View.VISIBLE);
 
             if(String.valueOf(main2Activity.Utente.get("Username")).matches(data4.get(position))){ //l'utente connesso è il partecipante
-                holder.ButtonConfermaRifiuta.setText("Accetta");
-                holder.ButtonRifiutaGara.setText("Rifiuta");
+                holder.ButtonConfermaRifiuta.setBackgroundResource(R.drawable.icona_ok_verde);
+                holder.ButtonRifiutaGara.setBackgroundResource(R.drawable.icona_x_rosso);
                 holder.ButtonRifiutaGara.setVisibility(View.VISIBLE);
                 holder.ButtonRifiutaGara.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -203,7 +203,7 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
             }
             else { //l'utente connesso è il creatore
                 holder.UsernamePartecipanteTextView.setText("Invitato: " + data4.get(position));
-                holder.ButtonConfermaRifiuta.setText("Annulla");
+                holder.ButtonConfermaRifiuta.setBackgroundResource(R.drawable.icona_x_rosso);
                 holder.StatoChallengeTextView.setText("Stato gara: " + data5.get(position));
                 holder.ButtonConfermaRifiuta.setOnClickListener(new View.OnClickListener() {
                     @Override

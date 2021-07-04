@@ -97,6 +97,8 @@ public class ResoContochallengeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reso_contochallenge);
 
+        getSupportActionBar().setTitle("Resoconto gara");
+
         KmProgressBar = findViewById(R.id.KmProgressBar);
         VelocitaProgessBar = findViewById(R.id.velocitaProgressBar);
         CalorieProgressBar = findViewById(R.id.CalorieProgressBar);
