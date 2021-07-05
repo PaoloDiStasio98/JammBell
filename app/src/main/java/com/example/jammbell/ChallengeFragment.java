@@ -20,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -69,6 +70,7 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
 
 
     RecyclerView recyclerViewChallenge;
+    TextView filtroTextView;
 
     @Override
     public void getUsername(String Datafine, String Datainizio, String IDcreatore, String Nome, String Stato, String UsernameCreatore, String UsernamePartecipante) {
@@ -108,6 +110,8 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
         setHasOptionsMenu(true);
 
         PullGare();
+
+        filtroTextView = getView().findViewById(R.id.FiltroTextView);
 
 
         super.onViewCreated(view, savedInstanceState);
@@ -248,6 +252,10 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
                                                     MyAdapterChallenge myAdapter = new MyAdapterChallenge(getContext(), ChallengeDataInizio, ChallengeDataFine, ChallengeNome, ChallengeUsernamePartecipante, ChallengeStato, ChallengeUsernameCreatore, ChallengeDocumento, ChallengeRisultato, ChallengeUsernameVincitore);
                                                     recyclerViewChallenge.setAdapter(myAdapter);
                                                     recyclerViewChallenge.setLayoutManager(new LinearLayoutManager(getContext()));
+
+                                                    if(ChallengeDataInizio.size() == 0){
+                                                        filtroTextView.setText("Nessuna gara");
+                                                    }
 
                                                 }
                                             }

@@ -245,21 +245,31 @@ public class ResoContochallengeActivity extends AppCompatActivity {
 
     public String getOrario(HashMap Data){
         String orarioMH = null;
+        Log.d("Orario1", Data.toString());
+
 
         String Stringora = String.valueOf(Data.get("hour"));
         int ora = Integer.parseInt(Stringora);
+        Log.d("Orario1", String.valueOf(ora));
 
         String Stringminuto = String.valueOf(Data.get("minute"));
         int minuto = Integer.parseInt(Stringminuto);
+        Log.d("Orario1", String.valueOf(minuto));
 
-        if(minuto < 10)
+
+
+        if(minuto < 10) {
             orarioMH = Stringora + ":0" + Stringminuto;
-        if(ora < 10)
+        }
+        else if(ora < 10) {
             orarioMH = "0" + Stringora + ":" + Stringminuto;
-        if(ora < 10 && minuto < 10)
+        }
+        else if(ora < 10 && minuto < 10) {
             orarioMH = "0" + Stringora + ":0" + Stringminuto;
-        if(ora > 10 && minuto > 10)
+        }
+        else if(ora >= 10 && minuto >= 10) {
             orarioMH = Stringora + ":" + Stringminuto;
+        }
 
         Log.d("orario", "prova funzione" + orarioMH);
         return orarioMH;
@@ -289,12 +299,15 @@ public class ResoContochallengeActivity extends AppCompatActivity {
                                     Log.d("DatamapGara", DatamapGara.toString());
 
                                     String dataSessione = ConversioneDate(DatamapSessione);
+                                    Log.d("dataMap", dataSessione);
 
 
                                     if(dataSessione.compareTo(datainizio) >= 0 && dataSessione.compareTo(datafine) <= 0) {
 
                                         String orarioFineSessione = getOrario(DatamapSessione);
                                         String orarioInizioGara = getOrario(DatamapGara);
+                                        Log.d("dataMap", orarioFineSessione);
+                                        Log.d("dataMap", orarioInizioGara);
 
 
                                         Log.d("date", dataSessione + " poi  " + datainizio);
@@ -558,11 +571,11 @@ public class ResoContochallengeActivity extends AppCompatActivity {
 
 
                 } else {
-                    contoRovesciaTextView.setText("La gara ancora deve iniziare");
+                    contoRovesciaTextView.setText("La gara comincerà a breve");
                 }
             }
             else {
-                contoRovesciaTextView.setText("La gara è finita");
+                contoRovesciaTextView.setText("La gara è terminata");
 
 
                 if(countrisultatocreatore > countrisultatopartecipante) {
@@ -576,7 +589,7 @@ public class ResoContochallengeActivity extends AppCompatActivity {
                     pushRisultato(risultato, usernamePartecipante);
                 }
                 if(countrisultatocreatore == countrisultatopartecipante) {
-                    messaggioVincitoreTextView.setText("La gara è finita in pareggio!");
+                    messaggioVincitoreTextView.setText("La gara è terminata in pareggio!");
                     String risultato = countrisultatopartecipante + "-" + countrisultatocreatore;
                     pushRisultato(risultato, "Pareggio");
                 }
