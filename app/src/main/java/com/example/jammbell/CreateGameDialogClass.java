@@ -10,6 +10,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,6 +91,7 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
 
     OnGameCreatedListener mOnGameCreatedListener;
 
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -104,6 +107,7 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
         cercaAmicoEditText = view.findViewById(R.id.cercaAmicoEditText);
         nomePartitaEditText = view.findViewById(R.id.NomePartitaEditText);
         ErroreTextView = view.findViewById(R.id.ErroreTextView);
+
 
 
         //prendo data di inizio e la imposto come testo del picker
@@ -215,7 +219,6 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
                 .setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                     }
                 })
                 .setPositiveButton("Conferma", new DialogInterface.OnClickListener() {
@@ -223,8 +226,10 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
 
                         if(cercaAmicoEditText.getText().toString().matches("") || DatainizioTextView.getText().toString().matches("Data inizio gara")
-                            || DatafineTextView.getText().toString().matches("Data fine gara") || nomePartitaEditText.getText().toString().matches(""))
+                            || DatafineTextView.getText().toString().matches("Data fine gara") || nomePartitaEditText.getText().toString().matches("")) {
                             Log.d("amico", "qualche campo vuoto");
+                            Toast.makeText(getContext(), "Inserisci tutti i campi richiesti per creare una gara", Toast.LENGTH_SHORT).show();
+                        }
                         else {
                             Log.d("amicodata", datainizio);
                             Log.d("amicodata", datafine);
@@ -382,6 +387,7 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
 
         if(amicotrovato == false) {
             Log.d("amico", "amico non trovato");
+            Toast.makeText(getContext(), "Nessun utente trovato con questo username, riprova", Toast.LENGTH_SHORT).show();
             ErroreTextView.setVisibility(View.VISIBLE);
             ErroreTextView.setText("Nessun utente trovato con questo username, riprova");
         }

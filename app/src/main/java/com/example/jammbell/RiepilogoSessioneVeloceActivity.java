@@ -71,6 +71,8 @@ public class RiepilogoSessioneVeloceActivity extends AppCompatActivity {
         buttonConferma = findViewById(R.id.buttonConferma);
 
 
+        getSupportActionBar().setTitle("Riepilogo sessione");
+
         String userId = getIntent().getStringExtra("USER_ID");
         long Tempo = getIntent().getLongExtra("TEMPO", 0);
         float Km = getIntent().getFloatExtra("KM", 0);
@@ -157,50 +159,50 @@ public class RiepilogoSessioneVeloceActivity extends AppCompatActivity {
         switch (v.getId()) {
             case R.id.Stella1:
                 valutazione = 1;
-                Stella1.setBackgroundResource(R.drawable.ic_baseline_star_24);
-                Stella2.setBackgroundResource(R.drawable.ic_baseline_star_border_24);
-                Stella3.setBackgroundResource(R.drawable.ic_baseline_star_border_24);
-                Stella4.setBackgroundResource(R.drawable.ic_baseline_star_border_24);
-                Stella5.setBackgroundResource(R.drawable.ic_baseline_star_border_24);
+                Stella1.setBackgroundResource(R.drawable.stella_bianca);
+                Stella2.setBackgroundResource(R.drawable.stella_bordo_bianca);
+                Stella3.setBackgroundResource(R.drawable.stella_bordo_bianca);
+                Stella4.setBackgroundResource(R.drawable.stella_bordo_bianca);
+                Stella5.setBackgroundResource(R.drawable.stella_bordo_bianca);
                 break;
 
             case R.id.Stella2:
                 valutazione = 2;
-                Stella1.setBackgroundResource(R.drawable.ic_baseline_star_24);
-                Stella2.setBackgroundResource(R.drawable.ic_baseline_star_24);
-                Stella3.setBackgroundResource(R.drawable.ic_baseline_star_border_24);
-                Stella4.setBackgroundResource(R.drawable.ic_baseline_star_border_24);
-                Stella5.setBackgroundResource(R.drawable.ic_baseline_star_border_24);
+                Stella1.setBackgroundResource(R.drawable.stella_bianca);
+                Stella2.setBackgroundResource(R.drawable.stella_bianca);
+                Stella3.setBackgroundResource(R.drawable.stella_bordo_bianca);
+                Stella4.setBackgroundResource(R.drawable.stella_bordo_bianca);
+                Stella5.setBackgroundResource(R.drawable.stella_bordo_bianca);
                 break;
 
             case R.id.Stella3:
                 valutazione = 3;
-                Stella1.setBackgroundResource(R.drawable.ic_baseline_star_24);
-                Stella2.setBackgroundResource(R.drawable.ic_baseline_star_24);
-                Stella3.setBackgroundResource(R.drawable.ic_baseline_star_24);
-                Stella4.setBackgroundResource(R.drawable.ic_baseline_star_border_24);
-                Stella5.setBackgroundResource(R.drawable.ic_baseline_star_border_24);
+                Stella1.setBackgroundResource(R.drawable.stella_bianca);
+                Stella2.setBackgroundResource(R.drawable.stella_bianca);
+                Stella3.setBackgroundResource(R.drawable.stella_bianca);
+                Stella4.setBackgroundResource(R.drawable.stella_bordo_bianca);
+                Stella5.setBackgroundResource(R.drawable.stella_bordo_bianca);
 
                 break;
 
             case R.id.Stella4:
                 valutazione = 4;
-                Stella1.setBackgroundResource(R.drawable.ic_baseline_star_24);
-                Stella2.setBackgroundResource(R.drawable.ic_baseline_star_24);
-                Stella3.setBackgroundResource(R.drawable.ic_baseline_star_24);
-                Stella4.setBackgroundResource(R.drawable.ic_baseline_star_24);
-                Stella5.setBackgroundResource(R.drawable.ic_baseline_star_border_24);
+                Stella1.setBackgroundResource(R.drawable.stella_bianca);
+                Stella2.setBackgroundResource(R.drawable.stella_bianca);
+                Stella3.setBackgroundResource(R.drawable.stella_bianca);
+                Stella4.setBackgroundResource(R.drawable.stella_bianca);
+                Stella5.setBackgroundResource(R.drawable.stella_bordo_bianca);
 
 
 
                 break;
             case R.id.Stella5:
                 valutazione = 5;
-                Stella1.setBackgroundResource(R.drawable.ic_baseline_star_24);
-                Stella2.setBackgroundResource(R.drawable.ic_baseline_star_24);
-                Stella3.setBackgroundResource(R.drawable.ic_baseline_star_24);
-                Stella4.setBackgroundResource(R.drawable.ic_baseline_star_24);
-                Stella5.setBackgroundResource(R.drawable.ic_baseline_star_24);
+                Stella1.setBackgroundResource(R.drawable.stella_bianca);
+                Stella2.setBackgroundResource(R.drawable.stella_bianca);
+                Stella3.setBackgroundResource(R.drawable.stella_bianca);
+                Stella4.setBackgroundResource(R.drawable.stella_bianca);
+                Stella5.setBackgroundResource(R.drawable.stella_bianca);
 
 
                 break;

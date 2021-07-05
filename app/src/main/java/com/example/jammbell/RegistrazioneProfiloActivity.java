@@ -267,7 +267,7 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity implements N
     public void showNumberPickerAltezza(View view) {
         AltezzaCliccato = true;
         PesoCliccato = false;
-        NumberPickerDialog newFragment = new NumberPickerDialog(120, 220);
+        NumberPickerDialog newFragment = new NumberPickerDialog(120, 220, 175);
         newFragment.setValueChangeListener(this);
         newFragment.show(getSupportFragmentManager(), "time picker");
     }
@@ -275,7 +275,7 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity implements N
     public void showNumberPickerPeso(View view) {
         AltezzaCliccato = false;
         PesoCliccato = true;
-        NumberPickerDialog newFragment = new NumberPickerDialog(40, 210);
+        NumberPickerDialog newFragment = new NumberPickerDialog(40, 210, 70);
         newFragment.setValueChangeListener(this);
         newFragment.show(getSupportFragmentManager(), "time picker");
     }
@@ -325,6 +325,11 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity implements N
         int style = AlertDialog.THEME_HOLO_LIGHT;
 
         datePickerDialog = new DatePickerDialog(this, style, dateSetListener, year, month, day);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.YEAR, -15);
+        datePickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
+
     }
 
     private String makeDateString(int day, int month, int year)

@@ -220,8 +220,8 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
 
                                     if (document.get("Stato").equals("In attesa") || document.get("Stato").equals("Attiva")){
                                         Log.d("stato", String.valueOf(document.get("Stato")));
-                                        ChallengeUsernameVincitore.add("Nessuno");
-                                        ChallengeRisultato.add("0-0");
+                                        ChallengeUsernameVincitore.add("null");
+                                        ChallengeRisultato.add("null");
                                     }
                                     else {
                                         ChallengeUsernameVincitore.add(String.valueOf(document.get("UsernameVincitore")));
@@ -273,8 +273,8 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
 
                                 if (document.get("Stato").equals("In attesa") || document.get("Stato").equals("Attiva")){
                                     Log.d("stato", String.valueOf(document.get("Stato")));
-                                    ChallengeUsernameVincitore.add("Nessuno");
-                                    ChallengeRisultato.add("0-0");
+                                    ChallengeUsernameVincitore.add("null");
+                                    ChallengeRisultato.add("null");
                                 }
                                 else {
                                     ChallengeUsernameVincitore.add(String.valueOf(document.get("UsernameVincitore")));

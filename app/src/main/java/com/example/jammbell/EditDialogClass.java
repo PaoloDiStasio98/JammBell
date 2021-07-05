@@ -270,6 +270,10 @@ public class EditDialogClass extends AppCompatDialogFragment {
         int style = AlertDialog.THEME_HOLO_LIGHT;
 
         datePickerDialog = new DatePickerDialog(getContext(), style, dateSetListener, year, month, day);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.YEAR, -15);
+        datePickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
     }
 
     private String makeDateString(int day, int month, int year)
