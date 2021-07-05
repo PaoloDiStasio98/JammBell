@@ -16,9 +16,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.w3c.dom.Text;
 
@@ -137,24 +141,7 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
                         data3.remove(position);
                         notifyItemRemoved(position);
 
-                        db.collection("Gara").document(data7.get(position))
-                                .delete()
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d("Eliminato", "DocumentSnapshot successfully deleted!");
-
-
-
-                                    }
-
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        // Log.w(TAG, "Error deleting document", e);
-                                    }
-                                });
+                        EliminaGara(position);
                     }
                 });
                 holder.UsernamePartecipanteTextView.setText("Invitato da: " + data6.get(position));
@@ -212,25 +199,8 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
                             data3.remove(position);
                             notifyItemRemoved(position);
                            // notifyItemRangeChanged(position, data3.size());
+                            EliminaGara(position);
 
-                        db.collection("Gara").document(data7.get(position))
-                                .delete()
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d("Eliminato", "DocumentSnapshot successfully deleted!");
-
-
-
-                                    }
-
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        // Log.w(TAG, "Error deleting document", e);
-                                    }
-                                });
 
                     }
                 });
@@ -336,5 +306,65 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
         }
 
 
+
     }
+
+    public void EliminaGara(int position){
+        db.collection("Gara").document(data7.get(position))
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Eliminato", "DocumentSnapshot successfully deleted!");
+
+
+
+                    }
+
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Log.w(TAG, "Error deleting document", e);
+                    }
+                });
+
+        db.collection("GaraUtente")
+                .whereEqualTo("IDGara", data7.get(position))
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                String IDgara = document.getId();
+
+
+                                db.collection("GaraUtente")
+                                        .document(IDgara)
+                                        .delete()
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d("Eliminato", "DocumentSnapshot successfully deleted!");
+                                            }
+
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                // Log.w(TAG, "Error deleting document", e);
+                                            }
+                                        });
+                            }
+                        }
+                        else
+                        {
+
+                            Log.d("database", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+    }
+
 }
