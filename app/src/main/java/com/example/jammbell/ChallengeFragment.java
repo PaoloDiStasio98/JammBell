@@ -207,7 +207,8 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
                                 IDGara = String.valueOf(document.get("IDGara"));
                                 Log.d("CHALLENGEIDGARA", IDGara);
 
-                                db.collection("Gara").document(IDGara)
+                                db.collection("Gara")
+                                        .document(IDGara)
                                         .get()
                                         .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                             @Override
