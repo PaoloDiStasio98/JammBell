@@ -62,6 +62,9 @@ public class MapFragment extends Fragment {
     //sessione veloce
     FloatingActionButton buttonSessioneVeloce;
 
+    //sessione guidata
+    FloatingActionButton buttonSessioneGuidata;
+
     @Override
     public void onResume() {
         supportMapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -107,6 +110,15 @@ public class MapFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        buttonSessioneGuidata = (FloatingActionButton) getView().findViewById(R.id.ButtonSessioneGuidata);
+        buttonSessioneGuidata.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SessioneGuidataDialog();
+            }
+        });
+
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -147,6 +159,11 @@ public class MapFragment extends Fragment {
         return view;
     }
 
+    public void SessioneGuidataDialog() {
+        SessioneGuidataDialog createSessioneGuidata = new SessioneGuidataDialog();
+        createSessioneGuidata.show(getFragmentManager(), "createsessioneguidata");
+        createSessioneGuidata.setTargetFragment(MapFragment.this, 1);
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull  String[] permissions, @NonNull int[] grantResults) {
