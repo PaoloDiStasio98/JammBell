@@ -63,7 +63,7 @@ public class SignupActivity extends AppCompatActivity {
                 }
 
                 else {
-                    String mail = MailEditText.getText().toString();
+                    String mail = MailEditText.getText().toString().toLowerCase();
                     String password = PasswordEditText.getText().toString();
                     idTransfer(mail, password);
                 }

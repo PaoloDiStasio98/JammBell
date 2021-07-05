@@ -32,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
 
     FirebaseUser currentUser;
 
+
     @Override
     public void onBackPressed() {
         return;

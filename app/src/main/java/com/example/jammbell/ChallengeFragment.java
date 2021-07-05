@@ -40,6 +40,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -248,6 +250,7 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
                                                     MyAdapterChallenge myAdapter = new MyAdapterChallenge(getContext(), ChallengeDataInizio, ChallengeDataFine, ChallengeNome, ChallengeUsernamePartecipante, ChallengeStato, ChallengeUsernameCreatore, ChallengeDocumento, ChallengeRisultato, ChallengeUsernameVincitore);
                                                     recyclerViewChallenge.setAdapter(myAdapter);
                                                     recyclerViewChallenge.setLayoutManager(new LinearLayoutManager(getContext()));
+
 
                                                 }
                                             }

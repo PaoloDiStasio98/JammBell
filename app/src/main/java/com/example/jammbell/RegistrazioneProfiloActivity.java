@@ -197,9 +197,9 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity implements N
                                                 {
                                                     //Prendo le informazioni e le metto in utente
                                                     utente.put("IDUtente", user.getUid());
-                                                    utente.put("Username", usernameTextView.getText().toString());
-                                                    utente.put("Nome", nomeTextView.getText().toString());
-                                                    utente.put("Cognome", cognomeTextView.getText().toString());
+                                                    utente.put("Username", usernameTextView.getText().toString().replace(" ", ""));
+                                                    utente.put("Nome", nomeTextView.getText().toString().trim());
+                                                    utente.put("Cognome", cognomeTextView.getText().toString().trim());
                                                     utente.put("Data di nascita", date);
                                                     utente.put("Sesso", sessoSpinner.getSelectedItem().toString());
                                                     utente.put("Peso", (int) Integer.parseInt(pesoButton.getText().toString()));
