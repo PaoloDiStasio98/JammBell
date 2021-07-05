@@ -359,6 +359,7 @@ public class ResoContochallengeActivity extends AppCompatActivity {
                                 Log.d("DatamapGara", DatamapGara.toString());
 
                                 String dataSessione = ConversioneDate(DatamapSessione);
+                                Log.d("dataMap",dataSessione);
 
 
                                 if(dataSessione.compareTo(datainizio) >= 0 && dataSessione.compareTo(datafine) <= 0) {
