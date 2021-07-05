@@ -86,7 +86,7 @@ public class Main2Activity extends AppCompatActivity {
                                     Utente.put("Cognome", document.get("Cognome"));
                                     Utente.put("Nome", document.get("Nome"));
                                     Utente.put("Data di nascita", document.get("Data di nascita"));
-                                    Utente.put("ID", document.get("ID"));
+                                    Utente.put("ID", document.get("IDUtente"));
                                     Utente.put("Peso", document.get("Peso"));
                                     Utente.put("Sesso", document.get("Sesso"));
                                     Utente.put("Username", document.get("Username"));

@@ -82,6 +82,7 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
     boolean amicotrovato;
 
     Map<String, Object> gara = new HashMap<>();
+    Map<String, Object> GaraUtenteID = new HashMap<>();
 
     ChallengeFragment fragment = new ChallengeFragment();
 
@@ -333,8 +334,20 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
             public void onSuccess(DocumentReference documentReference)
             {
                 Log.d("TAG", "DocumentSnapshot written with ID: " + documentReference.getId());
-              //  startActivity(new Intent(RegistrazioneProfiloActivity.this, Main2Activity.class));
+                    GaraUtenteID.put("IDGara", documentReference.getId());
+                    GaraUtenteID.put("UTENTEID", currentUser.getUid());
+                    db.collection("GaraUtente").add(GaraUtenteID).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            GaraUtenteID.put("UTENTEID", IDamico);
+                            db.collection("GaraUtente").add(GaraUtenteID).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
 
+                                }
+                            });
+                        }
+                    });
                 mOnGameCreatedListener.getUsername(datafine, datainizio, currentUser.getUid(), nomepartita, "In attesa", usernamecreatore, usernameamico);
 
             }
