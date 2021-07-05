@@ -104,6 +104,9 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sessione_veloce);
 
+        getSupportActionBar().setTitle("Sessione veloce");
+
+
         notificationManager = NotificationManagerCompat.from(this);
         createNotificationChannel();
         builderNotification = new NotificationCompat.Builder(this, "lembuit")

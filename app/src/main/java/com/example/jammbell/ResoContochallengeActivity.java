@@ -76,6 +76,7 @@ public class ResoContochallengeActivity extends AppCompatActivity {
     Double CalorieTot2 = 0.0;
     Double Velocitamedia2 = 0.0;
 
+    int countdocument2 = 0;
     int countdocument = 0;
     int countrisultatocreatore = 0;
     int countrisultatopartecipante = 0;
@@ -336,7 +337,7 @@ public class ResoContochallengeActivity extends AppCompatActivity {
     }
 
     public void PullSessioniPartecipante(FirestoreCallback1 firestoreCallback){
-        countdocument = 0;
+        countdocument2 = 0;
         KmTot2 = 0.0;
         CalorieTot2 = 0.0;
         Velocitamedia2 = 0.0;
@@ -376,7 +377,7 @@ public class ResoContochallengeActivity extends AppCompatActivity {
                                             Velocitamedia2 = (Velocitamedia2 + (double) document.get("Velocita"));
 
                                             Log.d("gara2", "km: " + String.valueOf(KmTot2) + "Cal " + String.valueOf(CalorieTot2));
-                                            countdocument++;
+                                            countdocument2++;
 
 
                                         }
@@ -388,7 +389,7 @@ public class ResoContochallengeActivity extends AppCompatActivity {
                                         Velocitamedia2 = (Velocitamedia2 + (double) document.get("Velocita"));
 
                                         Log.d("gara2", "km: " + String.valueOf(KmTot2) + "Cal " + String.valueOf(CalorieTot2));
-                                        countdocument++;
+                                        countdocument2++;
                                     }
                                 }
 
@@ -445,11 +446,16 @@ public class ResoContochallengeActivity extends AppCompatActivity {
         String VelocitaPartecipanteString = StatistichePartecipante.get(2);
         float VelocitaPartecipante = Float.parseFloat(VelocitaPartecipanteString);
 
+        Log.d("PunteggioBarra", String.valueOf((int) (VelocitaCreatore + VelocitaPartecipante)));
+
         if((int) (VelocitaCreatore + VelocitaPartecipante) == 0) {
             VelocitaProgessBar.setMax(100);
             VelocitaProgessBar.setProgress(50, true);
         }
         else{
+            Log.d("PunteggioBarra", String.valueOf((int) (VelocitaCreatore + VelocitaPartecipante)));
+            Log.d("PunteggioBarra", String.valueOf((int) (VelocitaCreatore)));
+
             VelocitaProgessBar.setMax((int) (VelocitaCreatore + VelocitaPartecipante));
             VelocitaProgessBar.setProgress((int) VelocitaCreatore, true);
 
@@ -472,24 +478,36 @@ public class ResoContochallengeActivity extends AppCompatActivity {
 
         }
 
-        if((int) KmCreatore > KmPartecipante) {
+        if((int) KmCreatore > (int) KmPartecipante) {
             countrisultatocreatore++;
+            Log.d("Punteggio", "punto km creatore");
         }
-        else if((int) KmCreatore < KmPartecipante)
-           countrisultatopartecipante++;
-
-        if((int) VelocitaCreatore > VelocitaPartecipante) {
-            countrisultatocreatore++;
-        }
-        else if((int) VelocitaCreatore < VelocitaPartecipante)
+        else if((int) KmCreatore < (int) KmPartecipante) {
             countrisultatopartecipante++;
-
-        if((int) CalorieCreatore > CaloriePartecipante) {
-            countrisultatocreatore++;
+            Log.d("Punteggio", "punto km paretipante");
         }
-        else if((int) CalorieCreatore < CaloriePartecipante)
-            countrisultatopartecipante++;
 
+
+        if((int) VelocitaCreatore > (int) VelocitaPartecipante) {
+            countrisultatocreatore++;
+            Log.d("Punteggio", "punto vel creatore");
+
+        }
+        else if((int) VelocitaCreatore < (int) VelocitaPartecipante) {
+            countrisultatopartecipante++;
+            Log.d("Punteggio", "punto vel partecipante");
+        }
+
+        if((int) CalorieCreatore > (int) CaloriePartecipante) {
+            countrisultatocreatore++;
+            Log.d("Punteggio", "punto cal creatore");
+
+        }
+        else if((int) CalorieCreatore < (int) CaloriePartecipante) {
+            countrisultatopartecipante++;
+            Log.d("Punteggio", "punto cal partecipante");
+
+        }
         risultatoTextView.setText(countrisultatocreatore + "-" + countrisultatopartecipante);
 
         DateTimeFormatter dtf = null;

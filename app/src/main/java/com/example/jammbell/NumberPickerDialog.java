@@ -14,10 +14,12 @@ public class NumberPickerDialog extends DialogFragment {
 
     int valoreMinimo;
     int valoreMassimo;
+    int valoreDefault;
 
-    public NumberPickerDialog(int minValue, int maxValue) {
+    public NumberPickerDialog(int minValue, int maxValue, int Value) {
         valoreMinimo = minValue;
         valoreMassimo = maxValue;
+        valoreDefault = Value;
     }
 
 
@@ -28,6 +30,7 @@ public class NumberPickerDialog extends DialogFragment {
         final NumberPicker numberPicker = new NumberPicker(getActivity());
         numberPicker.setMinValue(valoreMinimo);
         numberPicker.setMaxValue(valoreMassimo);
+        numberPicker.setValue(valoreDefault);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Seleziona: ");

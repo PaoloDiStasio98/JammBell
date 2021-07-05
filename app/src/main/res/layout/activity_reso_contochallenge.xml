@@ -10,7 +10,7 @@
     tools:context=".ResoContochallengeActivity">
 
 <LinearLayout
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
@@ -24,7 +24,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Nome gara"
-            android:textColor="@color/black"
+            android:textColor="@color/neroapp"
             android:textSize="30dp"
             android:layout_centerVertical="true"
             android:textAlignment="center"
@@ -49,11 +49,11 @@
             android:layout_width="fill_parent"
             android:layout_height="120dp"
             android:src="@drawable/ic_baseline_person_24"
-            app:tint="@color/red" />
+            app:tint="@color/bluapp" />
 
            <TextView
                android:id="@+id/Username1TextView"
-               android:textColor="@color/red"
+               android:textColor="@color/bluapp"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:text="Username1"
@@ -70,6 +70,7 @@
         <TextView
             android:id="@+id/RisultatoTextView"
             android:layout_width="fill_parent"
+            android:textColor="@color/grigioapp"
             android:layout_height="wrap_content"
             android:text="Risultato"
             android:textSize="30dp"
@@ -89,11 +90,11 @@
                 android:layout_width="fill_parent"
                 android:layout_height="120dp"
                 android:src="@drawable/ic_baseline_person_24"
-                app:tint="@color/blu"/>
+                app:tint="@color/azzurroapp"/>
 
             <TextView
                 android:id="@+id/Username2TextView"
-                android:textColor="@color/blu"
+                android:textColor="@color/azzurroapp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Username2"
@@ -111,10 +112,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="Km"
-        android:textSize="15dp"
-        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:textColor="@color/neroapp"
         android:layout_gravity="center"
         android:gravity="center"/>
+
     <ProgressBar
         android:id="@+id/KmProgressBar"
         android:layout_width="fill_parent"
@@ -131,8 +133,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="Velocità"
-        android:textSize="15dp"
-        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:textColor="@color/neroapp"
         android:layout_gravity="center"
         android:gravity="center"/>
     <ProgressBar
@@ -151,8 +153,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="Calorie"
-        android:textSize="15dp"
-        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:textColor="@color/neroapp"
         android:layout_gravity="center"
         android:gravity="center"/>
     <ProgressBar
@@ -171,9 +173,10 @@
         android:layout_height="match_parent"
         android:text="Alla fine della gara mancano: "
         android:layout_gravity="center"
+        android:textColor="@color/neroapp"
         android:gravity="center"
         android:textSize="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="25dp"
         />
 
     <TextView
@@ -183,7 +186,7 @@
         android:text="Data"
         android:layout_gravity="center"
         android:gravity="center"
-        android:textColor="@color/black"
+        android:textColor="@color/bluappscuro"
         android:textSize="25dp"
         android:layout_marginTop="20dp"
         />
@@ -195,14 +198,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="Corri a vincere!"
+        android:textColor="@color/neroapp"
         android:gravity="center"
         android:textSize="25dp"/>
 
     <Button
         android:id="@+id/SessioneVeloceButton"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:text="Avvia Sessione veloce"
+        android:textAlignment="center"
+        android:layout_gravity="center"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:background="@drawable/custom_button"
+        android:textColor="@color/biancoapp"
         />
 
 

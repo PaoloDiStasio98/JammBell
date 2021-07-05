@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -43,8 +44,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 
-public class ChallengeFragment extends Fragment implements CreateGameDialogClass.OnGameCreatedListener{
-
+public class ChallengeFragment extends Fragment implements CreateGameDialogClass.OnGameCreatedListener {
 
 
     private static final String TAG = "ChallengeFragment";
@@ -65,13 +65,13 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
     ArrayList<String> ChallengeRisultato = new ArrayList<String>();
     ArrayList<String> ChallengeUsernameVincitore = new ArrayList<String>();
 
-
+    String IDGara = null;
 
 
     RecyclerView recyclerViewChallenge;
 
     @Override
-    public void getUsername(String Datafine, String Datainizio, String IDcreatore, String Nome, String Stato, String UsernameCreatore, String UsernamePartecipante){
+    public void getUsername(String Datafine, String Datainizio, String IDcreatore, String Nome, String Stato, String UsernameCreatore, String UsernamePartecipante) {
         /*
         Log.d("getUsername", Datafine);
         Log.d("getUsername", Datainizio);
@@ -101,15 +101,13 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
     }
 
 
-
     @Override
-    public void onViewCreated(@NonNull  View view, @Nullable  Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         recyclerViewChallenge = (RecyclerView) getView().findViewById(R.id.recyclerViewChallenge);
 
         setHasOptionsMenu(true);
 
         PullGare();
-
 
 
         super.onViewCreated(view, savedInstanceState);
@@ -124,7 +122,7 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
     }
 
     @Override
-    public void onPrepareOptionsMenu(@NonNull  Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
         menu.clear();
         MenuInflater inflater = getActivity().getMenuInflater();
         inflater.inflate(R.menu.upbarchallenge_menu, menu);
@@ -133,9 +131,9 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.create_button: {
-                    CreateGameDialog();
+                CreateGameDialog();
                 return true;
             }
             case R.id.refresh_button: {
@@ -150,7 +148,7 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
 
     @Override
     public void onAttach(Activity activity) {
-        myContext=(FragmentActivity) activity;
+        myContext = (FragmentActivity) activity;
         super.onAttach(activity);
     }
 
@@ -174,7 +172,7 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
     }
 
 
-    public void clearCell(){
+    public void clearCell() {
         ChallengeDataInizio.clear();
         ChallengeDataFine.clear();
         ChallengeDocumento.clear();
@@ -189,14 +187,86 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
     public void PullGare() {
 
 
-       clearCell();
+        clearCell();
 
         mAuth = FirebaseAuth.getInstance();
 
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
+        Log.d("CHALLENGEID", String.valueOf(main2Activity.Utente.get("ID")));
 
+        db.collection("GaraUtente")
+                .whereEqualTo("UTENTEID", main2Activity.Utente.get("ID"))
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                IDGara = String.valueOf(document.get("IDGara"));
+                                Log.d("CHALLENGEIDGARA", IDGara);
+
+                                db.collection("Gara").document(IDGara)
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    DocumentSnapshot document1 = task.getResult();
+                                                    Log.d("CHALLENGEID", "dentrooooooo");
+                                                    Log.d("CHALLENGEID", String.valueOf(document1.get("Datainizio")));
+                                                    Log.d("CHALLENGEID", String.valueOf(document1.getId()));
+
+
+                                                    ChallengeDataInizio.add(String.valueOf(document1.get("Datainizio")));
+                                                    ChallengeDataFine.add(String.valueOf(document1.get("Datafine")));
+                                                    ChallengeNome.add(String.valueOf(document1.get("Nome")));
+                                                    ChallengeStato.add(String.valueOf(document1.get("Stato")));
+                                                    ChallengeUsernamePartecipante.add(String.valueOf(document1.get("UsernamePartecipante")));
+                                                    ChallengeUsernameCreatore.add(String.valueOf(document1.get("UsernameCreatore")));
+                                                    ChallengeDocumento.add(String.valueOf(document1.getId()));
+
+
+                                                    if (document1.get("Stato").equals("In attesa") || document1.get("Stato").equals("Attiva")) {
+                                                        Log.d("stato", String.valueOf(document1.get("Stato")));
+                                                        ChallengeUsernameVincitore.add("null");
+                                                        ChallengeRisultato.add("null");
+                                                    } else {
+                                                        ChallengeUsernameVincitore.add(String.valueOf(document1.get("UsernameVincitore")));
+                                                        ChallengeRisultato.add(String.valueOf(document1.get("Risultato")));
+                                                    }
+
+                                                    Log.d("PASSATO", String.valueOf(ChallengeRisultato));
+                                                    Log.d("PASSATO", String.valueOf(ChallengeUsernameVincitore));
+                                                    Log.d("CHALLENGE1", String.valueOf(ChallengeStato));
+                                                    Log.d("CHALLENGE1", String.valueOf(ChallengeDataInizio));
+                                                    Log.d("CHALLENGE1", String.valueOf(ChallengeNome));
+                                                    Log.d("CHALLENGE1", String.valueOf(ChallengeUsernameCreatore));
+
+                                                    MyAdapterChallenge myAdapter = new MyAdapterChallenge(getContext(), ChallengeDataInizio, ChallengeDataFine, ChallengeNome, ChallengeUsernamePartecipante, ChallengeStato, ChallengeUsernameCreatore, ChallengeDocumento, ChallengeRisultato, ChallengeUsernameVincitore);
+                                                    recyclerViewChallenge.setAdapter(myAdapter);
+                                                    recyclerViewChallenge.setLayoutManager(new LinearLayoutManager(getContext()));
+
+                                                }
+                                            }
+                                        });
+                            }
+
+
+                            Log.d("CHALLENGE2", String.valueOf(ChallengeStato));
+                            Log.d("CHALLENGE2", String.valueOf(ChallengeDataInizio));
+                            Log.d("CHALLENGE2", String.valueOf(ChallengeNome));
+                            Log.d("CHALLENGE2", String.valueOf(ChallengeUsernameCreatore));
+
+
+                        }
+
+                    }
+                });
+
+
+        /*
             db.collection("Gara")
                     .whereEqualTo("UsernameCreatore", main2Activity.Utente.get("Username"))
                     .orderBy("Datafine")
@@ -220,8 +290,8 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
 
                                     if (document.get("Stato").equals("In attesa") || document.get("Stato").equals("Attiva")){
                                         Log.d("stato", String.valueOf(document.get("Stato")));
-                                        ChallengeUsernameVincitore.add("Nessuno");
-                                        ChallengeRisultato.add("0-0");
+                                        ChallengeUsernameVincitore.add("null");
+                                        ChallengeRisultato.add("null");
                                     }
                                     else {
                                         ChallengeUsernameVincitore.add(String.valueOf(document.get("UsernameVincitore")));
@@ -273,8 +343,8 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
 
                                 if (document.get("Stato").equals("In attesa") || document.get("Stato").equals("Attiva")){
                                     Log.d("stato", String.valueOf(document.get("Stato")));
-                                    ChallengeUsernameVincitore.add("Nessuno");
-                                    ChallengeRisultato.add("0-0");
+                                    ChallengeUsernameVincitore.add("null");
+                                    ChallengeRisultato.add("null");
                                 }
                                 else {
                                     ChallengeUsernameVincitore.add(String.valueOf(document.get("UsernameVincitore")));
@@ -302,5 +372,6 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
                 });
 
     }
-
+*/
+    }
 }

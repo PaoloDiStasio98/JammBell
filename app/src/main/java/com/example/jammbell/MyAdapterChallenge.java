@@ -284,7 +284,15 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
 
                 }
             });
-            holder.RisultatoChallengeTextView.setText("Risultato: " + data8.get(position) + "\n Vincitore: " + data9.get(position));
+
+
+            if(data8.get(position).matches("null")){
+                holder.RisultatoChallengeTextView.setText("Clicca per scoprire il risultato");
+            }
+            else {
+                Log.d("provadata", data8.get(position) + " " + data8.get(position).length());
+                holder.RisultatoChallengeTextView.setText("Risultato: " + data8.get(position) + "\n Vincitore: " + data9.get(position));
+            }
         }
 
 
