@@ -19,6 +19,7 @@
         <activity android:name=".RiepilogoSessioneVeloceActivity" />
         <activity android:name=".SessioneVeloceActivity" />
         <activity android:name=".RegistrazioneProfiloActivity" />
+        <activity android:name=".SessioneGuidataActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

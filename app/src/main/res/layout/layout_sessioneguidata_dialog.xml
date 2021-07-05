@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Livello Facile"
+        android:background="@drawable/custom_button"
+        android:id="@+id/buttonFacile"/>
+
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Livello Medio"
+        android:background="@drawable/custom_button"
+        android:id="@+id/buttonMedio"/>
+
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Livello Difficile"
+        android:background="@drawable/custom_button"
+        android:id="@+id/buttonDifficile"/>
+
+</LinearLayout>

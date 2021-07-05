@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SessioneVeloceActivity">
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="fill_parent"
+        android:layout_height="204dp"
+        android:background="@drawable/box"
+        android:orientation="horizontal"
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintStart_toStartOf="parent"
+        map:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/linearLayout6"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            map:layout_constraintBottom_toBottomOf="@+id/Cronometro"
+            map:layout_constraintTop_toBottomOf="@+id/Cronometro">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="48dp"
+                android:layout_marginTop="32dp"
+                android:text="Tempo"
+                android:textColor="@color/azzurroapp"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                map:layout_constraintStart_toStartOf="parent"
+                map:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/cronometroTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:00"
+                android:layout_marginStart="54dp"
+                android:layout_marginTop="8dp"
+                android:textSize="15dp"
+                android:textColor="@color/biancoapp"
+                map:layout_constraintStart_toStartOf="parent"
+                map:layout_constraintTop_toBottomOf="@+id/textView" />
+
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="130dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="48dp"
+                android:text="Km percorsi"
+                android:textColor="@color/azzurroapp"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                map:layout_constraintEnd_toEndOf="parent"
+                map:layout_constraintStart_toEndOf="@+id/textView"
+                map:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/KmTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="80dp"
+                android:text="0.0 Km"
+                android:textSize="15dp"
+                android:textColor="@color/biancoapp"
+                map:layout_constraintEnd_toEndOf="parent"
+                map:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="127dp"
+                android:layout_marginTop="115dp"
+                android:layout_marginEnd="128dp"
+                android:text="Sessione guidata"
+                android:textColor="@color/azzurroapp"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                map:layout_constraintEnd_toEndOf="parent"
+                map:layout_constraintStart_toStartOf="parent"
+                map:layout_constraintTop_toTopOf="parent"
+                android:id="@+id/indicazioniSessione"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        map:layout_constraintBottom_toBottomOf="parent"
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintStart_toStartOf="parent"
+        map:layout_constraintTop_toBottomOf="@+id/linearLayout4"
+        tools:context=".MapsActivity" />
+
+    <Button
+        android:id="@+id/ButtonPausa"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="80dp"
+        android:alpha="0"
+        android:background="@drawable/icona_pause_azzurroapp"
+        android:onClick="clickButton"
+        map:layout_constraintBottom_toBottomOf="parent"
+        map:layout_constraintEnd_toStartOf="@+id/ButtonStart"
+        map:layout_constraintHorizontal_bias="0.545"
+        map:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/ButtonStart"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="75dp"
+        android:background="@drawable/icona_play_azzurroapp"
+        android:onClick="clickButton"
+        map:layout_constraintBottom_toBottomOf="@+id/map"
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintStart_toStartOf="parent"
+        map:layout_constraintTop_toBottomOf="@+id/linearLayout4"
+        map:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/ButtonStop"
+        android:layout_width="81dp"
+        android:layout_height="81dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="82dp"
+        android:alpha="0"
+        android:background="@drawable/icona_stop_azzurroapp"
+        android:onClick="clickButton"
+        map:layout_constraintBottom_toBottomOf="parent"
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintHorizontal_bias="0.51"
+        map:layout_constraintStart_toEndOf="@+id/ButtonStart" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

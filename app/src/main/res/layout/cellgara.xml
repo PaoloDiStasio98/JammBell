@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="350dp"
     android:layout_height="150dp"
@@ -11,138 +12,126 @@
     android:layout_margin="6dp"
     android:id="@+id/CellaGara">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/linearLayout9"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:paddingTop="5dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Nome gara: "
-        android:id="@+id/NomeGaraCellaTextView"
-        android:textSize="15dp"
-        android:textStyle="bold"
-        android:textAlignment="center"
-        android:layout_gravity="center"
-        android:textColor="@color/black"/>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
         <TextView
-            android:paddingTop="5dp"
+            android:id="@+id/NomeGaraCellaTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" Data Inizio "
+            android:layout_marginStart="90dp"
+            android:paddingTop="5dp"
+            android:text="Nome gara: "
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/DataFineCellaTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
             android:id="@+id/DataInizioCellaTextView"
-            android:textSize="15dp"
-            android:textStyle="bold"
-            android:textAlignment="center"
-            android:layout_gravity="center"
-            android:textColor="@color/black"/>
-
-        <TextView
-            android:paddingTop="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" Data Fine "
-            android:id="@+id/DataFineCellaTextView"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:paddingTop="5dp"
+            android:text=" Data Inizio "
+            android:textAlignment="center"
+            android:textColor="@color/black"
             android:textSize="15dp"
             android:textStyle="bold"
-            android:textAlignment="center"
-            android:layout_gravity="center"
-            android:textColor="@color/black"/>
+            app:layout_constraintBaseline_toBaselineOf="@+id/DataFineCellaTextView"
+            app:layout_constraintStart_toStartOf="parent" />
 
-        </LinearLayout>
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:layout_weight="1"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Username Amico"
-                android:id="@+id/UsernameAmicoCellaTextView"
-                android:textSize="15dp"
-                android:layout_gravity="left"
-                android:padding="3dp"/>
-
-         <TextView
-             android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/DataFineCellaTextView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Stato gara"
-            android:id="@+id/StatoCellaTextView"
-            android:gravity="left"
+            android:layout_marginStart="75dp"
+            android:layout_marginBottom="1dp"
+            android:paddingTop="5dp"
+            android:text=" Data Fine "
+            android:textAlignment="center"
+            android:textColor="@color/black"
             android:textSize="15dp"
-            android:padding="3dp"/>
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/DataInizioCellaTextView" />
 
 
-        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <LinearLayout
-            android:layout_weight="1"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical"
-            android:layout_gravity="right"
-            android:gravity="right">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/linearLayout10"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+
+        <TextView
+            android:id="@+id/UsernameAmicoCellaTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="16dp"
+            android:padding="3dp"
+            android:text="Username Amico"
+            android:textSize="15dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/StatoCellaTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:gravity="left"
+            android:padding="3dp"
+            android:text="Stato gara"
+            android:textSize="15dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/UsernameAmicoCellaTextView" />
+
 
         <TextView
 
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Risultato"
-                android:id="@+id/RisultatoCellaTextView"
-                android:gravity="right"
-                android:textSize="15dp"
-                android:padding="3dp"
-                android:visibility="invisible"
-                />
+            android:id="@+id/RisultatoCellaTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="100dp"
+            android:layout_marginTop="16dp"
+            android:gravity="right"
+            android:padding="3dp"
+            android:text="Risultato"
+            android:textSize="15dp"
+            android:visibility="invisible"
+            app:layout_constraintStart_toEndOf="@+id/UsernameAmicoCellaTextView"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal" >
+        <Button
+            android:id="@+id/ButtonConfermaRifiuta"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/icona_x_rosso"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-                <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:gravity="right">
+        <Button
+            android:id="@+id/ButtonRifiutaGara"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/icona_x_rosso"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ButtonConfermaRifiuta" />
 
 
-            <Button
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@drawable/icona_x_rosso"
-                android:id="@+id/ButtonConfermaRifiuta"
-                android:layout_alignParentRight="true"
-                />
-
-                    <Button
-                        android:id="@+id/ButtonRifiutaGara"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:background="@drawable/icona_x_rosso"
-                        android:visibility="invisible" />
-
-                </RelativeLayout>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
