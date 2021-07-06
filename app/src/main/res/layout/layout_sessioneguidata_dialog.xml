@@ -2,21 +2,39 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_margin="15dp"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="La sessione guidata consiste in un allenamento personalizzato nel
+quale ci saranno minuti in cui dovrai camminare e altri in cui dovrai correre. Ovviamente
+ti verranno mostrate tutte le indicazioni. \n Attenzione una volta che la sessione sarà
+avviata non potrai più interromperla ma dovrai completarla."
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="10dp"
+        android:textSize="15dp"
+        android:textColor="@color/neroapp"/>
 
     <Button
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:text="Livello Facile"
         android:background="@drawable/custom_button"
-        android:id="@+id/buttonFacile"/>
+        android:id="@+id/buttonFacile"
+        android:layout_marginBottom="10dp" />
 
     <Button
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:text="Livello Medio"
         android:background="@drawable/custom_button"
-        android:id="@+id/buttonMedio"/>
+        android:id="@+id/buttonMedio"
+        android:layout_marginBottom="10dp"/>
 
     <Button
         android:layout_width="300dp"

@@ -3,6 +3,7 @@ package com.example.jammbell;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
@@ -13,6 +14,8 @@ import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -23,6 +26,8 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Looper;
 import android.os.SystemClock;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -67,13 +72,13 @@ public class SessioneGuidataActivity extends AppCompatActivity implements
     int minutiCamminata, minutiCorsa, numeroRipetizioni;
 
     TextView cronometroTextView;
+    TextView spiegazioneLivello;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth;
 
     Button ButtonStart;
     Button ButtonStop;
-    Button ButtonPause;
     int flag;
 
     Boolean CronometroRunning = false;
@@ -116,7 +121,9 @@ public class SessioneGuidataActivity extends AppCompatActivity implements
         numeroRipetizioni = getIntent().getIntExtra("Numero_ripetizioni", 3);
 
         indicazioniSessione = findViewById(R.id.indicazioniSessione);
+        spiegazioneLivello = findViewById(R.id.spiegazioneLivello);
 
+        spiegazioneLivello.setText("Ripetizioni: " + numeroRipetizioni + "     Corsa: " + minutiCorsa + "'     Camminata: " + minutiCamminata +"'");
 
         notificationManager = NotificationManagerCompat.from(this);
         createNotificationChannel();
@@ -129,7 +136,6 @@ public class SessioneGuidataActivity extends AppCompatActivity implements
 
 
         ButtonStart = findViewById(R.id.ButtonStart);
-        ButtonPause = findViewById(R.id.ButtonPausa);
         ButtonStop = findViewById(R.id.ButtonStop);
        // Cronometro = findViewById(R.id.Cronometro);
         cronometroTextView = findViewById(R.id.cronometroTextView);
@@ -383,29 +389,67 @@ public class SessioneGuidataActivity extends AppCompatActivity implements
         gpsTrack.setPoints(points);
     }
 
+    public void Vibrazione(){
+        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            // Vibrate for 500 milliseconds
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+        } else {
+            //deprecated in API 26
+            v.vibrate(500);
+        }
+    }
+
     public void setCountDown(){
         final int[] numRip = {0};
 
         new CountDownTimer(minutiCamminata*60*1000, 1000) {
 
             public void onTick(long millisUntilFinished) {
-                indicazioniSessione.setText("Cammina");
+                String minutiCamminataRimenenti = formatSecondDateTime((int) (millisUntilFinished/1000));
+                indicazioniSessione.setText("Cammina! " + minutiCamminataRimenenti);
             }
 
             public void onFinish() {
+                Vibrazione();
                 indicazioniSessione.setText("Corri!");
                 new CountDownTimer(minutiCorsa*60*1000, 1000) {
 
                     public void onTick(long millisUntilFinished) {
-                        indicazioniSessione.setText("Corri!");
+                        String minutiCorsaRimenenti = formatSecondDateTime((int) (millisUntilFinished/1000));
+                        indicazioniSessione.setText("Corri! " + minutiCorsaRimenenti);
                     }
 
                     public void onFinish() {
+                        Vibrazione();
                         indicazioniSessione.setText("");
                         numRip[0]++;
+                        int numeroRip = numeroRipetizioni - 1;
+                        spiegazioneLivello.setText("Ripetizioni: " + numeroRip + "     Corsa: " + minutiCorsa + "'     Camminata: " + minutiCamminata +"'");
+
 
                         if (numRip[0] == numeroRipetizioni){
                             indicazioniSessione.setText("finito");
+
+                             FirebaseUser user = mAuth.getCurrentUser();
+                             float km = risultato/1000;
+
+                            long tempoTotale = (minutiCamminata + minutiCorsa) * numeroRipetizioni;
+                            notificationManager.cancel(100);
+                            Log.d("buttonstop", String.valueOf(tempoTotale*60));
+                            Log.d("buttonstop", String.valueOf(km));
+                            Log.d("buttonstop", String.valueOf(calorie));
+                            Log.d("buttonstop", String.valueOf(user.getUid()));
+
+
+                            Intent intent = new Intent(getBaseContext(), RiepilogoSessioneVeloceActivity.class);
+                            intent.putExtra("USER_ID", user.getUid());
+                            intent.putExtra("TEMPO", tempoTotale*60);
+                            intent.putExtra("KM", km);
+                            intent.putExtra("CALORIE", calorie);
+
+                            startActivity(intent);
+
                         }
                         else{
                             setCountDown();
@@ -414,6 +458,22 @@ public class SessioneGuidataActivity extends AppCompatActivity implements
                 }.start();
             }
         }.start();
+    }
+
+    public static String formatSecondDateTime(int scound) {
+        if(scound <= 0)return "";
+        int h = scound / 3600;
+        int m = scound % 3600 / 60;
+        int s = scound % 60; // Less than 60 is the second, enough 60 is the minute
+        if(m<10 && s<10)
+            return "0"+m+":0"+s+"";
+        if(m < 10)
+            return "0"+m+":"+s+"";
+        if(s < 10)
+            return m+":0"+s+"";
+
+        return m+":"+s+"";
+
     }
 
     public void sessioneGuidata(){
@@ -425,7 +485,8 @@ public class SessioneGuidataActivity extends AppCompatActivity implements
         new CountDownTimer(tempoTotale*60*1000, 1000) {
 
             public void onTick(long millisUntilFinished) {
-                cronometroTextView.setText("seconds remaining: " + millisUntilFinished / 1000);
+                String TempoRimanente = formatSecondDateTime((int) (millisUntilFinished/1000));
+                cronometroTextView.setText(TempoRimanente);
             }
 
             public void onFinish() {
@@ -449,48 +510,27 @@ public class SessioneGuidataActivity extends AppCompatActivity implements
                 notificationManager.notify(100, builderNotification.build());
 
                 ButtonStart.setAlpha(0);
-                ButtonPause.setAlpha(1);
-                ButtonStop.setAlpha(1);
+                ButtonStop.setVisibility(View.VISIBLE);
 
-                break;
-
-
-            case R.id.ButtonPausa:
-
-                if(CronometroRunning){
-                    Cronometro.stop();
-                    pauseOffset = SystemClock.elapsedRealtime() - Cronometro.getBase();
-                    CronometroRunning = false;
-                }
-
-                Log.d("cronometro1", String.valueOf((SystemClock.elapsedRealtime() - Cronometro.getBase())/1000));
-
-
-                stopLocationUpdates();
-                ButtonPause.setAlpha(0);
-                ButtonStart.setAlpha(1);
                 break;
 
             case R.id.ButtonStop:
-                Cronometro.stop();
 
-                FirebaseUser user = mAuth.getCurrentUser();
-                long tempo = (SystemClock.elapsedRealtime() - Cronometro.getBase())/1000;
-                float km = risultato/1000;
+                new AlertDialog.Builder(this)
+                        .setTitle("Attenzione")
+                        .setMessage("Se termini la sessione prima del previsto i tuoi dati non saranno salvati. \n Sei sicuro di uscire?")
+                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(getBaseContext(), Main2Activity.class);
+                                startActivity(intent);
+                            }
+                        })
 
-                notificationManager.cancel(100);
-                Log.d("buttonstop", String.valueOf(tempo));
-                Log.d("buttonstop", String.valueOf(km));
-                Log.d("buttonstop", String.valueOf(calorie));
-                Log.d("buttonstop", String.valueOf(user.getUid()));
+                        // A null listener allows the button to dismiss the dialog and take no further action.
+                        .setNegativeButton("No", null)
+                        .show();
 
-                Intent intent = new Intent(getBaseContext(), RiepilogoSessioneVeloceActivity.class);
-                intent.putExtra("USER_ID", user.getUid());
-                intent.putExtra("TEMPO", tempo);
-                intent.putExtra("KM", km);
-                intent.putExtra("CALORIE", calorie);
 
-                startActivity(intent);
                 break;
 
         }

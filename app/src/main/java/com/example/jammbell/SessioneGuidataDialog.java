@@ -76,9 +76,9 @@ public class SessioneGuidataDialog extends AppCompatDialogFragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), SessioneGuidataActivity.class);
-                intent.putExtra("Minuti_camminata", 3);
-                intent.putExtra("Minuti_corsa", 4);
-                intent.putExtra("Numero_ripetizioni", 6);
+                intent.putExtra("Minuti_camminata", 1); //3
+                intent.putExtra("Minuti_corsa", 1); //4
+                intent.putExtra("Numero_ripetizioni", 1); //6
                 startActivity(intent);
             }
         });

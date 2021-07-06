@@ -84,7 +84,7 @@
                 android:layout_marginStart="127dp"
                 android:layout_marginTop="115dp"
                 android:layout_marginEnd="128dp"
-                android:text="Sessione guidata"
+                android:text="Clicca play per iniziare"
                 android:textColor="@color/azzurroapp"
                 android:textSize="20dp"
                 android:textStyle="bold"
@@ -92,6 +92,20 @@
                 map:layout_constraintStart_toStartOf="parent"
                 map:layout_constraintTop_toTopOf="parent"
                 android:id="@+id/indicazioniSessione"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="127dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="128dp"
+                android:text="Spiegazione"
+                android:textColor="@color/biancoapp"
+                android:textSize="15dp"
+                map:layout_constraintEnd_toEndOf="parent"
+                map:layout_constraintStart_toStartOf="parent"
+                map:layout_constraintTop_toTopOf="@id/indicazioniSessione"
+                android:id="@+id/spiegazioneLivello"/>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -111,21 +125,6 @@
         tools:context=".MapsActivity" />
 
     <Button
-        android:id="@+id/ButtonPausa"
-        android:layout_width="85dp"
-        android:layout_height="85dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="80dp"
-        android:alpha="0"
-        android:background="@drawable/icona_pause_azzurroapp"
-        android:onClick="clickButton"
-        map:layout_constraintBottom_toBottomOf="parent"
-        map:layout_constraintEnd_toStartOf="@+id/ButtonStart"
-        map:layout_constraintHorizontal_bias="0.545"
-        map:layout_constraintStart_toStartOf="parent" />
-
-    <Button
         android:id="@+id/ButtonStart"
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -140,17 +139,17 @@
 
     <Button
         android:id="@+id/ButtonStop"
-        android:layout_width="81dp"
-        android:layout_height="81dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="82dp"
-        android:alpha="0"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="75dp"
         android:background="@drawable/icona_stop_azzurroapp"
         android:onClick="clickButton"
-        map:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="invisible"
+        map:layout_constraintBottom_toBottomOf="@+id/map"
         map:layout_constraintEnd_toEndOf="parent"
-        map:layout_constraintHorizontal_bias="0.51"
-        map:layout_constraintStart_toEndOf="@+id/ButtonStart" />
+        map:layout_constraintStart_toStartOf="parent"
+        map:layout_constraintTop_toBottomOf="@+id/linearLayout4"
+        map:layout_constraintVertical_bias="1.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

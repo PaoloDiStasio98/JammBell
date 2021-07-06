@@ -51,6 +51,12 @@ public class RiepilogoSessioneVeloceActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
+    public void onBackPressed() {
+        return;
+    }
+
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
@@ -92,8 +98,13 @@ public class RiepilogoSessioneVeloceActivity extends AppCompatActivity {
         int passi;
         passi = (int) ((Km * 1000) / 0.6);
 
+
         double velocitamedia;
-        velocitamedia = Km / ((float) Tempo / 3600);
+
+        if(Tempo > 0)
+            velocitamedia = Km / ((float) Tempo / 3600);
+        else
+            velocitamedia = 0.0;
 
         Log.d("calcolo", String.valueOf( (float) Tempo/3600));
 
