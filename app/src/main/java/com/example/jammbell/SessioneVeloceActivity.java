@@ -264,8 +264,9 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
 
     @Override
     protected void onPause() {
+        Log.d("crash", "pause");
         super.onPause();
-        stopLocationUpdates();
+       // stopLocationUpdates();
     }
 
     @Override
