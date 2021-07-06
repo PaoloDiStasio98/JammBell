@@ -111,6 +111,12 @@ public class SessioneGuidataActivity extends AppCompatActivity implements
     NotificationCompat.Builder builderNotification;
 
     @Override
+    public void onBackPressed() {
+        notificationManager.cancel(100);
+        return;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sessione_guidata);

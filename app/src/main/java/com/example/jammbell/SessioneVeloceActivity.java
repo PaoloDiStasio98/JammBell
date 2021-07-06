@@ -100,6 +100,12 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
     NotificationCompat.Builder builderNotification;
 
     @Override
+    public void onBackPressed() {
+        notificationManager.cancel(100);
+        return;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sessione_veloce);
@@ -258,6 +264,7 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
 
     @Override
     protected void onStop() {
+        Log.d("crash", "stop");
         googleApiClient.disconnect();
         super.onStop();
     }
@@ -265,8 +272,8 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
     @Override
     protected void onPause() {
         Log.d("crash", "pause");
+        //stopLocationUpdates();
         super.onPause();
-       // stopLocationUpdates();
     }
 
     @Override

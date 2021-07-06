@@ -201,6 +201,11 @@ public class ProfileFragment extends Fragment {
                                             Log.d("datamap1", DateSessioni);
                                             Log.d("giorno", giornosettimana + " " + Km);
 
+                                            if(Km < 0.0001){
+                                                Km = 0.0;
+                                            }
+
+
                                             if(giornosettimana.equals("MONDAY"))
                                                 KmTotLunedi = KmTotLunedi + Km;
                                             if(giornosettimana.equals("TUESDAY"))
@@ -227,6 +232,7 @@ public class ProfileFragment extends Fragment {
 
                                     Log.d("giornosettimana", giornoSettimanaOggi);
                                     int oggi = calendar.get(Calendar.DAY_OF_WEEK);
+
                                     switch (oggi)
                                     {
                                         case Calendar.MONDAY:
