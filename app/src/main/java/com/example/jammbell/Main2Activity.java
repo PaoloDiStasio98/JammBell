@@ -60,7 +60,6 @@ public class Main2Activity extends AppCompatActivity
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
     }
 
-
     public void pullUtente()
     {
         mAuth = FirebaseAuth.getInstance();

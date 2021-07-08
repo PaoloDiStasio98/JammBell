@@ -53,17 +53,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CreateGameDialogClass extends AppCompatDialogFragment {
-
-
-
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+public class CreateGameDialogClass extends AppCompatDialogFragment
+{
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth;
 
-    DatePickerDialog dialogInizio;
+    private DatePickerDialog dialogInizio;
     private DatePickerDialog.OnDateSetListener dateSetListenerInizio;
 
-    DatePickerDialog dialogFine;
+    private DatePickerDialog dialogFine;
     private DatePickerDialog.OnDateSetListener dateSetListenerFine;
 
 
@@ -73,18 +71,16 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
     private EditText nomePartitaEditText;
     private TextView ErroreTextView;
 
-    String usernameamico;
-    String datainizio;
-    String datafine;
-    String nomepartita;
-    String usernamecreatore;
-    String IDamico;
-    boolean amicotrovato;
+    private String usernameamico;
+    private String datainizio;
+    private String datafine;
+    private String nomepartita;
+    private String usernamecreatore;
+    private String IDamico;
+    private boolean amicotrovato;
 
-    Map<String, Object> gara = new HashMap<>();
-    Map<String, Object> GaraUtenteID = new HashMap<>();
-
-    ChallengeFragment fragment = new ChallengeFragment();
+    private Map<String, Object> gara = new HashMap<>();
+    private Map<String, Object> GaraUtenteID = new HashMap<>();
 
     public interface OnGameCreatedListener{
         public void getUsername(String Datafine, String Datainizio, String IDcreatore, String Nome, String Stato, String UsernameCreatore, String UsernamePartecipante);
@@ -92,12 +88,10 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
 
     OnGameCreatedListener mOnGameCreatedListener;
 
-
     @NonNull
     @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-
-
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState)
+    {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -109,15 +103,11 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
         nomePartitaEditText = view.findViewById(R.id.NomePartitaEditText);
         ErroreTextView = view.findViewById(R.id.ErroreTextView);
 
-
-
         //prendo data di inizio e la imposto come testo del picker
-
         DatainizioTextView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-
-
+            public void onClick(View v)
+            {
                 Calendar cal = Calendar.getInstance();
                 int year = cal.get(Calendar.YEAR);
                 int month = cal.get(Calendar.MONTH);
@@ -126,16 +116,15 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
                 dialogInizio = new DatePickerDialog(getContext(), android.R.style.Theme_DeviceDefault_Dialog, dateSetListenerInizio, year, month, day);
                 dialogInizio.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
                 dialogInizio.show();
-
-
             }
         });
 
 
-        dateSetListenerInizio = new DatePickerDialog.OnDateSetListener() {
+        dateSetListenerInizio = new DatePickerDialog.OnDateSetListener()
+        {
             @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-
+            public void onDateSet(DatePicker datePicker, int year, int month, int day)
+            {
                 month = month + 1;
                 Log.d("provadata", "onDateSet: dd/mm/yyyy: " + day + "/" + month + "/" + year);
 
@@ -149,22 +138,20 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
 
                 DatafineTextView.setText("Data fine gara");
                 datafine = null;
-
             }
         };
 
         //prendo data di fine e la imposto come testo del picker
-
-
-
             DatafineTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    if(datainizio == null){
+                    if(datainizio == null)
+                    {
                         Toast.makeText(getContext(), "on Move", Toast.LENGTH_SHORT).show();
                     }
-                    else {
+                    else
+                    {
                     Calendar cal = Calendar.getInstance();
                     int year = cal.get(Calendar.YEAR);
                     int month = cal.get(Calendar.MONTH);
@@ -207,13 +194,6 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
 
             }
         };
-
-
-
-
-
-
-
 
         builder.setView(view)
                 .setTitle("Crea Gara")
@@ -266,9 +246,8 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
 
 
 
-    public void pullUsernameCreatore(){
-
-
+    public void pullUsernameCreatore()
+    {
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
@@ -279,11 +258,10 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-
+                                for (QueryDocumentSnapshot document : task.getResult())
+                                {
                                     usernamecreatore = String.valueOf(document.get("Username"));
                                     gara.put("IDcreatore", currentUser.getUid());
-
                                 }
 
                                 DateTimeFormatter dtf = null;
@@ -303,11 +281,6 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
                                 gara.put("Stato", "In attesa");
 
                                 pushGara();
-
-
-
-
-
                             }
                             else
                             {
@@ -361,10 +334,8 @@ public class CreateGameDialogClass extends AppCompatDialogFragment {
         });
     }
 
-
-
-
-    public void cercautenteDB(String username){
+    public void cercautenteDB(String username)
+    {
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();

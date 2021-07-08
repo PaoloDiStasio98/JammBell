@@ -94,12 +94,8 @@ public class MyAdapterChallenge extends RecyclerView.Adapter<MyAdapterChallenge.
                                 Log.w("TAG", "Error updating document", e);
                             }
                         });
-
-
             }
-
         }
-
     }
 
 
