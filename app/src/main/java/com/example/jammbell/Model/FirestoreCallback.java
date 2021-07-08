@@ -24,6 +24,9 @@ public class FirestoreCallback implements IFirestoreCallback {
 
  }
 
+    public void onPullSessioneCallback(){
+    }
+
 
 
 }

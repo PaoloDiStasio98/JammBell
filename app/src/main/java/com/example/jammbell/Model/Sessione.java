@@ -1,17 +1,23 @@
 package com.example.jammbell.Model;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.jammbell.MyAdapterStorico;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -30,6 +36,24 @@ public class Sessione
     private ArrayList<Double>                 Velocita_Media   = new ArrayList<>();
     private ArrayList<HashMap<String,String>> Data             = new ArrayList<>();
     private ArrayList<String>                 IDUtente         = new ArrayList<>();
+    private ArrayList<String>                 documentID       = new ArrayList<>();
+    private ArrayList<Long>                   Valutazione      = new ArrayList<>();
+
+    public ArrayList<Long> getValutazione() {
+        return Valutazione;
+    }
+
+    public ArrayList<String> getDocumentID() {
+        return documentID;
+    }
+
+    public void setDocumentID(ArrayList<String> documentID) {
+        this.documentID = documentID;
+    }
+
+    public void setValutazione(ArrayList<Long> valutazione) {
+        Valutazione = valutazione;
+    }
 
     public ArrayList<Long> getPassi() {
         return Passi;
@@ -129,6 +153,137 @@ public class Sessione
         Log.d("Statistiche", " " + Statistiche_Totali);
 
         return Statistiche_Totali;
+    }
+
+    public void EliminaSessione(String documentID)
+    {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("SessioneVeloce").document(documentID)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>()
+                {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Eliminato", "DocumentSnapshot successfully deleted!");
+                    }
+
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Log.w(TAG, "Error deleting document", e);
+                    }
+                });
+    }
+
+    public void OrdinaTutteSessioni(FirestoreCallback firestoreCallback)
+    {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        if(currentUser != null)
+        {
+            db.collection("SessioneVeloce")
+                    .whereEqualTo("UserID", currentUser.getUid())
+                    .orderBy("Data.year", Query.Direction.DESCENDING)
+                    .orderBy("Data.monthValue", Query.Direction.DESCENDING)
+                    .orderBy("Data.dayOfMonth", Query.Direction.DESCENDING)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                    {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task)
+                        {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult())
+                                {
+                                    Double Km                      = (double) document.get("Km");
+                                    Long Passi_Fatti               = (long)   document.get("Passi");
+                                    Long Calorie                   = (long)   document.get("Calorie");
+                                    Long Tempo_Sessione            = (long)   document.get("Tempo");
+                                    Long Valutazione_Sessione      = (long)   document.get("Feedback");
+                                    Double Velocita                = (double) document.get("Velocita");
+                                    HashMap<String,String> Datamap = (HashMap<String, String>) document.get("Data");
+                                    String DocumentID              = document.getId();
+
+                                    Km_Percorsi.add(Km);
+                                    Passi.add(Passi_Fatti);
+                                    Calorie_Bruciate.add(Calorie);
+                                    Tempo.add(Tempo_Sessione);
+                                    Valutazione.add(Valutazione_Sessione);
+                                    Velocita_Media.add(Velocita);
+                                    Data.add(Datamap);
+                                    documentID.add(DocumentID);
+                                }
+                                firestoreCallback.onPullSessioneCallback();
+                            }
+                            else
+                            {
+                                Log.d("database", "Error getting documents: ", task.getException());
+                            }
+                        }
+                    });
+        }
+        else
+        {
+            Log.d("utenteid", "niente vuoto");
+        }
+    }
+
+    public void OrdinaSessioniPerData(int day, int month, int year, FirestoreCallback firestoreCallback)
+    {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if(currentUser != null)
+        {
+            Log.d("utenteid", currentUser.getUid());
+            db.collection("SessioneVeloce")
+                    .whereEqualTo("UserID", currentUser.getUid())
+                    .whereEqualTo("Data.dayOfMonth", day)
+                    .whereEqualTo("Data.monthValue", month)
+                    .whereEqualTo("Data.year", year)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult())
+                                {
+                                    Double Km                      = (double) document.get("Km");
+                                    Long Passi_Fatti               = (long)   document.get("Passi");
+                                    Long Calorie                   = (long)   document.get("Calorie");
+                                    Long Tempo_Sessione            = (long)   document.get("Tempo");
+                                    Long Valutazione_Sessione      = (long)   document.get("Feedback");
+                                    Double Velocita                = (double) document.get("Velocita");
+                                    HashMap<String,String> Datamap = (HashMap<String, String>) document.get("Data");
+                                    String DocumentID              = document.getId();
+
+                                    Km_Percorsi.add(Km);
+                                    Passi.add(Passi_Fatti);
+                                    Calorie_Bruciate.add(Calorie);
+                                    Tempo.add(Tempo_Sessione);
+                                    Valutazione.add(Valutazione_Sessione);
+                                    Velocita_Media.add(Velocita);
+                                    Data.add(Datamap);
+                                    documentID.add(DocumentID);
+                                }
+                                firestoreCallback.onPullSessioneCallback();
+                            }
+                            else
+                            {
+                                Log.d("database", "Error getting documents: ", task.getException());
+                            }
+                        }
+                    });
+        }
+        else
+        {
+            Log.d("utenteid", "niente vuoto");
+        }
     }
 
 }
