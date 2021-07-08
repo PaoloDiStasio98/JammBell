@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.example.jammbell.Model.FirestoreCallback;
 import com.example.jammbell.Model.Utente;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,20 +33,18 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Main2Activity extends AppCompatActivity {
-
-
+public class Main2Activity extends AppCompatActivity
+{
     public String PosizioneCorrente;
     public static Map<String, Object> Utente = new HashMap<>();
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth;
 
-    FragmentManager fManager = getFragmentManager();
-    FragmentTransaction fTransaction = fManager.beginTransaction();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 

@@ -28,6 +28,8 @@ import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.TextView;
 
+import com.example.jammbell.Model.FirestoreCallback;
+import com.example.jammbell.Model.Utente;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationCallback;
@@ -57,25 +59,20 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SessioneVeloceActivity extends AppCompatActivity implements
-        OnMapReadyCallback,
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        com.google.android.gms.location.LocationListener {
+public class SessioneVeloceActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener
+{
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth;
 
-    Button ButtonStart;
-    Button ButtonStop;
-    Button ButtonPause;
-    int flag;
+    private Button ButtonStart;
+    private Button ButtonStop;
+    private Button ButtonPause;
 
-    Boolean CronometroRunning = false;
-    long pauseOffset;
+    private Boolean CronometroRunning = false;
+    private long pauseOffset;
 
-
-    Chronometer Cronometro;
+    private Chronometer Cronometro;
 
     private GoogleMap mMap;
 
@@ -90,28 +87,26 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
     private TextView CalorieTextView;
     private TextView VelocitàTextView;
     double calorie;
-    String peso;
+    private int peso_utente;
 
+    private NotificationManagerCompat notificationManager;
 
-    private LocationCallback locationCallback;
-
-    NotificationManagerCompat notificationManager;
-
-    NotificationCompat.Builder builderNotification;
+    private NotificationCompat.Builder builderNotification;
 
     @Override
-    public void onBackPressed() {
+    public void onBackPressed()
+    {
         notificationManager.cancel(100);
         return;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sessione_veloce);
 
         getSupportActionBar().setTitle("Sessione veloce");
-
 
         notificationManager = NotificationManagerCompat.from(this);
         createNotificationChannel();
@@ -122,43 +117,45 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         builderNotification.setOngoing(true);
 
-
         ButtonStart = findViewById(R.id.ButtonStart);
         ButtonPause = findViewById(R.id.ButtonPausa);
         ButtonStop = findViewById(R.id.ButtonStop);
         Cronometro = findViewById(R.id.Cronometro);
-
 
         KmtextView = findViewById(R.id.KmTextView);
         CalorieTextView = findViewById(R.id.CalorieTextView);
         VelocitàTextView = findViewById(R.id.VelocitaTextView);
 
         mAuth = FirebaseAuth.getInstance();
-        accessodatabase();
 
-
+        //Prelevo peso utente
+        Utente utente = new Utente();
+        utente.getDatiUtenteDatabase(new FirestoreCallback()
+        {
+            @Override
+            public void onCallback()
+            {
+                peso_utente = utente.getPeso();
+            }
+        });
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        if (googleApiClient == null) {
+        if (googleApiClient == null)
+        {
             googleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
                     .build();
         }
-
-
-
-
-
-
     }
 
-    private void createNotificationChannel(){
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-
+    private void createNotificationChannel()
+    {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
+        {
             CharSequence name = "CIAOOOO";
             String description = "DESCRIZIONEEEEEE";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
@@ -172,36 +169,9 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
         }
     }
 
-    private void accessodatabase() {
-
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-            Log.d("utenteid", currentUser.getUid());
-
-            db.collection("Utente")
-                    .whereEqualTo("IDUtente", currentUser.getUid())
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    peso = document.get("Peso").toString();
-                                    Log.d("database", document.getId() + " => " + document.getData() + " "  + " " + document.get("Altezza"));
-                                }
-                            } else {
-                                Log.d("database", "Error getting documents: ", task.getException());
-                            }
-                        }
-                    });
-        }
-    }
-
-
-
-
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(GoogleMap googleMap)
+    {
         mMap = googleMap;
 
         PolylineOptions polylineOptions = new PolylineOptions();
@@ -232,7 +202,8 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
 
 
         LocationServices.getFusedLocationProviderClient(this).getLastLocation()
-                .addOnSuccessListener(new OnSuccessListener<Location>() {
+                .addOnSuccessListener(new OnSuccessListener<Location>()
+                {
                     @Override
                     public void onSuccess(Location location) {
                         if (location != null){
@@ -371,13 +342,9 @@ public class SessioneVeloceActivity extends AppCompatActivity implements
 
             DecimalFormat df1 = new DecimalFormat("##");
             df1.setRoundingMode(RoundingMode.DOWN);
-            calorie = 0.75 * Integer.parseInt(peso) * (risultato / 1000);
-            Log.d("pesocalorie", String.valueOf(peso));
-            Log.d("pesocalo", String.valueOf(calorie));
+            calorie = 0.75 * peso_utente * (risultato / 1000);
 
             CalorieTextView.setText(String.valueOf(df1.format(calorie)) + " " + "Kcal");
-
-
         }
         
         points.add(lastKnownLatLng);

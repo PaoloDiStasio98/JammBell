@@ -49,9 +49,8 @@ import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
 
-public class MapFragment extends Fragment {
-
-
+public class MapFragment extends Fragment
+{
     //mappa
     LatLng PosizioneCorrente;
     SupportMapFragment supportMapFragment;
@@ -150,11 +149,6 @@ public class MapFragment extends Fragment {
             //quando i permessi non sono concessi
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
         }
-
-
-
-
-
 
         return view;
     }
