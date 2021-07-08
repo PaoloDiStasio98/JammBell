@@ -33,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jammbell.Model.FirestoreCallback;
 import com.example.jammbell.Model.Sessione;
 import com.example.jammbell.Model.Utente;
 import com.example.jammbell.View.IProfileView;
@@ -123,7 +124,7 @@ public class ProfileFragment extends Fragment implements IProfileView
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         //Prelevo dati utente database
-        utente.getDatiUtenteDatabase(new Utente.FirestoreCallback() {
+        utente.getDatiUtenteDatabase(new FirestoreCallback() {
             @Override
             public void onCallback() {
 
@@ -139,7 +140,7 @@ public class ProfileFragment extends Fragment implements IProfileView
     @Override
     public void onResume()
     {
-        utente.getDatiUtenteDatabase(new Utente.FirestoreCallback() {
+        utente.getDatiUtenteDatabase(new FirestoreCallback() {
             @Override
             public void onCallback()
             {
@@ -385,19 +386,14 @@ public class ProfileFragment extends Fragment implements IProfileView
             }
             case R.id.logout_button:
             {
-                logout();
+                utente.logOut();
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
                 return true;
             }
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    public void logout()
-    {
-        FirebaseAuth.getInstance().signOut();
-        Intent intent = new Intent(getActivity(), LoginActivity.class);
-        startActivity(intent);
     }
 
     @Override

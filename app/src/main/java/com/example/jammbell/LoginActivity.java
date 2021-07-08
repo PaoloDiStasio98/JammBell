@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jammbell.Model.FirestoreCallback;
+import com.example.jammbell.Model.Utente;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -70,31 +72,31 @@ public class LoginActivity extends AppCompatActivity {
 
                 }
                 else {
-                    Log.d("accesso", "dentroooooo:success");
-                        mAuth.signInWithEmailAndPassword(MailEditText.getText().toString(), PasswordEditText.getText().toString())
-                                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                        if (task.isSuccessful()) {
-                                            // Sign in success, update UI with the signed-in user's information
-                                            Log.d("TAG", "signInWithEmail:success");
-                                            FirebaseUser user = mAuth.getCurrentUser();
-                                            if(user.isEmailVerified() == true)
-                                            startActivity(new Intent(LoginActivity.this, Main2Activity.class));
-                                            else{
-                                                ErroreTextView.setVisibility(View.VISIBLE);
-                                                ErroreTextView.setText("Controlla di aver verificato la mail di registrazione");
-                                            }
-                                        } else {
-                                            // If sign in fails, display a message to the user.
-                                            Log.w("TAG", "signInWithEmail:failure", task.getException());
-                                            ErroreTextView.setVisibility(View.VISIBLE);
-                                            ErroreTextView.setText("Autenticazione fallita, ricontrolla mail e/o password");
+                    Utente utente = new Utente();
+                    String Email = MailEditText.getText().toString();
+                    String Password = PasswordEditText.getText().toString();
+                    utente.logIn(Email, Password, new FirestoreCallback(){
+                        @Override
+                        public void onLoginCallback(Boolean successo) {
 
-                                        }
-                                    }
-                                });
+                            if(successo == true){
 
+                                Log.d("TAG", "signInWithEmail:success");
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                if(user.isEmailVerified() == true)
+                                    startActivity(new Intent(LoginActivity.this, Main2Activity.class));
+                                else{
+                                    ErroreTextView.setVisibility(View.VISIBLE);
+                                    ErroreTextView.setText("Controlla di aver verificato la mail di registrazione");
+                                }
+                            }
+                            else {
+                                ErroreTextView.setVisibility(View.VISIBLE);
+                                ErroreTextView.setText("Autenticazione fallita, ricontrolla mail e/o password");
+
+                            }
+                        }
+                    });
                 }
 
             }

@@ -1,19 +1,27 @@
 package com.example.jammbell.Model;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.text.Html;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.jammbell.CreateGameDialogClass;
+import com.example.jammbell.LoginActivity;
+import com.example.jammbell.Main2Activity;
+import com.example.jammbell.RegistrazioneProfiloActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -23,14 +31,17 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Utente implements IUtente
 {
-    private String   IDUtente, Username, Nome, Cognome, Sesso, Data_di_nascita, IDdocument;
+    private String   Email, Password, IDUtente, Username, Nome, Cognome, Sesso, Data_di_nascita, IDdocument;
     private int      Peso, Altezza;
 
-    public Utente(String IDUtente, String Username, String Nome, String Cognome, String Sesso, String Data_di_nascita, int Peso, int Altezza)
+    public Utente(String Email, String Password, String IDUtente, String Username, String Nome, String Cognome, String Sesso, String Data_di_nascita, int Peso, int Altezza)
     {
+        this.Email           = Email;
+        this.Password        = Password;
         this.IDUtente        = IDUtente;
         this.Username        = Username;
         this.Nome            = Nome;
@@ -43,6 +54,8 @@ public class Utente implements IUtente
 
     public Utente()
     {
+        this.Email           = " ";
+        this.Password        = " ";
         this.IDUtente        = " ";
         this.Username        = " ";
         this.Nome            = " ";
@@ -52,6 +65,23 @@ public class Utente implements IUtente
         this.Peso            = 0;
         this.Altezza         = 0;
     }
+
+    public String getEmail() {
+        return Email;
+    }
+
+    public void setEmail(String email) {
+        Email = email;
+    }
+
+    public String getPassword() {
+        return Password;
+    }
+
+    public void setPassword(String password) {
+        Password = password;
+    }
+
 
     public String getIDdocument() {
         return IDdocument;
@@ -125,11 +155,6 @@ public class Utente implements IUtente
         Altezza = altezza;
     }
 
-    public interface FirestoreCallback
-    {
-        void onCallback();
-    }
-
     public void getDatiUtenteDatabase(FirestoreCallback firestoreCallback)
     {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -174,15 +199,17 @@ public class Utente implements IUtente
 
     public void pushDatiUtenteDatabase(String Nome, String Cognome, int Altezza, String Data, String Sesso, int Peso, String documentID)
     {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
         db.collection("Utente")
                 .document(documentID)
                 .update(
-                        "Nome", NomeEditText.getText().toString(),
-                        "Cognome", CognomeEditText.getText().toString(),
-                        "Altezza", altezzaNumberPicker.getValue(),
-                        "Data di nascita", dateButton.getText().toString(),
-                        "Sesso", sesso[sessoNumberPicker.getValue()],
-                        "Peso", pesoNumberPicker.getValue()
+                        "Nome", Nome,
+                        "Cognome", Cognome,
+                        "Altezza", Altezza,
+                        "Data di nascita", Data,
+                        "Sesso", Sesso,
+                        "Peso", Peso
                 )
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -198,4 +225,137 @@ public class Utente implements IUtente
                 });
     }
 
+    public void logIn(String Email, String Password, FirestoreCallback firestoreCallback){
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mAuth.signInWithEmailAndPassword(Email, Password)
+                .addOnCompleteListener( new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+
+                        Boolean successo = false;
+
+                        if (task.isSuccessful()) {
+
+                            successo = true;
+
+                        } else {
+
+                            successo = false;
+
+                        }
+
+                        firestoreCallback.onLoginCallback(successo);
+                    }
+                });
+
+    }
+
+    public void signUp(String Email, String Password, String username, FirestoreCallback firestoreCallback){
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+        mAuth.createUserWithEmailAndPassword(Email, Password)
+                .addOnCompleteListener( new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("TAG", "createUserWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+
+                            db.collection("Utente").whereEqualTo("Username", username).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                            {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task)
+                                {
+                                    Boolean usernameEsistente = false;
+                                    if(task.isSuccessful())
+                                    {
+                                        for(QueryDocumentSnapshot document : task.getResult())
+                                        {
+                                            usernameEsistente = true;
+                                            user.delete()
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            if (task.isSuccessful()) {
+                                                            }
+                                                        }
+                                                    });
+                                        }
+                                        firestoreCallback.onSignupCallback(usernameEsistente);
+                                    }
+                                    else
+                                    {
+                                        Log.d("ERROREUSERNAME", "Errore documento non trovato: ", task.getException());
+                                    }
+
+                                    if(usernameEsistente == false)
+                                    {
+                                        Map<String, Object> utente = new HashMap<>();
+
+                                        utente.put("IDUtente", getIDUtente());
+                                        utente.put("Username", getUsername());
+                                        utente.put("Nome", getNome());
+                                        utente.put("Cognome", getCognome());
+                                        utente.put("Data di nascita", getData_di_nascita());
+                                        utente.put("Sesso", getSesso());
+                                        utente.put("Peso", getPeso());
+                                        utente.put("Altezza", getAltezza());
+                                        Log.d("PROVA2", getUsername());
+
+                                        //pusho utente nel database
+                                        db.collection("Utente").add(utente).addOnSuccessListener(new OnSuccessListener<DocumentReference>()
+                                        {
+                                            @Override
+                                            public void onSuccess(DocumentReference documentReference)
+                                            {
+                                                Log.d("TAG", "DocumentSnapshot written with ID: " + documentReference.getId());
+
+                                                user.sendEmailVerification()
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    Log.d("TAG", "Email sent.");
+                                                                    firestoreCallback.emailSentCallback();
+                                                                }
+                                                                else {
+                                                                    Log.d("TAG", String.valueOf(task.getException()));
+                                                                }
+                                                            }
+                                                        });
+
+
+
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener()
+                                        {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e)
+                                            {
+                                                Log.w("TAG", "Error adding document", e);
+                                            }
+                                        });
+                                    }
+
+                                //    isValid = 0;
+                                }
+                            });
+
+                        }
+                        else{
+                            Log.d("ERROREMAILPASSWORD", String.valueOf(task.getException()));
+                        }
+                    }
+                });
+
+    }
+
+    public void logOut(){
+        FirebaseAuth.getInstance().signOut();
+    }
 }

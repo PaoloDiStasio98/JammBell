@@ -5,10 +5,8 @@ import com.example.jammbell.View.IProfileView;
 
 public class Profile implements IProfile
 {
-    IProfileView ProfileView;
 
-    public Profile(IProfileView ProfileView) {
-        this.ProfileView = ProfileView;
+    public Profile() {
     }
 
     public void ModificaProfilo(String Nome, String Cognome, int Altezza, String Data, String Sesso, int Peso, String documentID)

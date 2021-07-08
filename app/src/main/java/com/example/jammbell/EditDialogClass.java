@@ -28,6 +28,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.jammbell.Controller.Profile;
+import com.example.jammbell.Model.FirestoreCallback;
 import com.example.jammbell.Model.Utente;
 import com.example.jammbell.View.IProfileView;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -47,7 +48,9 @@ import java.util.Calendar;
 public class EditDialogClass extends AppCompatDialogFragment
 {
     Utente utente = new Utente();
-    Profile profilo;
+
+    Profile profilo = new Profile();
+
     private EditText NomeEditText;
     private EditText CognomeEditText;
 
@@ -142,8 +145,6 @@ public class EditDialogClass extends AppCompatDialogFragment
 
     private void pushDatiDB()
     {
-        profilo = new Profile((IProfileView) this);
-
         String Nome = NomeEditText.getText().toString();
         String Cognome = CognomeEditText.getText().toString();
         int Altezza = altezzaNumberPicker.getValue();
@@ -152,33 +153,11 @@ public class EditDialogClass extends AppCompatDialogFragment
         int Peso = pesoNumberPicker.getValue();
 
         profilo.ModificaProfilo(Nome, Cognome, Altezza, Data, Sesso, Peso, documentID);
-       db.collection("Utente")
-               .document(documentID)
-               .update(
-                       "Nome", NomeEditText.getText().toString(),
-                       "Cognome", CognomeEditText.getText().toString(),
-                       "Altezza", altezzaNumberPicker.getValue(),
-                       "Data di nascita", dateButton.getText().toString(),
-                       "Sesso", sesso[sessoNumberPicker.getValue()],
-                       "Peso", pesoNumberPicker.getValue()
-               )
-               .addOnSuccessListener(new OnSuccessListener<Void>() {
-                   @Override
-                   public void onSuccess(Void aVoid) {
-                       Log.d("TAG", "DocumentSnapshot successfully updated!");
-                   }
-               })
-               .addOnFailureListener(new OnFailureListener() {
-                   @Override
-                   public void onFailure(@NonNull Exception e) {
-                       Log.w("TAG", "Error updating document", e);
-                   }
-               });
     }
 
     private void SettaDati()
     {
-        utente.getDatiUtenteDatabase(new Utente.FirestoreCallback()
+        utente.getDatiUtenteDatabase(new FirestoreCallback()
         {
             @Override
             public void onCallback()
