@@ -27,7 +27,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.jammbell.Controller.Profile;
 import com.example.jammbell.Model.Utente;
+import com.example.jammbell.View.IProfileView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -45,6 +47,7 @@ import java.util.Calendar;
 public class EditDialogClass extends AppCompatDialogFragment
 {
     Utente utente = new Utente();
+    Profile profilo;
     private EditText NomeEditText;
     private EditText CognomeEditText;
 
@@ -139,6 +142,16 @@ public class EditDialogClass extends AppCompatDialogFragment
 
     private void pushDatiDB()
     {
+        profilo = new Profile((IProfileView) this);
+
+        String Nome = NomeEditText.getText().toString();
+        String Cognome = CognomeEditText.getText().toString();
+        int Altezza = altezzaNumberPicker.getValue();
+        String Data = dateButton.getText().toString();
+        String Sesso = sesso[sessoNumberPicker.getValue()];
+        int Peso = pesoNumberPicker.getValue();
+
+        profilo.ModificaProfilo(Nome, Cognome, Altezza, Data, Sesso, Peso, documentID);
        db.collection("Utente")
                .document(documentID)
                .update(

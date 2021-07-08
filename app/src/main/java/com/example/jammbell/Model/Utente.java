@@ -9,6 +9,8 @@ import androidx.annotation.Nullable;
 
 import com.example.jammbell.CreateGameDialogClass;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -170,9 +172,30 @@ public class Utente implements IUtente
         }
     }
 
-    public void pushDatiUtenteDatabase()
+    public void pushDatiUtenteDatabase(String Nome, String Cognome, int Altezza, String Data, String Sesso, int Peso, String documentID)
     {
-
+        db.collection("Utente")
+                .document(documentID)
+                .update(
+                        "Nome", NomeEditText.getText().toString(),
+                        "Cognome", CognomeEditText.getText().toString(),
+                        "Altezza", altezzaNumberPicker.getValue(),
+                        "Data di nascita", dateButton.getText().toString(),
+                        "Sesso", sesso[sessoNumberPicker.getValue()],
+                        "Peso", pesoNumberPicker.getValue()
+                )
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("TAG", "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("TAG", "Error updating document", e);
+                    }
+                });
     }
 
 }
