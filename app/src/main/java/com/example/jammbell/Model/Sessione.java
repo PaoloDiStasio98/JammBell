@@ -1,5 +1,6 @@
 package com.example.jammbell.Model;
 
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -7,13 +8,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.jammbell.Main2Activity;
 import com.example.jammbell.MyAdapterStorico;
+import com.example.jammbell.RiepilogoSessioneVeloceActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -25,6 +29,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Sessione
 {
@@ -284,6 +289,28 @@ public class Sessione
         {
             Log.d("utenteid", "niente vuoto");
         }
+    }
+
+    public void pushSessione(Map<String, Object> SessioneVeloce, FirestoreCallback firestoreCallback)
+    {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("SessioneVeloce").add(SessioneVeloce).addOnSuccessListener(new OnSuccessListener<DocumentReference>()
+        {
+            @Override
+            public void onSuccess(DocumentReference documentReference)
+            {
+                Log.d("TAG", "DocumentSnapshot written with ID: " + documentReference.getId());
+                firestoreCallback.onCallback();
+            }
+        }).addOnFailureListener(new OnFailureListener()
+        {
+            @Override
+            public void onFailure(@NonNull Exception e)
+            {
+                Log.w("TAG", "Error adding document", e);
+            }
+        });
     }
 
 }

@@ -50,6 +50,8 @@ public class Main2Activity extends AppCompatActivity
 
         PosizioneCorrente = getIntent().getStringExtra("USER_ID");
 
+        //pullUtente();
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         NavController navController = Navigation.findNavController(Main2Activity.this, R.id.fragment);
 

@@ -15,5 +15,4 @@ public class Profile implements IProfile
         utente.pushDatiUtenteDatabase(Nome, Cognome, Altezza, Data, Sesso, Peso, documentID);
     }
 
-
 }

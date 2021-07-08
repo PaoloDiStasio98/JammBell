@@ -16,6 +16,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.jammbell.Model.FirestoreCallback;
+import com.example.jammbell.Model.Utente;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -33,32 +35,32 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class MyAdapterChallenge extends RecyclerView.Adapter<MyAdapterChallenge.MyViewHolderChallenge> {
+public class MyAdapterChallenge extends RecyclerView.Adapter<MyAdapterChallenge.MyViewHolderChallenge>
+{
 
-ArrayList<String> data1, data2, data3, data4, data5, data6, data7, data8, data9;
-Context context;
+    ArrayList<String> data1, data2, data3, data4, data5, data6, data7, data8, data9;
+    Context context;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-Main2Activity main2Activity = new Main2Activity();
 
 
 
 
-public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<String> DataFine, ArrayList<String> Nome, ArrayList<String> UsernamePartecipante, ArrayList<String> Stato, ArrayList<String> UsernameCreatore, ArrayList<String> DocumentID, ArrayList<String> Risultato, ArrayList<String> UsernameVincitore){
-    context = ct;
-    data1 = DataInizio;
-    data2 = DataFine;
-    data3 = Nome;
-    data4 = UsernamePartecipante;
-    data5 = Stato;
-    data6 = UsernameCreatore;
-    data7 = DocumentID;
-    data8 = Risultato;
-    data9 = UsernameVincitore;
+    public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<String> DataFine, ArrayList<String> Nome, ArrayList<String> UsernamePartecipante, ArrayList<String> Stato, ArrayList<String> UsernameCreatore, ArrayList<String> DocumentID, ArrayList<String> Risultato, ArrayList<String> UsernameVincitore){
+        context = ct;
+        data1 = DataInizio;
+        data2 = DataFine;
+        data3 = Nome;
+        data4 = UsernamePartecipante;
+        data5 = Stato;
+        data6 = UsernameCreatore;
+        data7 = DocumentID;
+        data8 = Risultato;
+        data9 = UsernameVincitore;
 
 
-}
+    }
 
 
 
@@ -72,26 +74,26 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
             Log.d("data1", dtf.format(now));
             Log.d("data1", String.valueOf(data2));
 
-             if(data2.get(position).compareTo(dtf.format(now)) < 0){
-                    Log.d("data1", "La gara  " + data3.get(position) + "  in data " + data2.get(position) + " è terminata" );
-                    data5.set(position, "Terminata");
-                    db.collection("Gara")
-                            .document(data7.get(position))
-                            .update(
-                                    "Stato", "Terminata"
-                            )
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Log.d("TAG", "DocumentSnapshot successfully updated!");
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.w("TAG", "Error updating document", e);
-                                }
-                            });
+            if(data2.get(position).compareTo(dtf.format(now)) < 0){
+                Log.d("data1", "La gara  " + data3.get(position) + "  in data " + data2.get(position) + " è terminata" );
+                data5.set(position, "Terminata");
+                db.collection("Gara")
+                        .document(data7.get(position))
+                        .update(
+                                "Stato", "Terminata"
+                        )
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d("TAG", "DocumentSnapshot successfully updated!");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w("TAG", "Error updating document", e);
+                            }
+                        });
 
 
             }
@@ -113,7 +115,7 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
     @Override
     public void onBindViewHolder(@NonNull MyAdapterChallenge.MyViewHolderChallenge holder, int position) {
 
-             Log.d("cella", "cella creata");
+        Log.d("cella", "cella creata");
         String datainizioModificata = changeFormatData(data1.get(position));
         String datafineModificata = changeFormatData(data2.get(position));
 
@@ -125,147 +127,154 @@ public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<St
 
         CheckGaraFinita(position);
 
+        Utente utente = new Utente();
+        utente.getDatiUtenteDatabase(new FirestoreCallback()
+        {
+            @Override
+            public void onCallback()
+            {
+                if(data5.get(position).matches("In attesa"))
+                {
+                    holder.itemView.setBackground(ContextCompat.getDrawable(context, R.drawable.boxinattesa));
+                    holder.ButtonConfermaRifiuta.setVisibility(View.VISIBLE);
 
-        if(data5.get(position).matches("In attesa")) {
-            holder.itemView.setBackground(ContextCompat.getDrawable(context, R.drawable.boxinattesa));
-            holder.ButtonConfermaRifiuta.setVisibility(View.VISIBLE);
+                    if(utente.getUsername().matches(data4.get(position)))
+                    { //l'utente connesso è il partecipante
+                        holder.ButtonConfermaRifiuta.setBackgroundResource(R.drawable.icona_ok_verde);
+                        holder.ButtonRifiutaGara.setBackgroundResource(R.drawable.icona_x_rosso);
+                        holder.ButtonRifiutaGara.setVisibility(View.VISIBLE);
+                        holder.ButtonRifiutaGara.setOnClickListener(new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                data3.remove(position);
+                                notifyItemRemoved(position);
 
-            if(String.valueOf(main2Activity.Utente.get("Username")).matches(data4.get(position))){ //l'utente connesso è il partecipante
-                holder.ButtonConfermaRifiuta.setBackgroundResource(R.drawable.icona_ok_verde);
-                holder.ButtonRifiutaGara.setBackgroundResource(R.drawable.icona_x_rosso);
-                holder.ButtonRifiutaGara.setVisibility(View.VISIBLE);
-                holder.ButtonRifiutaGara.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                                EliminaGara(position);
+                            }
+                        });
+                        holder.UsernamePartecipanteTextView.setText("Invitato da: " + data6.get(position));
+                        holder.ButtonConfermaRifiuta.setOnClickListener(new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                data5.set(position, "Attiva");
+                                notifyItemChanged(position);
 
-                        data3.remove(position);
-                        notifyItemRemoved(position);
+                                DateTimeFormatter dtf = null;
+                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                                    dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                                    LocalDateTime now = LocalDateTime.now();
+                                    Log.d("data", dtf.format(now));
 
-                        EliminaGara(position);
+                                    db.collection("Gara")
+                                            .document(data7.get(position))
+                                            .update(
+                                                    "Stato", "Attiva",
+                                                    "Data", now
+
+                                            )
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Log.d("TAG", "DocumentSnapshot successfully updated!");
+
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.w("TAG", "Error updating document", e);
+                                                }
+                                            });
+
+                                }
+                                notifyDataSetChanged();
+                            }
+                        });
+
                     }
-                });
-                holder.UsernamePartecipanteTextView.setText("Invitato da: " + data6.get(position));
-                holder.ButtonConfermaRifiuta.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                    else
+                    { //l'utente connesso è il creatore
+                        holder.UsernamePartecipanteTextView.setText("Invitato: " + data4.get(position));
+                        holder.ButtonConfermaRifiuta.setBackgroundResource(R.drawable.icona_x_rosso);
+                        holder.StatoChallengeTextView.setText("Stato gara: " + data5.get(position));
+                        holder.ButtonConfermaRifiuta.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Log.d("cella", "tasto annulla cliccato");
+                                data3.remove(position);
+                                notifyItemRemoved(position);
+                                // notifyItemRangeChanged(position, data3.size());
+                                EliminaGara(position);
 
-                        data5.set(position, "Attiva");
-                        notifyItemChanged(position);
 
-                        DateTimeFormatter dtf = null;
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                            dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-                            LocalDateTime now = LocalDateTime.now();
-                            Log.d("data", dtf.format(now));
+                            }
+                        });
+                    }
+                }
+                if(data5.get(position).matches("Attiva")) {
+                    holder.itemView.setBackground(ContextCompat.getDrawable(context, R.drawable.boxattiva));
+                    holder.ButtonConfermaRifiuta.setVisibility(View.INVISIBLE);
+                    holder.ButtonRifiutaGara.setVisibility(View.INVISIBLE);
+                    holder.StatoChallengeTextView.setText("Stato gara: " + data5.get(position));
+                    if(utente.getUsername().matches(data4.get(position))){ //l'utente connesso è il partecipante
+                        holder.UsernamePartecipanteTextView.setText("Invitato da: " + data6.get(position));
+                    }
+                    else {
+                        holder.UsernamePartecipanteTextView.setText("Invitato: " + data4.get(position));
+                    }
 
-
-                            db.collection("Gara")
-                                    .document(data7.get(position))
-                                    .update(
-                                            "Stato", "Attiva",
-                                            "Data", now
-
-                                    )
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Log.d("TAG", "DocumentSnapshot successfully updated!");
-
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.w("TAG", "Error updating document", e);
-                                        }
-                                    });
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(v.getContext(), ResoContochallengeActivity.class);
+                            intent.putExtra("IDGara", data7.get(position));
+                            intent.putExtra("STATO", "Attiva");
+                            v.getContext().startActivity(intent);
 
                         }
-
-                        notifyDataSetChanged();
-
-                    }
-                });
-
-            }
-            else { //l'utente connesso è il creatore
-                holder.UsernamePartecipanteTextView.setText("Invitato: " + data4.get(position));
-                holder.ButtonConfermaRifiuta.setBackgroundResource(R.drawable.icona_x_rosso);
-                holder.StatoChallengeTextView.setText("Stato gara: " + data5.get(position));
-                holder.ButtonConfermaRifiuta.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                    Log.d("cella", "tasto annulla cliccato");
-                            data3.remove(position);
-                            notifyItemRemoved(position);
-                           // notifyItemRangeChanged(position, data3.size());
-                            EliminaGara(position);
-
-
-                    }
-                });
-            }
-        }
-        if(data5.get(position).matches("Attiva")) {
-            holder.itemView.setBackground(ContextCompat.getDrawable(context, R.drawable.boxattiva));
-            holder.ButtonConfermaRifiuta.setVisibility(View.INVISIBLE);
-            holder.ButtonRifiutaGara.setVisibility(View.INVISIBLE);
-            holder.StatoChallengeTextView.setText("Stato gara: " + data5.get(position));
-            if(String.valueOf(main2Activity.Utente.get("Username")).matches(data4.get(position))){ //l'utente connesso è il partecipante
-                holder.UsernamePartecipanteTextView.setText("Invitato da: " + data6.get(position));
-            }
-            else {
-                holder.UsernamePartecipanteTextView.setText("Invitato: " + data4.get(position));
-            }
-
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), ResoContochallengeActivity.class);
-                    intent.putExtra("IDGara", data7.get(position));
-                    intent.putExtra("STATO", "Attiva");
-                    v.getContext().startActivity(intent);
-
+                    });
                 }
-            });
-        }
-        if(data5.get(position).matches("Terminata")) {
-            Log.d("StatoTerminato", String.valueOf(position));
-            Log.d("StatoTerminato", String.valueOf(data5.get(position)));
-            Log.d("StatoTerminato", String.valueOf(data8.get(position)));
-            Log.d("StatoTerminato", String.valueOf(data9.get(position)));
-            Log.d("StatoTerminato", String.valueOf(data8));
-            Log.d("StatoTerminato", String.valueOf(data9));
-            Log.d("StatoTerminato", String.valueOf(data5));
+                if(data5.get(position).matches("Terminata")) {
+                    Log.d("StatoTerminato", String.valueOf(position));
+                    Log.d("StatoTerminato", String.valueOf(data5.get(position)));
+                    Log.d("StatoTerminato", String.valueOf(data8.get(position)));
+                    Log.d("StatoTerminato", String.valueOf(data9.get(position)));
+                    Log.d("StatoTerminato", String.valueOf(data8));
+                    Log.d("StatoTerminato", String.valueOf(data9));
+                    Log.d("StatoTerminato", String.valueOf(data5));
 
-            holder.StatoChallengeTextView.setText("Stato gara: " + data5.get(position));
-            holder.UsernamePartecipanteTextView.setVisibility(View.INVISIBLE);
+                    holder.StatoChallengeTextView.setText("Stato gara: " + data5.get(position));
+                    holder.UsernamePartecipanteTextView.setVisibility(View.INVISIBLE);
 
-            holder.itemView.setBackground(ContextCompat.getDrawable(context, R.drawable.box1));
-            holder.ButtonConfermaRifiuta.setVisibility(View.INVISIBLE);
-            holder.RisultatoChallengeTextView.setVisibility(View.VISIBLE);
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), ResoContochallengeActivity.class);
-                    intent.putExtra("IDGara", data7.get(position));
-                    intent.putExtra("STATO", "Terminata");
-                    v.getContext().startActivity(intent);
+                    holder.itemView.setBackground(ContextCompat.getDrawable(context, R.drawable.box1));
+                    holder.ButtonConfermaRifiuta.setVisibility(View.INVISIBLE);
+                    holder.RisultatoChallengeTextView.setVisibility(View.VISIBLE);
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(v.getContext(), ResoContochallengeActivity.class);
+                            intent.putExtra("IDGara", data7.get(position));
+                            intent.putExtra("STATO", "Terminata");
+                            v.getContext().startActivity(intent);
 
+                        }
+                    });
+
+
+                    if(data8.get(position).matches("null")){
+                        holder.RisultatoChallengeTextView.setText("Clicca per scoprire il risultato");
+                    }
+                    else {
+                        Log.d("provadata", data8.get(position) + " " + data8.get(position).length());
+                        holder.RisultatoChallengeTextView.setText("Risultato: " + data8.get(position) + "\n Vincitore: " + data9.get(position));
+                    }
                 }
-            });
-
-
-            if(data8.get(position).matches("null")){
-                holder.RisultatoChallengeTextView.setText("Clicca per scoprire il risultato");
             }
-            else {
-                Log.d("provadata", data8.get(position) + " " + data8.get(position).length());
-                holder.RisultatoChallengeTextView.setText("Risultato: " + data8.get(position) + "\n Vincitore: " + data9.get(position));
-            }
-        }
-
-
+        });
     }
 
     private String changeFormatData(String data) {

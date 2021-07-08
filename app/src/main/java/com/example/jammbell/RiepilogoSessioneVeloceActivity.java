@@ -12,6 +12,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.jammbell.Controller.SessioneVeloce;
+import com.example.jammbell.Model.FirestoreCallback;
+import com.example.jammbell.Model.Sessione;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,27 +31,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class RiepilogoSessioneVeloceActivity extends AppCompatActivity {
+public class RiepilogoSessioneVeloceActivity extends AppCompatActivity
+{
+     private TextView TempoTextView;
+     private TextView KmTextView;
+     private TextView CalorieTextView;
+     private TextView PassiTextView;
+     private TextView VelocitaMediaTextView;
 
-     TextView TempoTextView;
-     TextView KmTextView;
-     TextView CalorieTextView;
-     TextView PassiTextView;
-     TextView VelocitaMediaTextView;
+     private ImageView Stella1;
+     private ImageView Stella2;
+     private ImageView Stella3;
+     private ImageView Stella4;
+     private ImageView Stella5;
 
-     ImageView Stella1;
-     ImageView Stella2;
-     ImageView Stella3;
-     ImageView Stella4;
-     ImageView Stella5;
+     private Button buttonConferma;
 
-     Button buttonConferma;
+     private Map<String, Object> SessioneVeloce = new HashMap<>();
 
-    Map<String, Object> SessioneVeloce = new HashMap<>();
+     private int valutazione = 0;
 
-    int valutazione = 0;
-
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     public void onBackPressed() {
@@ -57,16 +60,16 @@ public class RiepilogoSessioneVeloceActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_riepilogo_sessione_veloce);
 
-        TempoTextView = (TextView) findViewById(R.id.TempoTextView);
-        KmTextView = (TextView) findViewById(R.id.KmPercorsiTextView);
-        CalorieTextView = (TextView) findViewById(R.id.CalorieBruciateTextView);
-        PassiTextView = (TextView) findViewById(R.id.PassiTextView);
-        VelocitaMediaTextView = (TextView) findViewById(R.id.VelocitaMediaTextView);
+        TempoTextView         =  findViewById(R.id.TempoTextView);
+        KmTextView            =  findViewById(R.id.KmPercorsiTextView);
+        CalorieTextView       =  findViewById(R.id.CalorieBruciateTextView);
+        PassiTextView         =  findViewById(R.id.PassiTextView);
+        VelocitaMediaTextView =  findViewById(R.id.VelocitaMediaTextView);
 
         Stella1 = findViewById(R.id.Stella1);
         Stella2 = findViewById(R.id.Stella2);
@@ -112,9 +115,7 @@ public class RiepilogoSessioneVeloceActivity extends AppCompatActivity {
         int tempoint = (int) Tempo;
         int calorieint = (int) Calorie;
 
-      String tempostringformat = formatSecondDateTime(tempoint);
-
-
+        String tempostringformat = formatSecondDateTime(tempoint);
 
         TempoTextView.setText(tempostringformat);
         KmTextView.setText(String.valueOf(df.format(Km)) + " Km" );
@@ -122,7 +123,8 @@ public class RiepilogoSessioneVeloceActivity extends AppCompatActivity {
         PassiTextView.setText(String.valueOf(passi));
         VelocitaMediaTextView.setText(String.valueOf(df1.format(velocitamedia)) + " Km/h");
 
-        buttonConferma.setOnClickListener(new View.OnClickListener() {
+        buttonConferma.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View v) {
 
@@ -143,21 +145,13 @@ public class RiepilogoSessioneVeloceActivity extends AppCompatActivity {
                 SessioneVeloce.put("UserID", userId);
 
                 Log.d("SessioneVeloce", String.valueOf(SessioneVeloce));
-
-                db.collection("SessioneVeloce").add(SessioneVeloce).addOnSuccessListener(new OnSuccessListener<DocumentReference>()
+                SessioneVeloce sessioneVeloce = new SessioneVeloce();
+                sessioneVeloce.pushSessione(SessioneVeloce, new FirestoreCallback()
                 {
                     @Override
-                    public void onSuccess(DocumentReference documentReference)
+                    public void onCallback()
                     {
-                        Log.d("TAG", "DocumentSnapshot written with ID: " + documentReference.getId());
                         startActivity(new Intent(RiepilogoSessioneVeloceActivity.this, Main2Activity.class));
-                    }
-                }).addOnFailureListener(new OnFailureListener()
-                {
-                    @Override
-                    public void onFailure(@NonNull Exception e)
-                    {
-                        Log.w("TAG", "Error adding document", e);
                     }
                 });
             }

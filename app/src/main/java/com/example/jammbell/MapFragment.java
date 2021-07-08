@@ -153,7 +153,8 @@ public class MapFragment extends Fragment
         return view;
     }
 
-    public void SessioneGuidataDialog() {
+    public void SessioneGuidataDialog()
+    {
         SessioneGuidataDialog createSessioneGuidata = new SessioneGuidataDialog();
         createSessioneGuidata.show(getFragmentManager(), "createsessioneguidata");
         createSessioneGuidata.setTargetFragment(MapFragment.this, 1);

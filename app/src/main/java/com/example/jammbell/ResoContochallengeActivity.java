@@ -94,7 +94,8 @@ public class ResoContochallengeActivity extends AppCompatActivity {
     String IDDocumentoGara;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reso_contochallenge);
 
@@ -120,8 +121,6 @@ public class ResoContochallengeActivity extends AppCompatActivity {
 
         PullGara(IDgara);
 
-
-
         SessioneVeloceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,7 +143,6 @@ public class ResoContochallengeActivity extends AppCompatActivity {
     }
 
     public void PullGara(String idgara) {
-
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -202,7 +200,7 @@ public class ResoContochallengeActivity extends AppCompatActivity {
 
                                   StatistichePartecipante.add(String.valueOf(KmTot2));
                                   StatistichePartecipante.add(String.valueOf(CalorieTot2));
-                                  StatistichePartecipante.add(String.valueOf(Velocitamedia2 / countdocument));
+                                  StatistichePartecipante.add(String.valueOf(Velocitamedia2 / countdocument2));
 
                                   Log.d("STATISTICHE PARTECIPANT", String.valueOf(StatistichePartecipante));
 
@@ -322,7 +320,6 @@ public class ResoContochallengeActivity extends AppCompatActivity {
                                                 Log.d("gara2", "km: " + String.valueOf(KmTot1) + "Cal " + String.valueOf(CalorieTot1));
                                                 countdocument++;
 
-
                                             }
                                         }
                                         else {
@@ -338,7 +335,6 @@ public class ResoContochallengeActivity extends AppCompatActivity {
 
                                 }
                                 firestoreCallback.onPullCreatoreCallback();
-
                             }
 
                             else
@@ -409,11 +405,6 @@ public class ResoContochallengeActivity extends AppCompatActivity {
 
                             }
                             firestoreCallback.onPullSessioniCallback();
-
-
-
-
-
                         }
 
                         else
@@ -460,19 +451,27 @@ public class ResoContochallengeActivity extends AppCompatActivity {
         String VelocitaPartecipanteString = StatistichePartecipante.get(2);
         float VelocitaPartecipante = Float.parseFloat(VelocitaPartecipanteString);
 
+        if(Double.isNaN(VelocitaCreatore) || Double.isInfinite(VelocitaCreatore))
+            VelocitaCreatore = 0;
+
+        if(Double.isNaN(VelocitaPartecipante) || Double.isInfinite(VelocitaPartecipante))
+            VelocitaPartecipante = 0;
+
+        Log.d("Punteggio2", VelocitaPartecipanteString);
         Log.d("PunteggioBarra", String.valueOf((int) (VelocitaCreatore + VelocitaPartecipante)));
 
-        if((int) (VelocitaCreatore + VelocitaPartecipante) == 0) {
+        if((int) (VelocitaCreatore + VelocitaPartecipante) == 0)
+        {
             VelocitaProgessBar.setMax(100);
             VelocitaProgessBar.setProgress(50, true);
         }
-        else{
+        else
+        {
             Log.d("PunteggioBarra", String.valueOf((int) (VelocitaCreatore + VelocitaPartecipante)));
             Log.d("PunteggioBarra", String.valueOf((int) (VelocitaCreatore)));
 
             VelocitaProgessBar.setMax((int) (VelocitaCreatore + VelocitaPartecipante));
             VelocitaProgessBar.setProgress((int) VelocitaCreatore, true);
-
         }
 
         String CalorieCreatoreString = StatisticheCreatore.get(1);
@@ -510,6 +509,7 @@ public class ResoContochallengeActivity extends AppCompatActivity {
         else if((int) VelocitaCreatore < (int) VelocitaPartecipante) {
             countrisultatopartecipante++;
             Log.d("Punteggio", "punto vel partecipante");
+            Log.d("Punteggio1", (int) VelocitaCreatore + " " + VelocitaPartecipante);
         }
 
         if((int) CalorieCreatore > (int) CaloriePartecipante) {

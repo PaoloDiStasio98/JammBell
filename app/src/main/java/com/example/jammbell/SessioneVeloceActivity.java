@@ -61,8 +61,6 @@ import java.util.List;
 
 public class SessioneVeloceActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener
 {
-
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth;
 
     private Button ButtonStart;
@@ -266,12 +264,10 @@ public class SessioneVeloceActivity extends AppCompatActivity implements OnMapRe
 
     @Override
     public void onConnectionSuspended(int i) {
-
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
     }
 
     @Override
@@ -289,7 +285,8 @@ public class SessioneVeloceActivity extends AppCompatActivity implements OnMapRe
 
 
 
-    protected void startLocationUpdates() {
+    protected void startLocationUpdates()
+    {
         LocationRequest locationRequest = new LocationRequest();
         locationRequest.setInterval(15 * 1000);
         locationRequest.setFastestInterval(5 * 1000);
@@ -312,7 +309,8 @@ public class SessioneVeloceActivity extends AppCompatActivity implements OnMapRe
                 this);
     }
 
-    protected void stopLocationUpdates() {
+    protected void stopLocationUpdates()
+    {
         LocationServices.FusedLocationApi.removeLocationUpdates(
                 googleApiClient, this);
     }
@@ -334,8 +332,8 @@ public class SessioneVeloceActivity extends AppCompatActivity implements OnMapRe
         risultato = risultato + distanza;
         Log.d("risultato", String.valueOf(risultato));
 
-        if(risultato != 0) {
-
+        if(risultato != 0)
+        {
             DecimalFormat df = new DecimalFormat("##.###");
             df.setRoundingMode(RoundingMode.DOWN);
             KmtextView.setText(String.valueOf(df.format(risultato / 1000)) + " " + "Km");
@@ -351,14 +349,16 @@ public class SessioneVeloceActivity extends AppCompatActivity implements OnMapRe
         gpsTrack.setPoints(points);
     }
 
-    public void clickButton(View v) {
-
-        switch (v.getId()) {
+    public void clickButton(View v)
+    {
+        switch (v.getId())
+        {
             case R.id.ButtonStart:
 
                 startLocationUpdates();
 
-                if(!CronometroRunning) {
+                if(!CronometroRunning)
+                {
                     Cronometro.setBase(SystemClock.elapsedRealtime() - pauseOffset);
                     Cronometro.start();
                     CronometroRunning = true;
@@ -374,15 +374,14 @@ public class SessioneVeloceActivity extends AppCompatActivity implements OnMapRe
 
             case R.id.ButtonPausa:
 
-                if(CronometroRunning){
+                if(CronometroRunning)
+                {
                     Cronometro.stop();
                     pauseOffset = SystemClock.elapsedRealtime() - Cronometro.getBase();
                     CronometroRunning = false;
                 }
 
                 Log.d("cronometro1", String.valueOf((SystemClock.elapsedRealtime() - Cronometro.getBase())/1000));
-
-
 
                 VelocitàTextView.setText("0.0 Km/h");
                 stopLocationUpdates();
@@ -411,7 +410,6 @@ public class SessioneVeloceActivity extends AppCompatActivity implements OnMapRe
 
                 startActivity(intent);
                 break;
-
         }
     }
 }

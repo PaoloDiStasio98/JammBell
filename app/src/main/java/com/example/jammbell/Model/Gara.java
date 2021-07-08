@@ -1,91 +1,126 @@
 package com.example.jammbell.Model;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.example.jammbell.MyAdapterChallenge;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Gara {
+public class Gara
+{
+    private ArrayList<String>                 Data_inizio           = new ArrayList<>();
+    private ArrayList<String>                 Data_fine             = new ArrayList<>();
+    private ArrayList<String>                 Nome                  = new ArrayList<>();
+    private ArrayList<String>                 Stato                 = new ArrayList<>();
+    private ArrayList<String>                 Username_creatore     = new ArrayList<>();
+    private ArrayList<String>                 Username_partecipante = new ArrayList<>();
+    private ArrayList<String>                 ID_creatore           = new ArrayList<>();
+    private ArrayList<String>                 ID_partecipante       = new ArrayList<>();
+    private ArrayList<String>                 IDDocumento           = new ArrayList<>();
+    private ArrayList<HashMap<String,String>> Data_creazione        = new ArrayList<>();
+    private ArrayList<String>                 Risultato             = new ArrayList<>();
+    private ArrayList<String>                 Username_vincitore    = new ArrayList<>();
 
-    private String   Data_inizio, Data_fine, Nome, Stato, Username_creatore, Username_partecipante, ID_creatore, ID_partecipante;
-    private ArrayList<HashMap<String,String>> Data_creazione = new ArrayList<>();
+    public ArrayList<String> getUsername_vincitore() {
+        return Username_vincitore;
+    }
 
-    public Gara(String data_inizio, String data_fine, String nome, String stato, String username_creatore, String username_partecipante, String ID_creatore, String ID_partecipante, ArrayList<HashMap<String, String>> data_creazione) {
-        Data_inizio = data_inizio;
-        Data_fine = data_fine;
-        Nome = nome;
-        Stato = stato;
-        Username_creatore = username_creatore;
-        Username_partecipante = username_partecipante;
-        this.ID_creatore = ID_creatore;
-        this.ID_partecipante = ID_partecipante;
-        Data_creazione = data_creazione;
+    public void setUsername_vincitore(ArrayList<String> username_vincitore) {
+        Username_vincitore = username_vincitore;
+    }
+
+    public ArrayList<String> getRisultato() {
+        return Risultato;
+    }
+
+    public void setRisultato(ArrayList<String> risultato) {
+        Risultato = risultato;
     }
 
     public Gara(){
 
     }
 
-    public String getData_inizio() {
+    public ArrayList<String> getData_inizio() {
         return Data_inizio;
     }
 
-    public void setData_inizio(String data_inizio) {
+    public void setData_inizio(ArrayList<String> data_inizio) {
         Data_inizio = data_inizio;
     }
 
-    public String getData_fine() {
+    public ArrayList<String> getData_fine() {
         return Data_fine;
     }
 
-    public void setData_fine(String data_fine) {
+    public void setData_fine(ArrayList<String> data_fine) {
         Data_fine = data_fine;
     }
 
-    public String getNome() {
+    public ArrayList<String> getNome() {
         return Nome;
     }
 
-    public void setNome(String nome) {
+    public void setNome(ArrayList<String> nome) {
         Nome = nome;
     }
 
-    public String getStato() {
+    public ArrayList<String> getStato() {
         return Stato;
     }
 
-    public void setStato(String stato) {
+    public void setStato(ArrayList<String> stato) {
         Stato = stato;
     }
 
-    public String getUsername_creatore() {
+    public ArrayList<String> getUsername_creatore() {
         return Username_creatore;
     }
 
-    public void setUsername_creatore(String username_creatore) {
+    public void setUsername_creatore(ArrayList<String> username_creatore) {
         Username_creatore = username_creatore;
     }
 
-    public String getUsername_partecipante() {
+    public ArrayList<String> getUsername_partecipante() {
         return Username_partecipante;
     }
 
-    public void setUsername_partecipante(String username_partecipante) {
+    public void setUsername_partecipante(ArrayList<String> username_partecipante) {
         Username_partecipante = username_partecipante;
     }
 
-    public String getID_creatore() {
+    public ArrayList<String> getID_creatore() {
         return ID_creatore;
     }
 
-    public void setID_creatore(String ID_creatore) {
+    public void setID_creatore(ArrayList<String> ID_creatore) {
         this.ID_creatore = ID_creatore;
     }
 
-    public String getID_partecipante() {
+    public ArrayList<String> getID_partecipante() {
         return ID_partecipante;
     }
 
-    public void setID_partecipante(String ID_partecipante) {
+    public void setID_partecipante(ArrayList<String> ID_partecipante) {
         this.ID_partecipante = ID_partecipante;
+    }
+
+    public ArrayList<String> getIDDocumento() {
+        return IDDocumento;
+    }
+
+    public void setIDDocumento(ArrayList<String> IDDocumento) {
+        this.IDDocumento = IDDocumento;
     }
 
     public ArrayList<HashMap<String, String>> getData_creazione() {
@@ -94,5 +129,79 @@ public class Gara {
 
     public void setData_creazione(ArrayList<HashMap<String, String>> data_creazione) {
         Data_creazione = data_creazione;
+    }
+
+    public void getGareUtenteDatabase(FirestoreCallback firestoreCallback1)
+    {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Utente utente = new Utente();
+        utente.getDatiUtenteDatabase(new FirestoreCallback()
+        {
+            @Override
+            public void onCallback()
+            {
+                Log.d("IDUTENTE",utente.getIDUtente());
+                db.collection("GaraUtente")
+                        .whereEqualTo("UTENTEID", utente.getIDUtente())
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                        {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task)
+                            {
+                                if (task.isSuccessful())
+                                {
+                                    for (QueryDocumentSnapshot document : task.getResult())
+                                    {
+                                        String IDGara = String.valueOf(document.get("IDGara"));
+                                        Log.d("CHALLENGEIDGARA", IDGara);
+
+                                        db.collection("Gara")
+                                                .document(IDGara)
+                                                .get()
+                                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+                                                {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<DocumentSnapshot> task)
+                                                    {
+
+                                                        if (task.isSuccessful())
+                                                        {
+                                                            DocumentSnapshot document1 = task.getResult();
+                                                            Log.d("CHALLENGEID", "dentrooooooo");
+                                                            Log.d("CHALLENGEID", String.valueOf(document1.get("Datainizio")));
+                                                            Log.d("CHALLENGEID", String.valueOf(document1.getId()));
+
+                                                            Data_inizio.add(String.valueOf(document1.get("Datainizio")));
+                                                            Data_fine.add(String.valueOf(document1.get("Datafine")));
+                                                            Nome.add(String.valueOf(document1.get("Nome")));
+                                                            Stato.add(String.valueOf(document1.get("Stato")));
+                                                            Username_partecipante.add(String.valueOf(document1.get("UsernamePartecipante")));
+                                                            Username_creatore.add(String.valueOf(document1.get("UsernameCreatore")));
+                                                            IDDocumento.add(document1.getId());
+
+                                                            if (document1.get("Stato").equals("In attesa") || document1.get("Stato").equals("Attiva"))
+                                                            {
+                                                                Username_vincitore.add("null");
+                                                                Risultato.add("null");
+                                                            }
+                                                            else
+                                                            {
+                                                                Username_vincitore.add(String.valueOf(document1.get("UsernameVincitore")));
+                                                                Risultato.add(String.valueOf(document1.get("Risultato")));
+                                                            }
+
+                                                            firestoreCallback1.onPullGareCallback();
+                                                            }
+
+                                                        }
+                                                    });
+                                    }
+                                }
+                            }
+                        });
+            }
+        });
+
     }
 }
