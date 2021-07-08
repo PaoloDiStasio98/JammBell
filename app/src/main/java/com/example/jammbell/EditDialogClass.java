@@ -10,9 +10,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -25,6 +27,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.jammbell.Model.Utente;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -35,11 +38,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Calendar;
 
-public class EditDialogClass extends AppCompatDialogFragment {
-
-
+public class EditDialogClass extends AppCompatDialogFragment
+{
+    Utente utente = new Utente();
     private EditText NomeEditText;
     private EditText CognomeEditText;
 
@@ -55,17 +60,15 @@ public class EditDialogClass extends AppCompatDialogFragment {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth;
 
-    long pesotext;
-
     String[] sesso = {"Maschio", "Femmina", "Altro"};
 
     String documentID;
 
-    //private EditDialogListener listener;
 
     @NonNull
     @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState)
+    {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -100,14 +103,13 @@ public class EditDialogClass extends AppCompatDialogFragment {
         sessoNumberPicker.setMinValue(0);
         sessoNumberPicker.setDisplayedValues(sesso);
 
-        pullDatiDB();
+        SettaDati();
 
-
-        dateButton.setOnClickListener(new View.OnClickListener() {
+        dateButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View v) {
                 datePickerDialog.show();
-
             }
         });
 
@@ -121,23 +123,22 @@ public class EditDialogClass extends AppCompatDialogFragment {
                 })
                 .setPositiveButton("Conferma", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
+                    public void onClick(DialogInterface dialog, int which)
+                    {
                         pushDatiDB();
 
                         ProfileFragment profilo = new ProfileFragment();
                         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.FrammentoProfilo, profilo).commit();
-
                     }
                 });
 
         return builder.create();
     }
 
-    private void pushDatiDB(){
-
+    private void pushDatiDB()
+    {
        db.collection("Utente")
                .document(documentID)
                .update(
@@ -162,57 +163,32 @@ public class EditDialogClass extends AppCompatDialogFragment {
                });
     }
 
-    private void pullDatiDB() {
+    private void SettaDati()
+    {
+        utente.getDatiUtenteDatabase(new Utente.FirestoreCallback()
+        {
+            @Override
+            public void onCallback()
+            {
+                NomeEditText.setText(utente.getNome());
+                CognomeEditText.setText(utente.getCognome());
+                dateButton.setText(utente.getData_di_nascita());
+                if(utente.getSesso().equals("Maschio")){
+                    sessoNumberPicker.setValue(0);
+                }
+                if(utente.getSesso().equals("Femmina")){
+                    sessoNumberPicker.setValue(1);
+                }
+                if(utente.getSesso().equals("Altro")){
+                    sessoNumberPicker.setValue(2);
+                }
+                pesoNumberPicker.setValue(utente.getPeso());
+                altezzaNumberPicker.setValue(utente.getAltezza());
 
-        mAuth = FirebaseAuth.getInstance();
-
-
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-            Log.d("utenteid", currentUser.getUid());
-
-            db.collection("Utente")
-                    .whereEqualTo("IDUtente", currentUser.getUid())
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-
-                                    NomeEditText.setText(document.get("Nome").toString());
-                                    CognomeEditText.setText(document.get("Cognome").toString());
-                                    dateButton.setText(document.get("Data di nascita").toString());
-                                    if(document.get("Sesso").equals("Maschio")){
-                                        sessoNumberPicker.setValue(0);
-                                    }
-                                    if(document.get("Sesso").equals("Femmina")){
-                                        sessoNumberPicker.setValue(1);
-                                    }
-                                    if(document.get("Sesso").equals("Altro")){
-                                        sessoNumberPicker.setValue(2);
-                                    }
-                                    pesoNumberPicker.setValue(((Number) document.get("Peso")).intValue());
-                                    altezzaNumberPicker.setValue(((Number) document.get("Altezza")).intValue());
-
-                                    documentID = document.getId();
-
-                                    Log.d("database1", document.getId() + " => " + document.getData() + " "  + " " + document.get("Altezza"));
-                                }
-                            } else {
-                                Log.d("database", "Error getting documents: ", task.getException());
-                            }
-                        }
-                    });
-        }
-        else {
-            Log.d("utenteid", "niente vuoto");
-        }
-
-
+                documentID = utente.getIDdocument();
+            }
+        });
     }
-
-
 
     private void initAltezzaPicker()
     {
@@ -323,8 +299,5 @@ public class EditDialogClass extends AppCompatDialogFragment {
         //default
         return "JAN";
     }
-
-
-
 }
 
