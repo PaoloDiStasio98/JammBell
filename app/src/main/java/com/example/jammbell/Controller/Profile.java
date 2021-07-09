@@ -1,5 +1,8 @@
 package com.example.jammbell.Controller;
 
+import android.util.Log;
+
+import com.example.jammbell.Model.FirestoreCallback;
 import com.example.jammbell.Model.Utente;
 import com.example.jammbell.View.IProfileView;
 
@@ -14,5 +17,4 @@ public class Profile implements IProfile
         Utente utente = new Utente();
         utente.pushDatiUtenteDatabase(Nome, Cognome, Altezza, Data, Sesso, Peso, documentID);
     }
-
 }

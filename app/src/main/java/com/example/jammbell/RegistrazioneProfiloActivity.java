@@ -52,8 +52,6 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity implements N
 
     private TextView altezzaTextView;
 
-    private NumberPicker sessoNumberPicker;
-
     private Button confermaButton;
 
     private TextView nomeTextView;
@@ -64,16 +62,16 @@ public class RegistrazioneProfiloActivity extends AppCompatActivity implements N
     private TextView erroreCognomeTextView;
     private TextView erroreDataDiNascitaTextView;
 
-    String date;
+    private String date;
 
-    int isValid = 0;
+    private int isValid = 0;
 
-    Boolean AltezzaCliccato = false;
-    Boolean PesoCliccato = false;
+    private Boolean AltezzaCliccato = false;
+    private Boolean PesoCliccato = false;
 
     private FirebaseAuth mAuth;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

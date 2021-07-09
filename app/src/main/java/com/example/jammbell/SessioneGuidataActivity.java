@@ -69,46 +69,26 @@ public class SessioneGuidataActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         com.google.android.gms.location.LocationListener {
 
-    int minutiCamminata, minutiCorsa, numeroRipetizioni;
-
-    TextView cronometroTextView;
-    TextView spiegazioneLivello;
-
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private int minutiCamminata, minutiCorsa, numeroRipetizioni;
+    private TextView cronometroTextView;
+    private TextView spiegazioneLivello;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth;
-
-    Button ButtonStart;
-    Button ButtonStop;
-    int flag;
-
-    Boolean CronometroRunning = false;
-    long pauseOffset;
-
-
-    Chronometer Cronometro;
-
+    private Button ButtonStart;
+    private Button ButtonStop;
     private GoogleMap mMap;
-
     private Polyline gpsTrack;
     private SupportMapFragment mapFragment;
     private GoogleApiClient googleApiClient;
     private LatLng lastKnownLatLng;
     private float distanza;
     private float risultato = 0;
-
     private TextView KmtextView;
-    double calorie;
-    String peso;
-
-    TextView indicazioniSessione;
-
-
-
-    private LocationCallback locationCallback;
-
-    NotificationManagerCompat notificationManager;
-
-    NotificationCompat.Builder builderNotification;
+    private double calorie;
+    private String peso;
+    private TextView indicazioniSessione;
+    private NotificationManagerCompat notificationManager;
+    private NotificationCompat.Builder builderNotification;
 
     @Override
     public void onBackPressed() {
@@ -143,7 +123,6 @@ public class SessioneGuidataActivity extends AppCompatActivity implements
 
         ButtonStart = findViewById(R.id.ButtonStart);
         ButtonStop = findViewById(R.id.ButtonStop);
-       // Cronometro = findViewById(R.id.Cronometro);
         cronometroTextView = findViewById(R.id.cronometroTextView);
 
 
@@ -164,12 +143,6 @@ public class SessioneGuidataActivity extends AppCompatActivity implements
                     .addApi(LocationServices.API)
                     .build();
         }
-
-
-
-
-
-
     }
 
     private void createNotificationChannel(){
@@ -510,7 +483,6 @@ public class SessioneGuidataActivity extends AppCompatActivity implements
 
                 startLocationUpdates();
 
-
                 sessioneGuidata();
 
                 notificationManager.notify(100, builderNotification.build());
@@ -535,8 +507,6 @@ public class SessioneGuidataActivity extends AppCompatActivity implements
                         // A null listener allows the button to dismiss the dialog and take no further action.
                         .setNegativeButton("No", null)
                         .show();
-
-
                 break;
 
         }

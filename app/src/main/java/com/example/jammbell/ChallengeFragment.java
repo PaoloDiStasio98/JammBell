@@ -52,11 +52,8 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
 
 
     private static final String TAG = "ChallengeFragment";
-
     private FragmentActivity myContext;
-
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-
     private ArrayList<String> ChallengeDataInizio           = new ArrayList<String>();
     private ArrayList<String> ChallengeDataFine             = new ArrayList<String>();
     private ArrayList<String> ChallengeNome                 = new ArrayList<String>();

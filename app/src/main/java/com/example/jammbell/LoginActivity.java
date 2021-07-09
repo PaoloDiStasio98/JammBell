@@ -27,12 +27,11 @@ import org.w3c.dom.Text;
 public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    EditText MailEditText=null, PasswordEditText=null;
-    Button LoginButton;
-    TextView SignupButton;
-    TextView ErroreTextView;
-
-    FirebaseUser currentUser;
+    private EditText MailEditText=null, PasswordEditText=null;
+    private Button LoginButton;
+    private TextView SignupButton;
+    private TextView ErroreTextView;
+    private FirebaseUser currentUser;
 
 
     @Override

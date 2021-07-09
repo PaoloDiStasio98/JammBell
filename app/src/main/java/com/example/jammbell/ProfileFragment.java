@@ -34,10 +34,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jammbell.Model.FirestoreCallback;
+import com.example.jammbell.Model.Gara;
 import com.example.jammbell.Model.Sessione;
 import com.example.jammbell.Model.Utente;
 import com.example.jammbell.View.IProfileView;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -77,9 +79,9 @@ import java.util.Locale;
 
 public class ProfileFragment extends Fragment implements IProfileView
 {
-    Main2Activity main2Activity = new Main2Activity();
-    Utente utente               = new Utente();
-    Sessione sessione           = new Sessione();
+    private Main2Activity main2Activity = new Main2Activity();
+    private Utente utente               = new Utente();
+    private Sessione sessione           = new Sessione();
 
     private FragmentActivity myContext;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -200,7 +202,8 @@ public class ProfileFragment extends Fragment implements IProfileView
 
         ArrayList<Double> Km = sessione.getKm_Percorsi();
         ArrayList<HashMap<String,String>> Data = sessione.getData();
-        Double km_effettuati = 0.0;
+        Double km_effettuati   = 0.0;
+        Double km_effettuati_0 = 0.0;
 
         for(int i = 0; i < sessione.getData().size(); i++)
         {
@@ -228,10 +231,16 @@ public class ProfileFragment extends Fragment implements IProfileView
                 Log.d("datamap1", DateSessioni);
                 Log.d("giorno", giornosettimana + " " + Km);
 
-                if(Km.get(i) > 0.0001)
-                    km_effettuati = Km.get(i);
-                else
+                if(Km.get(i) < 0.001)
                     km_effettuati = 0.0;
+                else
+                {
+                    km_effettuati_0 = Km.get(i);
+                    DecimalFormat df = new DecimalFormat("###.###");
+                    df.setRoundingMode(RoundingMode.DOWN);
+                    String km_effettuati_string = df.format(km_effettuati_0);
+                    km_effettuati = Double.parseDouble(km_effettuati_string);
+                }
 
                 if(giornosettimana.equals("MONDAY"))
                     KmTotLunedi = KmTotLunedi + km_effettuati;
@@ -350,8 +359,10 @@ public class ProfileFragment extends Fragment implements IProfileView
         BarDataSet barDataSet = new BarDataSet(sessioni, "Km");
         barDataSet.setColor(Color.parseColor("#0B4F6C"));
 
+
         barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
         BarData data = new BarData(barDataSet);
+
         barChart.setData(data);
         barChart.getAxisLeft().setDrawGridLines(false);
         barChart.getAxisRight().setDrawGridLines(false);
@@ -360,7 +371,7 @@ public class ProfileFragment extends Fragment implements IProfileView
         barChart.setScaleEnabled(false);
         barDataSet.setColors(Color.parseColor("#0B4F6C"));
         barDataSet.setValueTextColor(Color.BLACK);
-        barDataSet.setValueTextSize(14f);
+        barDataSet.setValueTextSize(13f);
         barChart.getDescription().setText("Riepilogo Km settimanali");
         barChart.getDescription().setTextSize(15f);
         barChart.animateY(2000);
@@ -427,60 +438,18 @@ public class ProfileFragment extends Fragment implements IProfileView
 
     public void StatisticheGare()
     {
-        numGare = 0;
+        Gara gara = new Gara();
         mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        //Controllo prima il numero di gare a cui ha partecipato l'utente
-        db.collection("Gara")
-                .whereEqualTo("IDcreatore", currentUser.getUid())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("Statistica", "trovata una gara come creatore");
-                                numGare++;
-                            }
-                            StatisticheGarePartecipante(currentUser);
-                        }
-                        else
-                        {
-                            Log.d("database", "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-    }
-
-    public void StatisticheGarePartecipante(FirebaseUser currentUser)
-    {
-        db.collection("Gara")
-                .whereEqualTo("IDpartecipante", currentUser.getUid())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
-                {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task)
-                    {
-                        if (task.isSuccessful())
-                        {
-                            for (QueryDocumentSnapshot document : task.getResult())
-                            {
-                                Log.d("Statistica", "trovata una gara come partecipante");
-                                numGare++;
-                            }
-
-                            Log.d("Statistica", "numero di gare" + numGare);
-
-                            StatisticheGareVinte();
-                        }
-                        else
-                        {
-                            Log.d("database", "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
+        gara.getGareUtenteDatabase(new FirestoreCallback()
+        {
+            @Override
+            public void onPullGareCallback()
+            {
+                numGare = gara.getNome().size();
+                StatisticheGareVinte();
+            }
+        });
     }
 
     public void StatisticheGareVinte()
@@ -493,7 +462,8 @@ public class ProfileFragment extends Fragment implements IProfileView
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
+                            for (QueryDocumentSnapshot document : task.getResult())
+                            {
                                 Log.d("Statistica", "trovata una gara come partecipante");
                                 numGareVinte++;
                             }

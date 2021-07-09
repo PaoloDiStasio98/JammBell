@@ -7,9 +7,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.jammbell.MyAdapterChallenge;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -35,6 +38,24 @@ public class Gara
     private ArrayList<HashMap<String,String>> Data_creazione        = new ArrayList<>();
     private ArrayList<String>                 Risultato             = new ArrayList<>();
     private ArrayList<String>                 Username_vincitore    = new ArrayList<>();
+    private String                            Utente_Invitato;
+    private String                            Username_Creatore;
+
+    public String getUsername_Creatore() {
+        return Username_Creatore;
+    }
+
+    public void setUsername_Creatore(String username_Creatore) {
+        Username_Creatore = username_Creatore;
+    }
+
+    public String getUtente_Invitato() {
+        return Utente_Invitato;
+    }
+
+    public void setUtente_Invitato(String utente_Invitato) {
+        Utente_Invitato = utente_Invitato;
+    }
 
     public ArrayList<String> getUsername_vincitore() {
         return Username_vincitore;
@@ -209,4 +230,69 @@ public class Gara
         });
 
     }
+
+    public void searchUtente(String username, FirestoreCallback firestoreCallback)
+    {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            db.collection("Utente")
+                    .whereEqualTo("Username", username)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                    {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task)
+                        {
+                            if (task.isSuccessful())
+                            {
+                                for (QueryDocumentSnapshot document : task.getResult())
+                                {
+                                    Utente_Invitato = String.valueOf(document.get("IDUtente"));
+                                }
+                                firestoreCallback.onCallback();
+                            }
+                        }
+                    });
+        }
+    }
+
+    public void pullUsernameCreatore(FirestoreCallback firestoreCallback)
+    {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        if(currentUser != null)
+        {
+            db.collection("Utente")
+                    .whereEqualTo("IDUtente", currentUser.getUid())
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                    {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task)
+                        {
+                            if (task.isSuccessful())
+                            {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Username_Creatore = String.valueOf(document.get("Username"));
+                                }
+                                firestoreCallback.onCallback();
+                            }
+                            else
+                            {
+                                Log.d("database", "Error getting documents: ", task.getException());
+                            }
+                        }
+                    });
+        }
+        else
+        {
+            Log.d("utenteid", "niente vuoto");
+        }
+    }
+
 }

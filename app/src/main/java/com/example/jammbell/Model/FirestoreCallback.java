@@ -31,5 +31,4 @@ public class FirestoreCallback implements IFirestoreCallback {
     @Override
     public void onPullGareCallback(){
     }
-
 }

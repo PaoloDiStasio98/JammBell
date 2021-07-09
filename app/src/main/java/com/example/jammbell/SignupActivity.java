@@ -24,9 +24,9 @@ import java.util.regex.Pattern;
 public class SignupActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    EditText MailEditText, PasswordEditText;
-    Button SignupButton;
-    TextView ErroreSignUpTextView;
+    private EditText MailEditText, PasswordEditText;
+    private Button SignupButton;
+    private TextView ErroreSignUpTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

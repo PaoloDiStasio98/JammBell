@@ -40,58 +40,46 @@ import java.util.HashMap;
 
 
 
-public class ResoContochallengeActivity extends AppCompatActivity {
-
+public class ResoContochallengeActivity extends AppCompatActivity
+{
     private FirebaseAuth mAuth;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    String datainizio;
-    String datafine;
-    String nomegara;
-    String usernameCreatore;
-    String usernamePartecipante;
-    String stato;
+    private String datainizio;
+    private String datafine;
+    private String nomegara;
+    private String usernameCreatore;
+    private String usernamePartecipante;
+    private String stato;
 
-    HashMap<String, String> DatamapSessione = new HashMap<>();
-    HashMap<String, String> DatamapGara = new HashMap<>();
-
-
-    TextView nomeGaraTextView;
-    TextView username1TextView;
-    TextView username2TextView;
-    TextView risultatoTextView;
-    TextView contoRovesciaTextView;
-    TextView messaggioVincitoreTextView;
-
-    ProgressBar KmProgressBar;
-    ProgressBar CalorieProgressBar;
-    ProgressBar VelocitaProgessBar;
-
-
-    Double KmTot1 = 0.0;
-    Double CalorieTot1 = 0.0;
-    Double Velocitamedia1 = 0.0;
-
-    Double KmTot2 = 0.0;
-    Double CalorieTot2 = 0.0;
-    Double Velocitamedia2 = 0.0;
-
-    int countdocument2 = 0;
-    int countdocument = 0;
-    int countrisultatocreatore = 0;
-    int countrisultatopartecipante = 0;
-
-    ArrayList<String> StatisticheCreatore = new ArrayList<>();
-    ArrayList<String> StatistichePartecipante = new ArrayList<>();
-    int countStatistiche = 0;
-
-    String IDcreatore;
-    String IDpartecipante;
-
-    Button SessioneVeloceButton;
-
-    String StatoGara;
-    String IDDocumentoGara;
+    private HashMap<String, String> DatamapSessione = new HashMap<>();
+    private HashMap<String, String> DatamapGara = new HashMap<>();
+    private TextView nomeGaraTextView;
+    private TextView username1TextView;
+    private TextView username2TextView;
+    private TextView risultatoTextView;
+    private TextView contoRovesciaTextView;
+    private TextView messaggioVincitoreTextView;
+    private ProgressBar KmProgressBar;
+    private ProgressBar CalorieProgressBar;
+    private ProgressBar VelocitaProgessBar;
+    private Double KmTot1 = 0.0;
+    private Double CalorieTot1 = 0.0;
+    private Double Velocitamedia1 = 0.0;
+    private Double KmTot2 = 0.0;
+    private Double CalorieTot2 = 0.0;
+    private Double Velocitamedia2 = 0.0;
+    private int countdocument2 = 0;
+    private int countdocument = 0;
+    private int countrisultatocreatore = 0;
+    private int countrisultatopartecipante = 0;
+    private ArrayList<String> StatisticheCreatore = new ArrayList<>();
+    private ArrayList<String> StatistichePartecipante = new ArrayList<>();
+    private String IDcreatore;
+    private String IDpartecipante;
+    private Button SessioneVeloceButton;
+    private String StatoGara;
+    private String IDDocumentoGara;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -414,8 +402,6 @@ public class ResoContochallengeActivity extends AppCompatActivity {
 
 
                     }
-
-
                 });
     }
 
@@ -480,12 +466,14 @@ public class ResoContochallengeActivity extends AppCompatActivity {
         String CaloriePartecipanteString = StatistichePartecipante.get(1);
         float CaloriePartecipante = Float.parseFloat(CaloriePartecipanteString);
 
-        if((int) (CalorieCreatore + CaloriePartecipante) == 0) {
+        if((int) (CalorieCreatore + CaloriePartecipante) == 0)
+        {
             CalorieProgressBar.setMax(100);
             CalorieProgressBar.setProgress(50, true);
             CalorieProgressBar.animate().setDuration(10000000);
         }
-        else{
+        else
+        {
             CalorieProgressBar.setMax((int) (CalorieCreatore + CaloriePartecipante));
             CalorieProgressBar.setProgress((int) CalorieCreatore, true);
 
@@ -628,10 +616,7 @@ public class ResoContochallengeActivity extends AppCompatActivity {
                         Log.w("TAG", "Error updating document", e);
                     }
                 });
-
     }
-
-
 
     public boolean onOptionsItemSelected(MenuItem item){
 

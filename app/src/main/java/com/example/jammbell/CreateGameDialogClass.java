@@ -29,6 +29,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.jammbell.Controller.Challenge;
+import com.example.jammbell.Controller.Profile;
+import com.example.jammbell.Model.FirestoreCallback;
+import com.example.jammbell.Model.Gara;
+import com.example.jammbell.Model.Utente;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -56,7 +61,7 @@ import java.util.Map;
 public class CreateGameDialogClass extends AppCompatDialogFragment
 {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private FirebaseAuth mAuth;
+    private FirebaseAuth mAuth  = FirebaseAuth.getInstance();
 
     private DatePickerDialog dialogInizio;
     private DatePickerDialog.OnDateSetListener dateSetListenerInizio;
@@ -82,7 +87,8 @@ public class CreateGameDialogClass extends AppCompatDialogFragment
     private Map<String, Object> gara = new HashMap<>();
     private Map<String, Object> GaraUtenteID = new HashMap<>();
 
-    public interface OnGameCreatedListener{
+    public interface OnGameCreatedListener
+    {
         public void getUsername(String Datafine, String Datainizio, String IDcreatore, String Nome, String Stato, String UsernameCreatore, String UsernamePartecipante);
     }
 
@@ -142,16 +148,17 @@ public class CreateGameDialogClass extends AppCompatDialogFragment
         };
 
         //prendo data di fine e la imposto come testo del picker
-            DatafineTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if(datainizio == null)
-                    {
-                        Toast.makeText(getContext(), "on Move", Toast.LENGTH_SHORT).show();
-                    }
-                    else
-                    {
+        DatafineTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if(datainizio == null)
+                {
+                    Toast.makeText(getContext(), "on Move", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
                     Calendar cal = Calendar.getInstance();
                     int year = cal.get(Calendar.YEAR);
                     int month = cal.get(Calendar.MONTH);
@@ -160,27 +167,29 @@ public class CreateGameDialogClass extends AppCompatDialogFragment
                     dialogFine = new DatePickerDialog(getContext(), android.R.style.Theme_DeviceDefault_Dialog, dateSetListenerFine, year, month, day);
                     DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                     Long date = null;
-                    try {
+                    try
+                    {
                         Log.d("amicodata", String.valueOf(datainizio));
                         date = df.parse(datainizio).getTime();
                         Log.d("amicodata", String.valueOf(date));
                         dialogFine.getDatePicker().setMinDate(date + 86400000);
                         dialogFine.show();
 
-                    } catch (ParseException e) {
+                    }
+                    catch (ParseException e)
+                    {
                         e.printStackTrace();
                     }
-
-
                 }
-                }
-            });
+            }
+        });
 
 
-        dateSetListenerFine = new DatePickerDialog.OnDateSetListener() {
+        dateSetListenerFine = new DatePickerDialog.OnDateSetListener()
+        {
             @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-
+            public void onDateSet(DatePicker datePicker, int year, int month, int day)
+            {
                 month = month + 1;
                 Log.d("provadata", "onDateSet: dd/mm/yyyy: " + day + "/" + month + "/" + year);
 
@@ -197,31 +206,37 @@ public class CreateGameDialogClass extends AppCompatDialogFragment
 
         builder.setView(view)
                 .setTitle("Crea Gara")
-                .setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Annulla", new DialogInterface.OnClickListener()
+                {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
                     }
                 })
-                .setPositiveButton("Conferma", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Conferma", new DialogInterface.OnClickListener()
+                {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
+                    public void onClick(DialogInterface dialog, int which)
+                    {
                         if(cercaAmicoEditText.getText().toString().matches("") || DatainizioTextView.getText().toString().matches("Data inizio gara")
-                            || DatafineTextView.getText().toString().matches("Data fine gara") || nomePartitaEditText.getText().toString().matches("")) {
+                                || DatafineTextView.getText().toString().matches("Data fine gara") || nomePartitaEditText.getText().toString().matches(""))
+                        {
                             Log.d("amico", "qualche campo vuoto");
                             Toast.makeText(getContext(), "Inserisci tutti i campi richiesti per creare una gara", Toast.LENGTH_SHORT).show();
                         }
-                        else {
+                        else
+                        {
                             Log.d("amicodata", datainizio);
                             Log.d("amicodata", datafine);
 
-                            if(datainizio.compareTo(datafine) < 0){
-                            nomepartita = nomePartitaEditText.getText().toString();
-                            usernameamico = cercaAmicoEditText.getText().toString();
-                            cercautenteDB(usernameamico);
-
+                            if(datainizio.compareTo(datafine) < 0)
+                            {
+                                nomepartita = nomePartitaEditText.getText().toString();
+                                usernameamico = cercaAmicoEditText.getText().toString();
+                                cercautenteDB(usernameamico);
                             }
-                            else {
+                            else
+                            {
                                 Log.d("amico", "controlla data");
                                 ErroreTextView.setVisibility(View.VISIBLE);
                                 ErroreTextView.setText("Controlla le date inserite");
@@ -229,74 +244,59 @@ public class CreateGameDialogClass extends AppCompatDialogFragment
                         }
                     }
                 });
-
         return builder.create();
-
     }
 
     @Override
-    public void onAttach(@NonNull Context context) {
-        try{
-        mOnGameCreatedListener = (OnGameCreatedListener) getTargetFragment();
-        } catch (ClassCastException e){
+    public void onAttach(@NonNull Context context)
+    {
+        try
+        {
+            mOnGameCreatedListener = (OnGameCreatedListener) getTargetFragment();
+        }
+        catch (ClassCastException e)
+        {
             Log.d("amico", "problema nel try");
         }
         super.onAttach(context);
     }
 
-
-
     public void pullUsernameCreatore()
     {
-        mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-            db.collection("Utente")
-                    .whereEqualTo("IDUtente", currentUser.getUid())
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult())
-                                {
-                                    usernamecreatore = String.valueOf(document.get("Username"));
-                                    gara.put("IDcreatore", currentUser.getUid());
-                                }
+        Gara gara_creata = new Gara();
+        gara_creata.pullUsernameCreatore(new FirestoreCallback()
+        {
+            @Override
+            public void onCallback()
+            {
+                usernamecreatore = gara_creata.getUsername_Creatore();
 
-                                DateTimeFormatter dtf = null;
-                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                                    dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-                                    LocalDateTime now = LocalDateTime.now();
-                                    Log.d("data", dtf.format(now));
-                                    gara.put("Data", now);
-                                }
+                gara.put("IDcreatore", currentUser.getUid());
+                DateTimeFormatter dtf = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
+                {
+                    dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                    LocalDateTime now = LocalDateTime.now();
+                    Log.d("data", dtf.format(now));
+                    gara.put("Data", now);
+                }
 
-                                gara.put("IDpartecipante", IDamico);
-                                gara.put("Datafine", datafine);
-                                gara.put("Datainizio", datainizio);
-                                gara.put("Nome", nomepartita);
-                                gara.put("UsernameCreatore", usernamecreatore);
-                                gara.put("UsernamePartecipante", usernameamico);
-                                gara.put("Stato", "In attesa");
+                gara.put("IDpartecipante", IDamico);
+                gara.put("Datafine", datafine);
+                gara.put("Datainizio", datainizio);
+                gara.put("Nome", nomepartita);
+                gara.put("UsernameCreatore", usernamecreatore);
+                gara.put("UsernamePartecipante", usernameamico);
+                gara.put("Stato", "In attesa");
 
-                                pushGara();
-                            }
-                            else
-                            {
-
-                                Log.d("database", "Error getting documents: ", task.getException());
-                            }
-                        }
-                    });
-        }
-        else {
-            Log.d("utenteid", "niente vuoto");
-        }
-
+                pushGara();
+            }
+        });
     }
 
-    public void pushGara(){
+    public void pushGara()
+    {
         //pusho gara nel database
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -307,20 +307,20 @@ public class CreateGameDialogClass extends AppCompatDialogFragment
             public void onSuccess(DocumentReference documentReference)
             {
                 Log.d("TAG", "DocumentSnapshot written with ID: " + documentReference.getId());
-                    GaraUtenteID.put("IDGara", documentReference.getId());
-                    GaraUtenteID.put("UTENTEID", currentUser.getUid());
-                    db.collection("GaraUtente").add(GaraUtenteID).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                        @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                            GaraUtenteID.put("UTENTEID", IDamico);
-                            db.collection("GaraUtente").add(GaraUtenteID).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                @Override
-                                public void onSuccess(DocumentReference documentReference) {
+                GaraUtenteID.put("IDGara", documentReference.getId());
+                GaraUtenteID.put("UTENTEID", currentUser.getUid());
+                db.collection("GaraUtente").add(GaraUtenteID).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        GaraUtenteID.put("UTENTEID", IDamico);
+                        db.collection("GaraUtente").add(GaraUtenteID).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
 
-                                }
-                            });
-                        }
-                    });
+                            }
+                        });
+                    }
+                });
                 mOnGameCreatedListener.getUsername(datafine, datainizio, currentUser.getUid(), nomepartita, "In attesa", usernamecreatore, usernameamico);
 
             }
@@ -336,47 +336,19 @@ public class CreateGameDialogClass extends AppCompatDialogFragment
 
     public void cercautenteDB(String username)
     {
+        Challenge challenge = new Challenge();
+        Gara gara_creata = new Gara();
 
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-            db.collection("Utente")
-                    .whereEqualTo("Username", username)
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-
-                                    IDamico = String.valueOf(document.get("IDUtente"));
-                                    amicotrovato = true;
-                                    Log.d("amico", "amico trovato");
-
-                                    pullUsernameCreatore();
-
-                                }
-                            }
-                            else
-                            {
-
-                                Log.d("database", "Error getting documents: ", task.getException());
-                            }
-                        }
-                    });
-        }
-        else {
-            Log.d("utenteid", "niente vuoto");
-        }
-
-        if(amicotrovato == false) {
-            Log.d("amico", "amico non trovato");
-            Toast.makeText(getContext(), "Nessun utente trovato con questo username, riprova", Toast.LENGTH_SHORT).show();
-            ErroreTextView.setVisibility(View.VISIBLE);
-            ErroreTextView.setText("Nessun utente trovato con questo username, riprova");
-        }
-
-
+        challenge.CercaUtente(username);
+        gara_creata.searchUtente(username, new FirestoreCallback()
+        {
+            @Override
+            public void onCallback()
+            {
+                IDamico = gara_creata.getUtente_Invitato();
+                pullUsernameCreatore();
+            }
+        });
     }
 
 }

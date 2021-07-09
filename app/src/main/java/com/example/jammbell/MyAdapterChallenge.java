@@ -43,10 +43,6 @@ public class MyAdapterChallenge extends RecyclerView.Adapter<MyAdapterChallenge.
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-
-
-
-
     public MyAdapterChallenge(Context ct, ArrayList<String> DataInizio, ArrayList<String> DataFine, ArrayList<String> Nome, ArrayList<String> UsernamePartecipante, ArrayList<String> Stato, ArrayList<String> UsernameCreatore, ArrayList<String> DocumentID, ArrayList<String> Risultato, ArrayList<String> UsernameVincitore){
         context = ct;
         data1 = DataInizio;
@@ -59,11 +55,7 @@ public class MyAdapterChallenge extends RecyclerView.Adapter<MyAdapterChallenge.
         data8 = Risultato;
         data9 = UsernameVincitore;
 
-
     }
-
-
-
 
     private void CheckGaraFinita(int position) {
 

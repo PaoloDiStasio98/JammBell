@@ -38,10 +38,6 @@ public class Main2Activity extends AppCompatActivity
     public String PosizioneCorrente;
     public static Map<String, Object> Utente = new HashMap<>();
 
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private FirebaseAuth mAuth;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -49,8 +45,6 @@ public class Main2Activity extends AppCompatActivity
         setContentView(R.layout.activity_main2);
 
         PosizioneCorrente = getIntent().getStringExtra("USER_ID");
-
-        //pullUtente();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         NavController navController = Navigation.findNavController(Main2Activity.this, R.id.fragment);
@@ -60,45 +54,4 @@ public class Main2Activity extends AppCompatActivity
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
     }
 
-    public void pullUtente()
-    {
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null)
-        {
-            db.collection("Utente")
-                    .whereEqualTo("IDUtente", currentUser.getUid())
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
-                    {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task)
-                        {
-                            if (task.isSuccessful())
-                            {
-                                for (QueryDocumentSnapshot document : task.getResult())
-                                {
-                                    Utente.put("Altezza", document.get("Altezza"));
-                                    Utente.put("Cognome", document.get("Cognome"));
-                                    Utente.put("Nome", document.get("Nome"));
-                                    Utente.put("Data di nascita", document.get("Data di nascita"));
-                                    Utente.put("ID", document.get("IDUtente"));
-                                    Utente.put("Peso", document.get("Peso"));
-                                    Utente.put("Sesso", document.get("Sesso"));
-                                    Utente.put("Username", document.get("Username"));
-                                }
-                                    Log.d("challengemain", String.valueOf(Utente));
-                            }
-                            else
-                            {
-                                Log.d("database", "Error getting documents: ", task.getException());
-                            }
-                        }
-                    });
-        }
-        else
-        {
-            Log.d("utenteid", "niente vuoto");
-        }
-    }
 }

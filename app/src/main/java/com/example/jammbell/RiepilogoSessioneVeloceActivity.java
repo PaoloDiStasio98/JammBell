@@ -215,8 +215,6 @@ public class RiepilogoSessioneVeloceActivity extends AppCompatActivity
         }
     }
 
-
-
     public static String formatSecondDateTime(int scound) {
         if(scound <= 0)return "";
         int h = scound / 3600;
@@ -232,6 +230,4 @@ public class RiepilogoSessioneVeloceActivity extends AppCompatActivity
         return h+":"+m+":"+s+"";
 
     }
-
-
 }

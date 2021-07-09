@@ -8,7 +8,6 @@ import java.util.Map;
 public class SessioneVeloce
 {
     public SessioneVeloce() {
-
     }
 
     public void pushSessione(Map<String, Object> SessioneVeloce, FirestoreCallback firestoreCallback)
