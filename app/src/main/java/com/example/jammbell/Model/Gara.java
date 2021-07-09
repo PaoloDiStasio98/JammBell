@@ -1,10 +1,14 @@
 package com.example.jammbell.Model;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.jammbell.ChallengeFragment;
+import com.example.jammbell.CreateGameDialogClass;
 import com.example.jammbell.MyAdapterChallenge;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -41,6 +45,17 @@ public class Gara
     private String                            Utente_Invitato;
     private String                            Username_Creatore;
 
+
+    private Context context;
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
     public String getUsername_Creatore() {
         return Username_Creatore;
     }
@@ -74,7 +89,6 @@ public class Gara
     }
 
     public Gara(){
-
     }
 
     public ArrayList<String> getData_inizio() {
@@ -248,12 +262,15 @@ public class Gara
                         {
                             if (task.isSuccessful())
                             {
+
                                 for (QueryDocumentSnapshot document : task.getResult())
                                 {
                                     Utente_Invitato = String.valueOf(document.get("IDUtente"));
                                 }
                                 firestoreCallback.onCallback();
                             }
+
+
                         }
                     });
         }
@@ -294,5 +311,7 @@ public class Gara
             Log.d("utenteid", "niente vuoto");
         }
     }
+
+
 
 }

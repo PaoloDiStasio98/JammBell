@@ -1,5 +1,7 @@
 package com.example.jammbell.Model;
 
+import android.content.Context;
+
 public interface IGara
 {
     void getGareUtenteDatabase(FirestoreCallback firestoreCallback1);

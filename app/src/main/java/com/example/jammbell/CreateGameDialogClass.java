@@ -84,6 +84,8 @@ public class CreateGameDialogClass extends AppCompatDialogFragment implements IC
     private String usernamecreatore;
     private String IDamico;
 
+    private Context context;
+
     private Map<String, Object> gara = new HashMap<>();
     private Map<String, Object> GaraUtenteID = new HashMap<>();
 
@@ -108,6 +110,8 @@ public class CreateGameDialogClass extends AppCompatDialogFragment implements IC
         cercaAmicoEditText = view.findViewById(R.id.cercaAmicoEditText);
         nomePartitaEditText = view.findViewById(R.id.NomePartitaEditText);
         ErroreTextView = view.findViewById(R.id.ErroreTextView);
+
+        context = getContext();
 
         //prendo data di inizio e la imposto come testo del picker
         DatainizioTextView.setOnClickListener(new View.OnClickListener() {
@@ -155,7 +159,7 @@ public class CreateGameDialogClass extends AppCompatDialogFragment implements IC
             {
                 if(datainizio == null)
                 {
-                    Toast.makeText(getContext(), "on Move", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Selezione prima la data di inizio", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
@@ -263,36 +267,40 @@ public class CreateGameDialogClass extends AppCompatDialogFragment implements IC
 
     private void pullUsernameCreatore()
     {
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        Gara gara_creata = new Gara();
-        gara_creata.pullUsernameCreatore(new FirestoreCallback()
-        {
-            @Override
-            public void onCallback()
-            {
-                usernamecreatore = gara_creata.getUsername_Creatore();
 
-                gara.put("IDcreatore", currentUser.getUid());
-                DateTimeFormatter dtf = null;
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
-                {
-                    dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-                    LocalDateTime now = LocalDateTime.now();
-                    Log.d("data", dtf.format(now));
-                    gara.put("Data", now);
+        if(IDamico != null) {
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+            Gara gara_creata = new Gara();
+            gara_creata.pullUsernameCreatore(new FirestoreCallback() {
+                @Override
+                public void onCallback() {
+                    usernamecreatore = gara_creata.getUsername_Creatore();
+
+                    gara.put("IDcreatore", currentUser.getUid());
+                    DateTimeFormatter dtf = null;
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                        dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                        LocalDateTime now = LocalDateTime.now();
+                        Log.d("data", dtf.format(now));
+                        gara.put("Data", now);
+                    }
+
+                    gara.put("IDpartecipante", IDamico);
+                    gara.put("Datafine", datafine);
+                    gara.put("Datainizio", datainizio);
+                    gara.put("Nome", nomepartita);
+                    gara.put("UsernameCreatore", usernamecreatore);
+                    gara.put("UsernamePartecipante", usernameamico);
+                    gara.put("Stato", "In attesa");
+
+                    pushGara();
+
                 }
-
-                gara.put("IDpartecipante", IDamico);
-                gara.put("Datafine", datafine);
-                gara.put("Datainizio", datainizio);
-                gara.put("Nome", nomepartita);
-                gara.put("UsernameCreatore", usernamecreatore);
-                gara.put("UsernamePartecipante", usernameamico);
-                gara.put("Stato", "In attesa");
-
-                pushGara();
-            }
-        });
+            });
+        }
+        else{
+                Log.d("Username", "username non esistente");
+        }
     }
 
     private void pushGara()
@@ -346,9 +354,16 @@ public class CreateGameDialogClass extends AppCompatDialogFragment implements IC
             public void onCallback()
             {
                 IDamico = gara_creata.getUtente_Invitato();
-                pullUsernameCreatore();
+                if (IDamico != null) {
+                    pullUsernameCreatore();
+                }
+                else {
+                    Toast.makeText(context, "Amico non trovato", Toast.LENGTH_SHORT).show();
+
+                }
             }
         });
+
     }
 
 }
