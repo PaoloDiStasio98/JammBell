@@ -138,7 +138,6 @@ public class Sessione
         getDatiSessioneDatabase();
         Log.d("prova", String.valueOf(getTempo()));
 
-
         double km_totali      = 0.0;
         double passi_totali   = 0.0;
         double calorie_totali = 0.0;

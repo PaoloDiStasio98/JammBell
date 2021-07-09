@@ -136,13 +136,6 @@ public class ProfileFragment extends Fragment implements IProfileView
 
         //Prelevo sessioni utente database
         sessione.getDatiSessioneDatabase();
-
-        return inflater.inflate(R.layout.fragment_profile, container, false);
-    }
-
-    @Override
-    public void onResume()
-    {
         utente.getDatiUtenteDatabase(new FirestoreCallback() {
             @Override
             public void onCallback()
@@ -168,7 +161,7 @@ public class ProfileFragment extends Fragment implements IProfileView
             }
         });
 
-        super.onResume();
+        return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
     private void graficogenerate()
@@ -201,7 +194,9 @@ public class ProfileFragment extends Fragment implements IProfileView
         datacorrente = formatter.format(date);
         data7giorni = formatter.format(calendar.getTime());
 
-        ArrayList<Double> Km = sessione.getKm_Percorsi();
+        ArrayList<Double> Km = new ArrayList<>();
+        Km.clear();
+        Km = sessione.getKm_Percorsi();
         ArrayList<HashMap<String,String>> Data = sessione.getData();
         Double km_effettuati   = 0.0;
         Double km_effettuati_0 = 0.0;
@@ -231,18 +226,6 @@ public class ProfileFragment extends Fragment implements IProfileView
             {
                 Log.d("datamap1", DateSessioni);
                 Log.d("giorno", giornosettimana + " " + Km);
-
-                /*
-                if(Km.get(i) < 0.001)
-                    km_effettuati = 0.0;
-                else
-                {
-                    km_effettuati_0 = Km.get(i);
-                    DecimalFormat df = new DecimalFormat("###.###");
-                    df.setRoundingMode(RoundingMode.DOWN);
-                    String km_effettuati_string = df.format(km_effettuati_0);
-                    km_effettuati = Double.parseDouble(km_effettuati_string);
-                }*/
 
                 km_effettuati = Km.get(i);
 
@@ -426,7 +409,8 @@ public class ProfileFragment extends Fragment implements IProfileView
 
     private void VisualizzaStatistiche()
     {
-        ArrayList<Double> statistiche = sessione.StatisticheTotali();
+        ArrayList<Double> statistiche = new ArrayList<>();
+        statistiche = sessione.StatisticheTotali();
 
         Log.d("Statistiche1"," " + statistiche);
 
