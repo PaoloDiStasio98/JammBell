@@ -49,6 +49,7 @@ public class Main2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
+        pullUtente();
         PosizioneCorrente = getIntent().getStringExtra("USER_ID");
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
