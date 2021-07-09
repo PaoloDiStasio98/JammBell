@@ -440,8 +440,12 @@ public class ProfileFragment extends Fragment implements IProfileView
         if(statistiche.get(3) == 0.0){
             DescrizioneStatistiche[3] = "0 h";
         }
-        else{
-            DescrizioneStatistiche[3] = String.valueOf(df.format(statistiche.get(3) / 3600) + " h");
+        else
+        {
+            if(statistiche.get(3)/3600 < 1)
+                DescrizioneStatistiche[3] = "0 h";
+            else
+                DescrizioneStatistiche[3] = String.valueOf(df.format((int) (statistiche.get(3) / 3600)) + " h");
         }
 
         StatisticheGare();
@@ -452,7 +456,6 @@ public class ProfileFragment extends Fragment implements IProfileView
     {
         Gara gara = new Gara();
         mAuth = FirebaseAuth.getInstance();
-        Log.d("C pall", String.valueOf(garaNonEsistente));
         DescrizioneStatistiche[4] = "0";
         DescrizioneStatistiche[5] = "0";
 

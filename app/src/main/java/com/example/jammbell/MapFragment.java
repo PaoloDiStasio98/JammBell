@@ -165,9 +165,6 @@ public class MapFragment extends Fragment implements IMap
 
         if(requestCode == 100 && (grantResults.length > 0) && (grantResults[0] + grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
 
-           // getCurrentLocation();
-        } else {
-            Toast.makeText(getActivity(), "Permission denied", Toast.LENGTH_SHORT).show();
         }
     }
 

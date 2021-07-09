@@ -90,6 +90,8 @@ public class SessioneGuidataActivity extends AppCompatActivity implements
     private TextView indicazioniSessione;
     private NotificationManagerCompat notificationManager;
     private NotificationCompat.Builder builderNotification;
+    private CountDownTimer timercamminata, timercorsa, timertotale;
+    private Boolean camminata_iniziata = false, corsa_iniziata = false;
 
     @Override
     public void onBackPressed() {
@@ -383,9 +385,12 @@ public class SessioneGuidataActivity extends AppCompatActivity implements
     public void setCountDown(){
         final int[] numRip = {0};
 
-        new CountDownTimer(minutiCamminata*60*1000, 1000) {
-
-            public void onTick(long millisUntilFinished) {
+        timercamminata = new CountDownTimer(minutiCamminata*60*1000, 1000)
+        {
+            public void onTick(long millisUntilFinished)
+            {
+                camminata_iniziata = true;
+                corsa_iniziata = false;
                 String minutiCamminataRimenenti = formatSecondDateTime((int) (millisUntilFinished/1000));
                 indicazioniSessione.setText("Cammina! " + minutiCamminataRimenenti);
             }
@@ -393,9 +398,11 @@ public class SessioneGuidataActivity extends AppCompatActivity implements
             public void onFinish() {
                 Vibrazione();
                 indicazioniSessione.setText("Corri!");
-                new CountDownTimer(minutiCorsa*60*1000, 1000) {
+                timercorsa = new CountDownTimer(minutiCorsa*60*1000, 1000) {
 
                     public void onTick(long millisUntilFinished) {
+                        camminata_iniziata = false;
+                        corsa_iniziata = true;
                         String minutiCorsaRimenenti = formatSecondDateTime((int) (millisUntilFinished/1000));
                         indicazioniSessione.setText("Corri! " + minutiCorsaRimenenti);
                     }
@@ -462,7 +469,7 @@ public class SessioneGuidataActivity extends AppCompatActivity implements
 
         int tempoTotale = (minutiCamminata + minutiCorsa) * numeroRipetizioni;
 
-        new CountDownTimer(tempoTotale*60*1000, 1000) {
+        timertotale =new CountDownTimer(tempoTotale*60*1000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 String TempoRimanente = formatSecondDateTime((int) (millisUntilFinished/1000));
@@ -497,9 +504,14 @@ public class SessioneGuidataActivity extends AppCompatActivity implements
 
                 new AlertDialog.Builder(this)
                         .setTitle("Attenzione")
-                        .setMessage("Se termini la sessione prima del previsto i tuoi dati non saranno salvati. \n Sei sicuro di uscire?")
+                        .setMessage("Se termini la sessione prima del previsto i tuoi dati non saranno salvati. \nSei sicuro di uscire?")
                         .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
+                                if(camminata_iniziata == true)
+                                    timercamminata.cancel();
+                                if(corsa_iniziata == true)
+                                    timercorsa.cancel();
+                                timertotale.cancel();
                                 Intent intent = new Intent(getBaseContext(), Main2Activity.class);
                                 startActivity(intent);
                             }
