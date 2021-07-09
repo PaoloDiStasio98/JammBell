@@ -23,6 +23,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jammbell.Model.FirestoreCallback;
+import com.example.jammbell.Model.Gara;
+import com.example.jammbell.View.IChallengeView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,6 +35,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.okhttp.Challenge;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -45,67 +49,36 @@ import java.util.Date;
 import java.util.HashMap;
 
 
-public class ChallengeFragment extends Fragment implements CreateGameDialogClass.OnGameCreatedListener {
+public class ChallengeFragment extends Fragment implements CreateGameDialogClass.OnGameCreatedListener, IChallengeView {
 
 
     private static final String TAG = "ChallengeFragment";
-
     private FragmentActivity myContext;
-
-    Main2Activity main2Activity = new Main2Activity();
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private FirebaseAuth mAuth;
-
-    ArrayList<String> ChallengeDataInizio = new ArrayList<String>();
-    ArrayList<String> ChallengeDataFine = new ArrayList<String>();
-    ArrayList<String> ChallengeNome = new ArrayList<String>();
-    ArrayList<String> ChallengeUsernamePartecipante = new ArrayList<String>();
-    ArrayList<String> ChallengeUsernameCreatore = new ArrayList<String>();
-    ArrayList<String> ChallengeStato = new ArrayList<String>();
-    ArrayList<String> ChallengeDocumento = new ArrayList<String>();
-    ArrayList<String> ChallengeRisultato = new ArrayList<String>();
-    ArrayList<String> ChallengeUsernameVincitore = new ArrayList<String>();
-
-    String IDGara = null;
-
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private ArrayList<String> ChallengeDataInizio           = new ArrayList<String>();
+    private ArrayList<String> ChallengeDataFine             = new ArrayList<String>();
+    private ArrayList<String> ChallengeNome                 = new ArrayList<String>();
+    private ArrayList<String> ChallengeUsernamePartecipante = new ArrayList<String>();
+    private ArrayList<String> ChallengeUsernameCreatore = new ArrayList<String>();
+    private ArrayList<String> ChallengeStato = new ArrayList<String>();
+    private ArrayList<String> ChallengeDocumento = new ArrayList<String>();
+    private ArrayList<String> ChallengeRisultato = new ArrayList<String>();
+    private ArrayList<String> ChallengeUsernameVincitore = new ArrayList<String>();
 
     RecyclerView recyclerViewChallenge;
     TextView filtroTextView;
 
     @Override
-    public void getUsername(String Datafine, String Datainizio, String IDcreatore, String Nome, String Stato, String UsernameCreatore, String UsernamePartecipante) {
-        /*
-        Log.d("getUsername", Datafine);
-        Log.d("getUsername", Datainizio);
-        Log.d("getUsername", IDcreatore);
-        Log.d("getUsername", Nome);
-        Log.d("getUsername", Stato);
-        Log.d("getUsername", UsernameCreatore);
-        Log.d("getUsername", UsernamePartecipante);
-
-        ChallengeDataInizio.add("Inizio: " + Datainizio);
-        ChallengeDataFine.add(" fine: " + Datafine);
-        ChallengeNome.add("Nome gara: " + Nome);
-        ChallengeStato.add("Stato gara: " + Stato);
-
-        ChallengeUsernamePartecipante.add("Invitato: " + UsernamePartecipante);
-        ChallengeUsernameCreatore.add(UsernameCreatore);
-
-        MyAdapterChallenge myAdapter = new MyAdapterChallenge(getContext(), ChallengeDataInizio, ChallengeDataFine, ChallengeNome, ChallengeUsernamePartecipante, ChallengeStato, ChallengeUsernameCreatore, ChallengeDocumento);
-        recyclerViewChallenge.setAdapter(myAdapter);
-        recyclerViewChallenge.setLayoutManager(new LinearLayoutManager(getContext()));
-
-
-         */
-
+    public void getUsername(String Datafine, String Datainizio, String IDcreatore, String Nome, String Stato, String UsernameCreatore, String UsernamePartecipante)
+    {
         PullGare();
-
     }
 
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        recyclerViewChallenge = (RecyclerView) getView().findViewById(R.id.recyclerViewChallenge);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
+    {
+        recyclerViewChallenge = getView().findViewById(R.id.recyclerViewChallenge);
 
         setHasOptionsMenu(true);
 
@@ -113,20 +86,19 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
 
         filtroTextView = getView().findViewById(R.id.FiltroTextView);
 
-
         super.onViewCreated(view, savedInstanceState);
     }
 
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater)
+    {
         inflater.inflate(R.menu.upbarchallenge_menu, menu);
-
     }
 
     @Override
-    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull Menu menu)
+    {
         menu.clear();
         MenuInflater inflater = getActivity().getMenuInflater();
         inflater.inflate(R.menu.upbarchallenge_menu, menu);
@@ -134,29 +106,34 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.create_button: {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.create_button:
+            {
                 CreateGameDialog();
                 return true;
             }
-            case R.id.refresh_button: {
+            case R.id.refresh_button:
+            {
                 PullGare();
                 return true;
             }
             default:
                 return super.onOptionsItemSelected(item);
-
         }
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Activity activity)
+    {
         myContext = (FragmentActivity) activity;
         super.onAttach(activity);
     }
 
-    public void CreateGameDialog() {
+    private void CreateGameDialog()
+    {
         CreateGameDialogClass createGameDialogClass = new CreateGameDialogClass();
         createGameDialogClass.show(getFragmentManager(), "creategame");
         createGameDialogClass.setTargetFragment(ChallengeFragment.this, 1);
@@ -164,19 +141,20 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d("challenge", String.valueOf(main2Activity.Utente));
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         return inflater.inflate(R.layout.fragment_challenge, container, false);
     }
 
 
-    public void clearCell() {
+    private void clearCell()
+    {
         ChallengeDataInizio.clear();
         ChallengeDataFine.clear();
         ChallengeDocumento.clear();
@@ -188,199 +166,36 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
         ChallengeUsernameVincitore.clear();
     }
 
-    public void PullGare() {
-
-
+    private void PullGare()
+    {
         clearCell();
 
-        mAuth = FirebaseAuth.getInstance();
+        Gara gara = new Gara();
 
+        gara.getGareUtenteDatabase(new FirestoreCallback()
+        {
+            @Override
+            public void onPullGareCallback()
+            {
+                ChallengeDataInizio           = gara.getData_inizio();
+                ChallengeDataFine             = gara.getData_fine();
+                ChallengeNome                 = gara.getNome();
+                ChallengeUsernamePartecipante = gara.getUsername_partecipante();
+                ChallengeUsernameCreatore     = gara.getUsername_creatore();
+                ChallengeStato                = gara.getStato();
+                ChallengeDocumento            = gara.getIDDocumento();
+                ChallengeRisultato            = gara.getRisultato();
+                ChallengeUsernameVincitore    = gara.getUsername_vincitore();
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+                Log.d("IDUTENTE", String.valueOf(ChallengeStato));
+                MyAdapterChallenge myAdapter = new MyAdapterChallenge(getContext(), ChallengeDataInizio, ChallengeDataFine, ChallengeNome, ChallengeUsernamePartecipante, ChallengeStato, ChallengeUsernameCreatore, ChallengeDocumento, ChallengeRisultato, ChallengeUsernameVincitore);
+                recyclerViewChallenge.setAdapter(myAdapter);
+                recyclerViewChallenge.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        Log.d("CHALLENGEID", String.valueOf(main2Activity.Utente.get("ID")));
+                if(ChallengeDataInizio.size() == 0)
+                    filtroTextView.setText("Nessuna gara");
 
-        db.collection("GaraUtente")
-                .whereEqualTo("UTENTEID", main2Activity.Utente.get("ID"))
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                IDGara = String.valueOf(document.get("IDGara"));
-                                Log.d("CHALLENGEIDGARA", IDGara);
-
-                                db.collection("Gara")
-                                        .document(IDGara)
-                                        .get()
-                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                if (task.isSuccessful()) {
-                                                    DocumentSnapshot document1 = task.getResult();
-                                                    Log.d("CHALLENGEID", "dentrooooooo");
-                                                    Log.d("CHALLENGEID", String.valueOf(document1.get("Datainizio")));
-                                                    Log.d("CHALLENGEID", String.valueOf(document1.getId()));
-
-
-                                                    ChallengeDataInizio.add(String.valueOf(document1.get("Datainizio")));
-                                                    ChallengeDataFine.add(String.valueOf(document1.get("Datafine")));
-                                                    ChallengeNome.add(String.valueOf(document1.get("Nome")));
-                                                    ChallengeStato.add(String.valueOf(document1.get("Stato")));
-                                                    ChallengeUsernamePartecipante.add(String.valueOf(document1.get("UsernamePartecipante")));
-                                                    ChallengeUsernameCreatore.add(String.valueOf(document1.get("UsernameCreatore")));
-                                                    ChallengeDocumento.add(String.valueOf(document1.getId()));
-
-
-                                                    if (document1.get("Stato").equals("In attesa") || document1.get("Stato").equals("Attiva")) {
-                                                        Log.d("stato", String.valueOf(document1.get("Stato")));
-                                                        ChallengeUsernameVincitore.add("null");
-                                                        ChallengeRisultato.add("null");
-                                                    } else {
-                                                        ChallengeUsernameVincitore.add(String.valueOf(document1.get("UsernameVincitore")));
-                                                        ChallengeRisultato.add(String.valueOf(document1.get("Risultato")));
-                                                    }
-
-                                                    Log.d("PASSATO", String.valueOf(ChallengeRisultato));
-                                                    Log.d("PASSATO", String.valueOf(ChallengeUsernameVincitore));
-                                                    Log.d("CHALLENGE1", String.valueOf(ChallengeStato));
-                                                    Log.d("CHALLENGE1", String.valueOf(ChallengeDataInizio));
-                                                    Log.d("CHALLENGE1", String.valueOf(ChallengeNome));
-                                                    Log.d("CHALLENGE1", String.valueOf(ChallengeUsernameCreatore));
-
-                                                    MyAdapterChallenge myAdapter = new MyAdapterChallenge(getContext(), ChallengeDataInizio, ChallengeDataFine, ChallengeNome, ChallengeUsernamePartecipante, ChallengeStato, ChallengeUsernameCreatore, ChallengeDocumento, ChallengeRisultato, ChallengeUsernameVincitore);
-                                                    recyclerViewChallenge.setAdapter(myAdapter);
-                                                    recyclerViewChallenge.setLayoutManager(new LinearLayoutManager(getContext()));
-
-                                                    if(ChallengeDataInizio.size() == 0){
-                                                        filtroTextView.setText("Nessuna gara");
-                                                    }
-
-                                                }
-                                            }
-                                        });
-                            }
-
-
-                            Log.d("CHALLENGE2", String.valueOf(ChallengeStato));
-                            Log.d("CHALLENGE2", String.valueOf(ChallengeDataInizio));
-                            Log.d("CHALLENGE2", String.valueOf(ChallengeNome));
-                            Log.d("CHALLENGE2", String.valueOf(ChallengeUsernameCreatore));
-
-
-                        }
-
-                    }
-                });
-
-
-        /*
-            db.collection("Gara")
-                    .whereEqualTo("UsernameCreatore", main2Activity.Utente.get("Username"))
-                    .orderBy("Datafine")
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-
-                                    Log.d("Challenge", "Trovato creatore");
-
-                                    ChallengeDataInizio.add(String.valueOf(document.get("Datainizio")));
-                                    ChallengeDataFine.add(String.valueOf(document.get("Datafine")));
-                                    ChallengeNome.add(String.valueOf(document.get("Nome")));
-                                    ChallengeStato.add(String.valueOf(document.get("Stato")));
-                                    ChallengeUsernamePartecipante.add(String.valueOf(document.get("UsernamePartecipante")));
-                                    ChallengeUsernameCreatore.add(String.valueOf(document.get("UsernameCreatore")));
-                                    ChallengeDocumento.add(String.valueOf(document.getId()));
-
-
-                                    if (document.get("Stato").equals("In attesa") || document.get("Stato").equals("Attiva")){
-                                        Log.d("stato", String.valueOf(document.get("Stato")));
-                                        ChallengeUsernameVincitore.add("null");
-                                        ChallengeRisultato.add("null");
-                                    }
-                                    else {
-                                        ChallengeUsernameVincitore.add(String.valueOf(document.get("UsernameVincitore")));
-                                        ChallengeRisultato.add(String.valueOf(document.get("Risultato")));
-                                    }
-
-
-                                }
-
-                                Log.d("PASSATO", String.valueOf(ChallengeRisultato));
-                                Log.d("PASSATO", String.valueOf(ChallengeUsernameVincitore));
-                                Log.d("PASSATO", String.valueOf(ChallengeStato));
-
-                                MyAdapterChallenge myAdapter = new MyAdapterChallenge(getContext(), ChallengeDataInizio, ChallengeDataFine, ChallengeNome, ChallengeUsernamePartecipante, ChallengeStato, ChallengeUsernameCreatore, ChallengeDocumento, ChallengeRisultato, ChallengeUsernameVincitore);
-                                recyclerViewChallenge.setAdapter(myAdapter);
-                                recyclerViewChallenge.setLayoutManager(new LinearLayoutManager(getContext()));
-
-
-                            }
-
-                            else
-                            {
-                                Log.d("database", "Error getting documents: ", task.getException());
-                            }
-                        }
-                    });
-
-        db.collection("Gara")
-                .whereEqualTo("UsernamePartecipante", main2Activity.Utente.get("Username"))
-                .orderBy("Datafine")
-                .orderBy("Stato")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-
-                                Log.d("Challenge", "Trovato partecipante");
-
-                                ChallengeDataInizio.add(String.valueOf(document.get("Datainizio")));
-                                ChallengeDataFine.add(String.valueOf(document.get("Datafine")));
-                                ChallengeNome.add(String.valueOf(document.get("Nome")));
-                                ChallengeStato.add(String.valueOf(document.get("Stato")));
-                                ChallengeUsernamePartecipante.add(String.valueOf(document.get("UsernamePartecipante")));
-                                ChallengeUsernameCreatore.add(String.valueOf(document.get("UsernameCreatore")));
-                                ChallengeDocumento.add(String.valueOf(document.getId()));
-
-
-                                if (document.get("Stato").equals("In attesa") || document.get("Stato").equals("Attiva")){
-                                    Log.d("stato", String.valueOf(document.get("Stato")));
-                                    ChallengeUsernameVincitore.add("null");
-                                    ChallengeRisultato.add("null");
-                                }
-                                else {
-                                    ChallengeUsernameVincitore.add(String.valueOf(document.get("UsernameVincitore")));
-                                    ChallengeRisultato.add(String.valueOf(document.get("Risultato")));
-                                }
-
-
-                            }
-
-                            Log.d("PASSATO1", String.valueOf(ChallengeRisultato));
-                            Log.d("PASSATO1", String.valueOf(ChallengeUsernameVincitore));
-                            Log.d("PASSATO1", String.valueOf(ChallengeStato));
-
-                            MyAdapterChallenge myAdapter = new MyAdapterChallenge(getContext(), ChallengeDataInizio, ChallengeDataFine, ChallengeNome, ChallengeUsernamePartecipante, ChallengeStato, ChallengeUsernameCreatore, ChallengeDocumento, ChallengeRisultato, ChallengeUsernameVincitore);
-                            recyclerViewChallenge.setAdapter(myAdapter);
-                            recyclerViewChallenge.setLayoutManager(new LinearLayoutManager(getContext()));
-
-                        }
-
-                        else
-                        {
-                            Log.d("database", "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-
-    }
-*/
+            }
+        });
     }
 }

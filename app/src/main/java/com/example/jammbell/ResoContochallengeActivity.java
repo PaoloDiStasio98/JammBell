@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jammbell.View.IResocontoGara;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -40,61 +41,50 @@ import java.util.HashMap;
 
 
 
-public class ResoContochallengeActivity extends AppCompatActivity {
-
+public class ResoContochallengeActivity extends AppCompatActivity implements IResocontoGara
+{
     private FirebaseAuth mAuth;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    String datainizio;
-    String datafine;
-    String nomegara;
-    String usernameCreatore;
-    String usernamePartecipante;
-    String stato;
+    private String datainizio;
+    private String datafine;
+    private String nomegara;
+    private String usernameCreatore;
+    private String usernamePartecipante;
+    private String stato;
 
-    HashMap<String, String> DatamapSessione = new HashMap<>();
-    HashMap<String, String> DatamapGara = new HashMap<>();
-
-
-    TextView nomeGaraTextView;
-    TextView username1TextView;
-    TextView username2TextView;
-    TextView risultatoTextView;
-    TextView contoRovesciaTextView;
-    TextView messaggioVincitoreTextView;
-
-    ProgressBar KmProgressBar;
-    ProgressBar CalorieProgressBar;
-    ProgressBar VelocitaProgessBar;
-
-
-    Double KmTot1 = 0.0;
-    Double CalorieTot1 = 0.0;
-    Double Velocitamedia1 = 0.0;
-
-    Double KmTot2 = 0.0;
-    Double CalorieTot2 = 0.0;
-    Double Velocitamedia2 = 0.0;
-
-    int countdocument2 = 0;
-    int countdocument = 0;
-    int countrisultatocreatore = 0;
-    int countrisultatopartecipante = 0;
-
-    ArrayList<String> StatisticheCreatore = new ArrayList<>();
-    ArrayList<String> StatistichePartecipante = new ArrayList<>();
-    int countStatistiche = 0;
-
-    String IDcreatore;
-    String IDpartecipante;
-
-    Button SessioneVeloceButton;
-
-    String StatoGara;
-    String IDDocumentoGara;
+    private HashMap<String, String> DatamapSessione = new HashMap<>();
+    private HashMap<String, String> DatamapGara = new HashMap<>();
+    private TextView nomeGaraTextView;
+    private TextView username1TextView;
+    private TextView username2TextView;
+    private TextView risultatoTextView;
+    private TextView contoRovesciaTextView;
+    private TextView messaggioVincitoreTextView;
+    private ProgressBar KmProgressBar;
+    private ProgressBar CalorieProgressBar;
+    private ProgressBar VelocitaProgessBar;
+    private Double KmTot1 = 0.0;
+    private Double CalorieTot1 = 0.0;
+    private Double Velocitamedia1 = 0.0;
+    private Double KmTot2 = 0.0;
+    private Double CalorieTot2 = 0.0;
+    private Double Velocitamedia2 = 0.0;
+    private int countdocument2 = 0;
+    private int countdocument = 0;
+    private int countrisultatocreatore = 0;
+    private int countrisultatopartecipante = 0;
+    private ArrayList<String> StatisticheCreatore = new ArrayList<>();
+    private ArrayList<String> StatistichePartecipante = new ArrayList<>();
+    private String IDcreatore;
+    private String IDpartecipante;
+    private Button SessioneVeloceButton;
+    private String StatoGara;
+    private String IDDocumentoGara;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reso_contochallenge);
 
@@ -120,8 +110,6 @@ public class ResoContochallengeActivity extends AppCompatActivity {
 
         PullGara(IDgara);
 
-
-
         SessioneVeloceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,7 +132,6 @@ public class ResoContochallengeActivity extends AppCompatActivity {
     }
 
     public void PullGara(String idgara) {
-
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -202,7 +189,7 @@ public class ResoContochallengeActivity extends AppCompatActivity {
 
                                   StatistichePartecipante.add(String.valueOf(KmTot2));
                                   StatistichePartecipante.add(String.valueOf(CalorieTot2));
-                                  StatistichePartecipante.add(String.valueOf(Velocitamedia2 / countdocument));
+                                  StatistichePartecipante.add(String.valueOf(Velocitamedia2 / countdocument2));
 
                                   Log.d("STATISTICHE PARTECIPANT", String.valueOf(StatistichePartecipante));
 
@@ -322,7 +309,6 @@ public class ResoContochallengeActivity extends AppCompatActivity {
                                                 Log.d("gara2", "km: " + String.valueOf(KmTot1) + "Cal " + String.valueOf(CalorieTot1));
                                                 countdocument++;
 
-
                                             }
                                         }
                                         else {
@@ -338,7 +324,6 @@ public class ResoContochallengeActivity extends AppCompatActivity {
 
                                 }
                                 firestoreCallback.onPullCreatoreCallback();
-
                             }
 
                             else
@@ -409,11 +394,6 @@ public class ResoContochallengeActivity extends AppCompatActivity {
 
                             }
                             firestoreCallback.onPullSessioniCallback();
-
-
-
-
-
                         }
 
                         else
@@ -423,8 +403,6 @@ public class ResoContochallengeActivity extends AppCompatActivity {
 
 
                     }
-
-
                 });
     }
 
@@ -460,19 +438,27 @@ public class ResoContochallengeActivity extends AppCompatActivity {
         String VelocitaPartecipanteString = StatistichePartecipante.get(2);
         float VelocitaPartecipante = Float.parseFloat(VelocitaPartecipanteString);
 
+        if(Double.isNaN(VelocitaCreatore) || Double.isInfinite(VelocitaCreatore))
+            VelocitaCreatore = 0;
+
+        if(Double.isNaN(VelocitaPartecipante) || Double.isInfinite(VelocitaPartecipante))
+            VelocitaPartecipante = 0;
+
+        Log.d("Punteggio2", VelocitaPartecipanteString);
         Log.d("PunteggioBarra", String.valueOf((int) (VelocitaCreatore + VelocitaPartecipante)));
 
-        if((int) (VelocitaCreatore + VelocitaPartecipante) == 0) {
+        if((int) (VelocitaCreatore + VelocitaPartecipante) == 0)
+        {
             VelocitaProgessBar.setMax(100);
             VelocitaProgessBar.setProgress(50, true);
         }
-        else{
+        else
+        {
             Log.d("PunteggioBarra", String.valueOf((int) (VelocitaCreatore + VelocitaPartecipante)));
             Log.d("PunteggioBarra", String.valueOf((int) (VelocitaCreatore)));
 
             VelocitaProgessBar.setMax((int) (VelocitaCreatore + VelocitaPartecipante));
             VelocitaProgessBar.setProgress((int) VelocitaCreatore, true);
-
         }
 
         String CalorieCreatoreString = StatisticheCreatore.get(1);
@@ -481,12 +467,14 @@ public class ResoContochallengeActivity extends AppCompatActivity {
         String CaloriePartecipanteString = StatistichePartecipante.get(1);
         float CaloriePartecipante = Float.parseFloat(CaloriePartecipanteString);
 
-        if((int) (CalorieCreatore + CaloriePartecipante) == 0) {
+        if((int) (CalorieCreatore + CaloriePartecipante) == 0)
+        {
             CalorieProgressBar.setMax(100);
             CalorieProgressBar.setProgress(50, true);
             CalorieProgressBar.animate().setDuration(10000000);
         }
-        else{
+        else
+        {
             CalorieProgressBar.setMax((int) (CalorieCreatore + CaloriePartecipante));
             CalorieProgressBar.setProgress((int) CalorieCreatore, true);
 
@@ -510,6 +498,7 @@ public class ResoContochallengeActivity extends AppCompatActivity {
         else if((int) VelocitaCreatore < (int) VelocitaPartecipante) {
             countrisultatopartecipante++;
             Log.d("Punteggio", "punto vel partecipante");
+            Log.d("Punteggio1", (int) VelocitaCreatore + " " + VelocitaPartecipante);
         }
 
         if((int) CalorieCreatore > (int) CaloriePartecipante) {
@@ -628,10 +617,7 @@ public class ResoContochallengeActivity extends AppCompatActivity {
                         Log.w("TAG", "Error updating document", e);
                     }
                 });
-
     }
-
-
 
     public boolean onOptionsItemSelected(MenuItem item){
 

@@ -29,6 +29,9 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jammbell.Model.FirestoreCallback;
+import com.example.jammbell.Model.Sessione;
+import com.example.jammbell.View.IActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -50,61 +53,50 @@ import java.util.Date;
 import java.util.HashMap;
 
 
-public class ActivityFragment extends Fragment {
-
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private FirebaseAuth mAuth;
+public class ActivityFragment extends Fragment implements IActivity
+{
     private Menu menu;
     private DatePickerDialog.OnDateSetListener dateSetListener;
 
-    ArrayList<String> StoricoSessioneData = new ArrayList<String>();
-    ArrayList<String> StoricoKm = new ArrayList<String>();
-    ArrayList<String> StoricoTempo = new ArrayList<String>();
-    ArrayList<String> StoricoCalorie = new ArrayList<String>();
-    ArrayList<String> StoricoPassi = new ArrayList<String>();
-    ArrayList<String> StoricoVelocitaMedia = new ArrayList<String>();
-    ArrayList<String> StoricoValutazione = new ArrayList<String>();
-    ArrayList<String> ArrayDocumentoID = new ArrayList<String>();
+    private ArrayList<String> StoricoSessioneData = new ArrayList<String>();
+    private ArrayList<String> StoricoKm = new ArrayList<String>();
+    private ArrayList<String> StoricoTempo = new ArrayList<String>();
+    private ArrayList<String> StoricoCalorie = new ArrayList<String>();
+    private ArrayList<String> StoricoPassi = new ArrayList<String>();
+    private ArrayList<String> StoricoVelocitaMedia = new ArrayList<String>();
+    private ArrayList<String> StoricoValutazione = new ArrayList<String>();
+    private ArrayList<String> ArrayDocumentoID = new ArrayList<String>();
 
-    RecyclerView recyclerViewStorico;
+    private RecyclerView recyclerViewStorico;
 
-    double Km;
-    long Tempo;
-    long Passi;
-    long Calorie;
-    long Valutazione;
-    double Velocita;
-    int dayprova;
-    int monthprova;
-    int yearprova;
-    String DocumentID;
-    boolean filtroapplicato = false;
-    HashMap<String, String> Datamap = new HashMap<>();
-    TextView filtroTextView;
-    DatePickerDialog dialog;
+    private int dayprova;
+    private int monthprova;
+    private int yearprova;
+
+    private boolean filtroapplicato = false;
+    private TextView filtroTextView;
+    private DatePickerDialog dialog;
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable  Bundle savedInstanceState) {
-        recyclerViewStorico = (RecyclerView) getView().findViewById(R.id.recyclerViewStorico);
-        filtroTextView = (TextView) getView().findViewById(R.id.FiltroTextView);
+    public void onViewCreated(@NonNull View view, @Nullable  Bundle savedInstanceState)
+    {
+        recyclerViewStorico =  getView().findViewById(R.id.recyclerViewStorico);
+        filtroTextView      =  getView().findViewById(R.id.FiltroTextView);
 
         setHasOptionsMenu(true);
-
-
-
 
         //eliminazione delle celle
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
             @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                //Toast.makeText(getContext(), "on Move", Toast.LENGTH_SHORT).show();
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target)
+            {
                 return false;
             }
 
             @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir)
+            {
                     int position = viewHolder.getAdapterPosition();
 
                     Log.d("Documento1", StoricoCalorie.get(position).split(" ")[1]);
@@ -113,9 +105,9 @@ public class ActivityFragment extends Fragment {
                     Log.d("Documento1", ArrayDocumentoID.get(position));
                     Log.d("Documento1", ArrayDocumentoID.toString());
 
-
-                    EliminaDocumento(ArrayDocumentoID.get(position));
-
+                    //Elimina la sessione
+                    Sessione sessione = new Sessione();
+                    sessione.EliminaSessione(ArrayDocumentoID.get(position));
 
                     StoricoSessioneData.remove(position);
                     StoricoCalorie.remove(position);
@@ -125,7 +117,6 @@ public class ActivityFragment extends Fragment {
                     StoricoValutazione.remove(position);
                     StoricoVelocitaMedia.remove(position);
                     ArrayDocumentoID.remove(position);
-                    //MyAdapterStorico.notifyDataSetChanged();
 
                     if(filtroapplicato == false)
                         PullDatiDatabaseStorico();
@@ -136,7 +127,8 @@ public class ActivityFragment extends Fragment {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerViewStorico);
 
-        dateSetListener = new DatePickerDialog.OnDateSetListener() {
+        dateSetListener = new DatePickerDialog.OnDateSetListener()
+        {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
 
@@ -165,51 +157,29 @@ public class ActivityFragment extends Fragment {
 
        if(filtroapplicato == false)
              PullDatiDatabaseStorico();
-
-
     }
 
-
-
-    public void EliminaDocumento(String documentID){
-
-        db.collection("SessioneVeloce").document(documentID)
-                .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("Eliminato", "DocumentSnapshot successfully deleted!");
-                    }
-
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                       // Log.w(TAG, "Error deleting document", e);
-                    }
-                });
-
-    }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull  MenuInflater inflater) {
-
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull  MenuInflater inflater)
+    {
         inflater.inflate(R.menu.upbar_menu, menu);
-            this.menu = menu;
+        this.menu = menu;
     }
 
     @Override
-    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull Menu menu)
+    {
         menu.clear();
         MenuInflater inflater = getActivity().getMenuInflater();
         inflater.inflate(R.menu.upbar_menu, menu);
         super.onPrepareOptionsMenu(menu);
-
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
+        switch (item.getItemId())
+        {
             case R.id.search_button:
                 {
                 Calendar cal = Calendar.getInstance();
@@ -219,7 +189,7 @@ public class ActivityFragment extends Fragment {
 
                  dialog = new DatePickerDialog(getContext(), android.R.style.Theme_DeviceDefault_Dialog, dateSetListener, year, month, day);
 
-                dialog.show();
+                 dialog.show();
 
                 return true;
             }
@@ -239,8 +209,8 @@ public class ActivityFragment extends Fragment {
         }
     }
 
-    public void clearCell(){
-
+    private void clearCell()
+    {
         StoricoKm.clear();
         StoricoCalorie.clear();
         StoricoPassi.clear();
@@ -249,178 +219,100 @@ public class ActivityFragment extends Fragment {
         StoricoVelocitaMedia.clear();
         StoricoValutazione.clear();
         ArrayDocumentoID.clear();
-
     }
 
-    public void PullDatiDatabaseStoricoData(int day, int month, int year){
-
-
-
-            clearCell();
-
-        mAuth = FirebaseAuth.getInstance();
-
-
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-            Log.d("utenteid", currentUser.getUid());
-
-            db.collection("SessioneVeloce")
-                    .whereEqualTo("UserID", currentUser.getUid())
-                    .whereEqualTo("Data.dayOfMonth", day)
-                    .whereEqualTo("Data.monthValue", month)
-                    .whereEqualTo("Data.year", year)
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-
-
-                                    Km = (double) document.get("Km");
-                                    Passi = (long) document.get("Passi");
-                                    Calorie = (long) document.get("Calorie");
-                                    Tempo =  (long) document.get("Tempo");
-                                    Valutazione = (long) document.get("Feedback");
-                                    Velocita = (double) document.get("Velocita");
-                                    Datamap = (HashMap<String, String>) document.get("Data");
-                                    DocumentID = document.getId();
-
-
-                                    Log.d("mappa1", String.valueOf(Datamap));
-
-
-                                    DecimalFormat df = new DecimalFormat("##########.###");
-                                    df.setRoundingMode(RoundingMode.DOWN);
-                                    StoricoKm.add("Km: " + String.valueOf(df.format(Km)));
-                                    StoricoCalorie.add("Calorie: " + String.valueOf(Calorie));
-                                    StoricoPassi.add("Passi: " + String.valueOf(Passi));
-                                    StoricoSessioneData.add("Sessione del " + String.valueOf(Datamap.get("dayOfMonth")) + "/" + String.valueOf(Datamap.get("monthValue")) + "/" +  String.valueOf(Datamap.get("year")));
-                                    StoricoTempo.add("Durata: " + formatSecondDateTime((int) Tempo));
-                                    DecimalFormat df1 = new DecimalFormat("###.##");
-                                    df.setRoundingMode(RoundingMode.DOWN);
-                                    StoricoVelocitaMedia.add("Velocità media: " + String.valueOf(df1.format(Velocita)));
-                                    StoricoValutazione.add(String.valueOf(Valutazione) + "/5");
-                                    ArrayDocumentoID.add(DocumentID);
-
-
-
-                                }
-
-                                if(StoricoKm.size() == 0) {
-                                    Toast.makeText(getContext(), "Nessuna sessione trovata", Toast.LENGTH_SHORT).show();
-                                    filtroTextView.setText("Nessuna sessione");
-                                } else {
-                                    filtroTextView.setText("Filtro, giorno: " + day + "/" + month + "/" + year);
-                                }
-
-
-
-
-
-                                MyAdapterStorico myAdapter = new MyAdapterStorico(getContext(), StoricoSessioneData, StoricoKm, StoricoTempo, StoricoCalorie, StoricoPassi, StoricoVelocitaMedia, StoricoValutazione, ArrayDocumentoID);
-                                recyclerViewStorico.setAdapter(myAdapter);
-                                recyclerViewStorico.setLayoutManager(new LinearLayoutManager(getContext()));
-
-                            }
-
-                            else
-                            {
-
-                                Log.d("database", "Error getting documents: ", task.getException());
-                            }
-                        }
-                    });
-        }
-        else {
-            Log.d("utenteid", "niente vuoto");
-        }
-    }
-
-    public void PullDatiDatabaseStorico() {
-
-
+    private void PullDatiDatabaseStoricoData(int day, int month, int year)
+    {
         clearCell();
 
-        mAuth = FirebaseAuth.getInstance();
+        Sessione sessione = new Sessione();
 
+        sessione.OrdinaSessioniPerData(day, month, year, new FirestoreCallback()
+        {
+            @Override
+            public void onPullSessioneCallback()
+            {
+                DecimalFormat df = new DecimalFormat("##########.###");
+                df.setRoundingMode(RoundingMode.DOWN);
+                DecimalFormat df1 = new DecimalFormat("###.##");
+                df.setRoundingMode(RoundingMode.DOWN);
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-            Log.d("utenteid", currentUser.getUid());
+                for(int i = 0; i < sessione.getPassi().size(); i++)
+                {
+                    StoricoKm.add("Km: " + String.valueOf(df.format(sessione.getKm_Percorsi().get(i))));
+                    StoricoCalorie.add("Calorie: " + String.valueOf(sessione.getCalorie_Bruciate().get(i)));
+                    StoricoPassi.add("Passi: " + String.valueOf(sessione.getPassi().get(i)));
+                    StoricoSessioneData.add("Sessione del " + String.valueOf(sessione.getData().get(i).get("dayOfMonth")) + "/" + String.valueOf(sessione.getData().get(i).get("monthValue")) + "/" + String.valueOf(sessione.getData().get(i).get("year")));
+                    StoricoTempo.add("Durata: " + formatSecondDateTime(Integer.parseInt(String.valueOf(sessione.getTempo().get(i)))));
+                    StoricoVelocitaMedia.add("Velocità media: " + String.valueOf(df1.format(sessione.getVelocita_Media().get(i))));
+                    StoricoValutazione.add(String.valueOf(sessione.getValutazione().get(i)) + "/5");
+                    ArrayDocumentoID.add(sessione.getDocumentID().get(i));
+                }
 
-                    db.collection("SessioneVeloce")
-                     .whereEqualTo("UserID", currentUser.getUid())
-                            .orderBy("Data.year", Query.Direction.DESCENDING)
-                            .orderBy("Data.monthValue", Query.Direction.DESCENDING)
-                            .orderBy("Data.dayOfMonth", Query.Direction.DESCENDING)
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
+                if(StoricoKm.size() == 0)
+                {
+                    Toast.makeText(getContext(), "Nessuna sessione trovata", Toast.LENGTH_SHORT).show();
+                    filtroTextView.setText("Nessuna sessione");
+                }
+                else
+                {
+                    filtroTextView.setText("Filtro, giorno: " + day + "/" + month + "/" + year);
+                }
+                MyAdapterStorico myAdapter = new MyAdapterStorico(getContext(), StoricoSessioneData, StoricoKm, StoricoTempo, StoricoCalorie, StoricoPassi, StoricoVelocitaMedia, StoricoValutazione, ArrayDocumentoID);
+                recyclerViewStorico.setAdapter(myAdapter);
+                recyclerViewStorico.setLayoutManager(new LinearLayoutManager(getContext()));
+            }
+        });
+    }
 
-                                    Km = (double) document.get("Km");
-                                    Passi = (long) document.get("Passi");
-                                    Calorie = (long) document.get("Calorie");
-                                    Tempo =  (long) document.get("Tempo");
-                                    Valutazione = (long) document.get("Feedback");
-                                    Velocita = (double) document.get("Velocita");
-                                    Datamap = (HashMap<String, String>) document.get("Data");
-                                    DocumentID = document.getId();
+    private void PullDatiDatabaseStorico()
+    {
+        clearCell();
 
+        Sessione sessione = new Sessione();
 
-                                    Log.d("mappa", String.valueOf(Datamap));
+        sessione.OrdinaTutteSessioni(new FirestoreCallback()
+        {
+            @Override
+            public void onPullSessioneCallback()
+            {
+                DecimalFormat df = new DecimalFormat("##########.###");
+                df.setRoundingMode(RoundingMode.DOWN);
+                DecimalFormat df1 = new DecimalFormat("###.##");
+                df.setRoundingMode(RoundingMode.DOWN);
 
+                for(int i = 0; i < sessione.getPassi().size(); i++)
+                {
+                    StoricoKm.add("Km: " + String.valueOf(df.format(sessione.getKm_Percorsi().get(i))));
+                    StoricoCalorie.add("Calorie: " + String.valueOf(sessione.getCalorie_Bruciate().get(i)));
+                    StoricoPassi.add("Passi: " + String.valueOf(sessione.getPassi().get(i)));
+                    StoricoSessioneData.add("Sessione del " + String.valueOf(sessione.getData().get(i).get("dayOfMonth")) + "/" + String.valueOf(sessione.getData().get(i).get("monthValue")) + "/" + String.valueOf(sessione.getData().get(i).get("year")));
+                    StoricoTempo.add("Durata: " + formatSecondDateTime(Integer.parseInt(String.valueOf(sessione.getTempo().get(i)))));
+                    StoricoVelocitaMedia.add("Velocità media: " + String.valueOf(df1.format(sessione.getVelocita_Media().get(i))));
+                    StoricoValutazione.add(String.valueOf(sessione.getValutazione().get(i)) + "/5");
+                    ArrayDocumentoID.add(sessione.getDocumentID().get(i));
+                }
 
-                                    DecimalFormat df = new DecimalFormat("##########.###");
-                                    df.setRoundingMode(RoundingMode.DOWN);
-                                    StoricoKm.add("Km: " + String.valueOf(df.format(Km)));
-                                    StoricoCalorie.add("Calorie: " + String.valueOf(Calorie));
-                                    StoricoPassi.add("Passi: " + String.valueOf(Passi));
-                                    StoricoSessioneData.add("Sessione del " + String.valueOf(Datamap.get("dayOfMonth")) + "/" + String.valueOf(Datamap.get("monthValue")) + "/" +  String.valueOf(Datamap.get("year")));
-                                    StoricoTempo.add("Durata: " + formatSecondDateTime((int) Tempo));
-                                    DecimalFormat df1 = new DecimalFormat("###.##");
-                                    df.setRoundingMode(RoundingMode.DOWN);
-                                    StoricoVelocitaMedia.add("Velocità media: " + String.valueOf(df1.format(Velocita)));
-                                    StoricoValutazione.add(String.valueOf(Valutazione) + "/5");
-                                    ArrayDocumentoID.add(DocumentID);
+                if(StoricoKm.size() == 0)
+                {
+                    Toast.makeText(getContext(), "Nessuna sessione trovata", Toast.LENGTH_SHORT).show();
+                    filtroTextView.setText("Nessuna sessione");
+                }
+                else
+                {
+                    filtroTextView.setText("Tutte le tue sessioni");
+                }
 
-
-                                }
-
-                                if(StoricoKm.size() == 0) {
-                                    Toast.makeText(getContext(), "Nessuna sessione trovata", Toast.LENGTH_SHORT).show();
-                                    filtroTextView.setText("Nessuna sessione");
-
-                                }
-                                else {
-                                    filtroTextView.setText("Tutte le tue sessioni");
-
-                                }
-
-                                MyAdapterStorico myAdapter = new MyAdapterStorico(getContext(), StoricoSessioneData, StoricoKm, StoricoTempo, StoricoCalorie, StoricoPassi, StoricoVelocitaMedia, StoricoValutazione, ArrayDocumentoID);
-                                recyclerViewStorico.setAdapter(myAdapter);
-                                recyclerViewStorico.setLayoutManager(new LinearLayoutManager(getContext()));
-
-                            }
-
-                            else
-                            {
-                                Log.d("database", "Error getting documents: ", task.getException());
-                            }
-                        }
-                    });
-        }
-        else {
-            Log.d("utenteid", "niente vuoto");
-        }
+                MyAdapterStorico myAdapter = new MyAdapterStorico(getContext(), StoricoSessioneData, StoricoKm, StoricoTempo, StoricoCalorie, StoricoPassi, StoricoVelocitaMedia, StoricoValutazione, ArrayDocumentoID);
+                recyclerViewStorico.setAdapter(myAdapter);
+                recyclerViewStorico.setLayoutManager(new LinearLayoutManager(getContext()));
+            }
+        });
     }
 
 
-    public static String formatSecondDateTime(int scound) {
+    private static String formatSecondDateTime(int scound)
+    {
         if(scound <= 0)return "";
         int h = scound / 3600;
         int m = scound % 3600 / 60;
@@ -433,25 +325,17 @@ public class ActivityFragment extends Fragment {
             return h+":"+m+":0"+s+"";
 
         return h+":"+m+":"+s+"";
-
     }
-
-    public ActivityFragment() {
-        // Required empty public constructor
-    }
-
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
-
-
-
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_activity, container, false);
     }

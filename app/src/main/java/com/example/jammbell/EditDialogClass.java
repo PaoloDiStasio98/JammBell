@@ -30,6 +30,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.jammbell.Controller.Profile;
 import com.example.jammbell.Model.FirestoreCallback;
 import com.example.jammbell.Model.Utente;
+import com.example.jammbell.View.IEditDialog;
 import com.example.jammbell.View.IProfileView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -45,12 +46,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
 
-public class EditDialogClass extends AppCompatDialogFragment
+public class EditDialogClass extends AppCompatDialogFragment implements IEditDialog
 {
-    Utente utente = new Utente();
-
-    Profile profilo = new Profile();
-
+    private Utente utente = new Utente();
+    private Profile profilo = new Profile();
     private EditText NomeEditText;
     private EditText CognomeEditText;
 
@@ -61,15 +60,14 @@ public class EditDialogClass extends AppCompatDialogFragment
     private NumberPicker altezzaNumberPicker;
     private NumberPicker sessoNumberPicker;
 
-    String date;
+    private String date;
 
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth;
 
-    String[] sesso = {"Maschio", "Femmina", "Altro"};
+    private String[] sesso = {"Maschio", "Femmina", "Altro"};
 
-    String documentID;
-
+    private String documentID;
 
     @NonNull
     @Override

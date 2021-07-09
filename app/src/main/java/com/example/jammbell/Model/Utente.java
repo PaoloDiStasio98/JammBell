@@ -341,11 +341,8 @@ public class Utente implements IUtente
                                             }
                                         });
                                     }
-
-                                //    isValid = 0;
                                 }
                             });
-
                         }
                         else{
                             Log.d("ERROREMAILPASSWORD", String.valueOf(task.getException()));
@@ -358,4 +355,5 @@ public class Utente implements IUtente
     public void logOut(){
         FirebaseAuth.getInstance().signOut();
     }
+
 }

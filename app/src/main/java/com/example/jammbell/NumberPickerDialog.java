@@ -9,12 +9,12 @@ import android.widget.NumberPicker;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
-public class NumberPickerDialog extends DialogFragment {
+public class NumberPickerDialog extends DialogFragment
+{
     private NumberPicker.OnValueChangeListener valueChangeListener;
-
-    int valoreMinimo;
-    int valoreMassimo;
-    int valoreDefault;
+    private int valoreMinimo;
+    private int valoreMassimo;
+    private int valoreDefault;
 
     public NumberPickerDialog(int minValue, int maxValue, int Value) {
         valoreMinimo = minValue;

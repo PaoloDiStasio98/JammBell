@@ -19,7 +19,8 @@ public class MyAdapterStorico extends RecyclerView.Adapter<MyAdapterStorico.MyVi
     ArrayList<String> data1, data2, data3, data4, data5, data6, data7, data8;
     Context context;
 
-    public MyAdapterStorico(Context ct, ArrayList<String> DataTempo, ArrayList<String> Km, ArrayList<String> Tempo, ArrayList<String> Calorie, ArrayList<String> Passi, ArrayList<String> Velocita, ArrayList<String> Valutazione, ArrayList<String> DocumentoID){
+    public MyAdapterStorico(Context ct, ArrayList<String> DataTempo, ArrayList<String> Km, ArrayList<String> Tempo, ArrayList<String> Calorie, ArrayList<String> Passi, ArrayList<String> Velocita, ArrayList<String> Valutazione, ArrayList<String> DocumentoID)
+    {
         context = ct;
         data1 = DataTempo;
         data2 = Km;
