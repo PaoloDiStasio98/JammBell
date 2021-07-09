@@ -232,6 +232,7 @@ public class ProfileFragment extends Fragment implements IProfileView
                 Log.d("datamap1", DateSessioni);
                 Log.d("giorno", giornosettimana + " " + Km);
 
+                /*
                 if(Km.get(i) < 0.001)
                     km_effettuati = 0.0;
                 else
@@ -241,7 +242,9 @@ public class ProfileFragment extends Fragment implements IProfileView
                     df.setRoundingMode(RoundingMode.DOWN);
                     String km_effettuati_string = df.format(km_effettuati_0);
                     km_effettuati = Double.parseDouble(km_effettuati_string);
-                }
+                }*/
+
+                km_effettuati = Km.get(i);
 
                 if(giornosettimana.equals("MONDAY"))
                     KmTotLunedi = KmTotLunedi + km_effettuati;
