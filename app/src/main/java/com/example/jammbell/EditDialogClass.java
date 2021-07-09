@@ -30,6 +30,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.jammbell.Controller.Profile;
 import com.example.jammbell.Model.FirestoreCallback;
 import com.example.jammbell.Model.Utente;
+import com.example.jammbell.View.IEditDialog;
 import com.example.jammbell.View.IProfileView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -45,7 +46,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
 
-public class EditDialogClass extends AppCompatDialogFragment
+public class EditDialogClass extends AppCompatDialogFragment implements IEditDialog
 {
     private Utente utente = new Utente();
     private Profile profilo = new Profile();

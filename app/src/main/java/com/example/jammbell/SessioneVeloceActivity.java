@@ -30,6 +30,7 @@ import android.widget.TextView;
 
 import com.example.jammbell.Model.FirestoreCallback;
 import com.example.jammbell.Model.Utente;
+import com.example.jammbell.View.ISessioneVeloceActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationCallback;
@@ -59,36 +60,28 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SessioneVeloceActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener
+public class SessioneVeloceActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener, ISessioneVeloceActivity
 {
     private FirebaseAuth mAuth;
-
     private Button ButtonStart;
     private Button ButtonStop;
     private Button ButtonPause;
-
     private Boolean CronometroRunning = false;
     private long pauseOffset;
-
     private Chronometer Cronometro;
-
     private GoogleMap mMap;
-
     private Polyline gpsTrack;
     private SupportMapFragment mapFragment;
     private GoogleApiClient googleApiClient;
     private LatLng lastKnownLatLng;
     private float distanza;
     private float risultato = 0;
-
     private TextView KmtextView;
     private TextView CalorieTextView;
     private TextView VelocitàTextView;
     double calorie;
     private int peso_utente;
-
     private NotificationManagerCompat notificationManager;
-
     private NotificationCompat.Builder builderNotification;
 
     @Override

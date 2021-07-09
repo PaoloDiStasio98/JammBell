@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.example.jammbell.Model.FirestoreCallback;
 import com.example.jammbell.Model.Sessione;
+import com.example.jammbell.View.IActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -52,7 +53,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 
-public class ActivityFragment extends Fragment
+public class ActivityFragment extends Fragment implements IActivity
 {
     private Menu menu;
     private DatePickerDialog.OnDateSetListener dateSetListener;
@@ -208,7 +209,7 @@ public class ActivityFragment extends Fragment
         }
     }
 
-    public void clearCell()
+    private void clearCell()
     {
         StoricoKm.clear();
         StoricoCalorie.clear();
@@ -220,7 +221,7 @@ public class ActivityFragment extends Fragment
         ArrayDocumentoID.clear();
     }
 
-    public void PullDatiDatabaseStoricoData(int day, int month, int year)
+    private void PullDatiDatabaseStoricoData(int day, int month, int year)
     {
         clearCell();
 
@@ -264,7 +265,7 @@ public class ActivityFragment extends Fragment
         });
     }
 
-    public void PullDatiDatabaseStorico()
+    private void PullDatiDatabaseStorico()
     {
         clearCell();
 
@@ -310,7 +311,7 @@ public class ActivityFragment extends Fragment
     }
 
 
-    public static String formatSecondDateTime(int scound)
+    private static String formatSecondDateTime(int scound)
     {
         if(scound <= 0)return "";
         int h = scound / 3600;

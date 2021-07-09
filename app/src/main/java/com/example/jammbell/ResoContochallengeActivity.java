@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jammbell.View.IResocontoGara;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -40,7 +41,7 @@ import java.util.HashMap;
 
 
 
-public class ResoContochallengeActivity extends AppCompatActivity
+public class ResoContochallengeActivity extends AppCompatActivity implements IResocontoGara
 {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();

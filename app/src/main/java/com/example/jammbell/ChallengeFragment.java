@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.example.jammbell.Model.FirestoreCallback;
 import com.example.jammbell.Model.Gara;
+import com.example.jammbell.View.IChallengeView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,7 +49,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 
-public class ChallengeFragment extends Fragment implements CreateGameDialogClass.OnGameCreatedListener {
+public class ChallengeFragment extends Fragment implements CreateGameDialogClass.OnGameCreatedListener, IChallengeView {
 
 
     private static final String TAG = "ChallengeFragment";
@@ -131,7 +132,7 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
         super.onAttach(activity);
     }
 
-    public void CreateGameDialog()
+    private void CreateGameDialog()
     {
         CreateGameDialogClass createGameDialogClass = new CreateGameDialogClass();
         createGameDialogClass.show(getFragmentManager(), "creategame");
@@ -152,7 +153,7 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
     }
 
 
-    public void clearCell()
+    private void clearCell()
     {
         ChallengeDataInizio.clear();
         ChallengeDataFine.clear();
@@ -165,7 +166,7 @@ public class ChallengeFragment extends Fragment implements CreateGameDialogClass
         ChallengeUsernameVincitore.clear();
     }
 
-    public void PullGare()
+    private void PullGare()
     {
         clearCell();
 

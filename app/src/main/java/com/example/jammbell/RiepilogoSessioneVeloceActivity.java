@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.example.jammbell.Controller.SessioneVeloce;
 import com.example.jammbell.Model.FirestoreCallback;
 import com.example.jammbell.Model.Sessione;
+import com.example.jammbell.View.IRiepilogoSessione;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,7 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class RiepilogoSessioneVeloceActivity extends AppCompatActivity
+public class RiepilogoSessioneVeloceActivity extends AppCompatActivity implements IRiepilogoSessione
 {
      private TextView TempoTextView;
      private TextView KmTextView;
@@ -215,7 +216,7 @@ public class RiepilogoSessioneVeloceActivity extends AppCompatActivity
         }
     }
 
-    public static String formatSecondDateTime(int scound) {
+    private static String formatSecondDateTime(int scound) {
         if(scound <= 0)return "";
         int h = scound / 3600;
         int m = scound % 3600 / 60;

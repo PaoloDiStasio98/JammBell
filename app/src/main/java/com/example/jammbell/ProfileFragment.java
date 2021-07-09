@@ -170,7 +170,7 @@ public class ProfileFragment extends Fragment implements IProfileView
         super.onResume();
     }
 
-    public void graficogenerate()
+    private void graficogenerate()
     {
         SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date(System.currentTimeMillis());
@@ -420,7 +420,7 @@ public class ProfileFragment extends Fragment implements IProfileView
         editDialogClass.show(myContext.getSupportFragmentManager(), "esempio" );
     }
 
-    public void VisualizzaStatistiche()
+    private void VisualizzaStatistiche()
     {
         ArrayList<Double> statistiche = sessione.StatisticheTotali();
 
@@ -436,7 +436,7 @@ public class ProfileFragment extends Fragment implements IProfileView
         graficogenerate();
     }
 
-    public void StatisticheGare()
+    private void StatisticheGare()
     {
         Gara gara = new Gara();
         mAuth = FirebaseAuth.getInstance();
@@ -452,7 +452,7 @@ public class ProfileFragment extends Fragment implements IProfileView
         });
     }
 
-    public void StatisticheGareVinte()
+    private void StatisticheGareVinte()
     {
         numGareVinte = 0;
         db.collection("Gara")

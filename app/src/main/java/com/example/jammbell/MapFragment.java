@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.jammbell.View.IMap;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -49,14 +50,12 @@ import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
 
-public class MapFragment extends Fragment
+public class MapFragment extends Fragment implements IMap
 {
     //mappa
-    LatLng PosizioneCorrente;
-    SupportMapFragment supportMapFragment;
-    FusedLocationProviderClient client;
-    Location mLastLocation;
-    Marker mCurrLocationMarker;
+    private LatLng PosizioneCorrente;
+    private SupportMapFragment supportMapFragment;
+    private FusedLocationProviderClient client;
 
     //sessione veloce
     FloatingActionButton buttonSessioneVeloce;
@@ -153,7 +152,7 @@ public class MapFragment extends Fragment
         return view;
     }
 
-    public void SessioneGuidataDialog()
+    private void SessioneGuidataDialog()
     {
         SessioneGuidataDialog createSessioneGuidata = new SessioneGuidataDialog();
         createSessioneGuidata.show(getFragmentManager(), "createsessioneguidata");
@@ -172,7 +171,7 @@ public class MapFragment extends Fragment
         }
     }
 
-    public void checkPermission(){
+    private void checkPermission(){
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(getContext(),Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
         ){//Can add more as per requirement

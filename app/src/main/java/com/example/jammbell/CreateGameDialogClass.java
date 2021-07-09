@@ -34,6 +34,7 @@ import com.example.jammbell.Controller.Profile;
 import com.example.jammbell.Model.FirestoreCallback;
 import com.example.jammbell.Model.Gara;
 import com.example.jammbell.Model.Utente;
+import com.example.jammbell.View.ICreateGame;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -58,7 +59,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CreateGameDialogClass extends AppCompatDialogFragment
+public class CreateGameDialogClass extends AppCompatDialogFragment implements ICreateGame
 {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth  = FirebaseAuth.getInstance();
@@ -82,7 +83,6 @@ public class CreateGameDialogClass extends AppCompatDialogFragment
     private String nomepartita;
     private String usernamecreatore;
     private String IDamico;
-    private boolean amicotrovato;
 
     private Map<String, Object> gara = new HashMap<>();
     private Map<String, Object> GaraUtenteID = new HashMap<>();
@@ -261,7 +261,7 @@ public class CreateGameDialogClass extends AppCompatDialogFragment
         super.onAttach(context);
     }
 
-    public void pullUsernameCreatore()
+    private void pullUsernameCreatore()
     {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         Gara gara_creata = new Gara();
@@ -295,7 +295,7 @@ public class CreateGameDialogClass extends AppCompatDialogFragment
         });
     }
 
-    public void pushGara()
+    private void pushGara()
     {
         //pusho gara nel database
         mAuth = FirebaseAuth.getInstance();
@@ -334,7 +334,7 @@ public class CreateGameDialogClass extends AppCompatDialogFragment
         });
     }
 
-    public void cercautenteDB(String username)
+    private void cercautenteDB(String username)
     {
         Challenge challenge = new Challenge();
         Gara gara_creata = new Gara();
