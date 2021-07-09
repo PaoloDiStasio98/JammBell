@@ -83,6 +83,7 @@ public class ProfileFragment extends Fragment implements IProfileView
     private Utente utente               = new Utente();
     private Sessione sessione           = new Sessione();
 
+    private Boolean garaNonEsistente = true;
     private FragmentActivity myContext;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth;
@@ -424,14 +425,38 @@ public class ProfileFragment extends Fragment implements IProfileView
     {
         ArrayList<Double> statistiche = sessione.StatisticheTotali();
 
-        Log.d("Statistiche"," " + statistiche);
+        Log.d("Statistiche1"," " + statistiche);
 
         DecimalFormat df = new DecimalFormat("##########.###");
         df.setRoundingMode(RoundingMode.DOWN);
-        DescrizioneStatistiche[0] = String.valueOf(df.format(statistiche.get(0)) + " Km");
-        DescrizioneStatistiche[1] = String.valueOf(df.format(statistiche.get(1)));
-        DescrizioneStatistiche[2] = String.valueOf(df.format(statistiche.get(2)) + " Kcal");
-        DescrizioneStatistiche[3] = String.valueOf(df.format(statistiche.get(3) / 3600) + " h");
+        if(statistiche.get(0) == 0.0){
+            DescrizioneStatistiche[0] = "0.0 Km";
+        }
+        else{
+            DescrizioneStatistiche[0] = String.valueOf(df.format(statistiche.get(0)) + " Km");
+        }
+
+        if(statistiche.get(1) == 0.0){
+            DescrizioneStatistiche[1] = "0";
+        }
+        else{
+            DescrizioneStatistiche[1] = String.valueOf(df.format(statistiche.get(1)));
+        }
+
+        if(statistiche.get(2) == 0.0){
+            DescrizioneStatistiche[2] = "0 Kcal";
+        }
+        else{
+            DescrizioneStatistiche[2] = String.valueOf(df.format(statistiche.get(2)) + " Kcal");
+        }
+
+        if(statistiche.get(3) == 0.0){
+            DescrizioneStatistiche[3] = "0 h";
+        }
+        else{
+            DescrizioneStatistiche[3] = String.valueOf(df.format(statistiche.get(3) / 3600) + " h");
+        }
+
         StatisticheGare();
         graficogenerate();
     }
@@ -440,6 +465,13 @@ public class ProfileFragment extends Fragment implements IProfileView
     {
         Gara gara = new Gara();
         mAuth = FirebaseAuth.getInstance();
+        Log.d("C pall", String.valueOf(garaNonEsistente));
+        DescrizioneStatistiche[4] = "0";
+        DescrizioneStatistiche[5] = "0";
+
+        MyAdapter myAdapter = new MyAdapter(getContext(), TitoliStatistiche, DescrizioneStatistiche);
+        recyclerViewStatistiche.setAdapter(myAdapter);
+        recyclerViewStatistiche.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
         gara.getGareUtenteDatabase(new FirestoreCallback()
         {
@@ -448,8 +480,10 @@ public class ProfileFragment extends Fragment implements IProfileView
             {
                 numGare = gara.getNome().size();
                 StatisticheGareVinte();
+                Log.d("ppp", String.valueOf(garaNonEsistente));
             }
         });
+
     }
 
     private void StatisticheGareVinte()
@@ -462,6 +496,8 @@ public class ProfileFragment extends Fragment implements IProfileView
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            garaNonEsistente = false;
+
                             for (QueryDocumentSnapshot document : task.getResult())
                             {
                                 Log.d("Statistica", "trovata una gara come partecipante");
@@ -483,5 +519,15 @@ public class ProfileFragment extends Fragment implements IProfileView
                         }
                     }
                 });
+        Log.d("ciao", String.valueOf(garaNonEsistente));
+        if(garaNonEsistente == true){
+            Log.d("C pall", String.valueOf(garaNonEsistente));
+            DescrizioneStatistiche[4] = "0";
+            DescrizioneStatistiche[5] = "0";
+
+            MyAdapter myAdapter = new MyAdapter(getContext(), TitoliStatistiche, DescrizioneStatistiche);
+            recyclerViewStatistiche.setAdapter(myAdapter);
+            recyclerViewStatistiche.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        }
     }
 }

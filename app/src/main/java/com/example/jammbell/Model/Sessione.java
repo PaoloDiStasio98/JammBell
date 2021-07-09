@@ -136,6 +136,8 @@ public class Sessione
     {
         ArrayList<Double> Statistiche_Totali = new ArrayList<>();
         getDatiSessioneDatabase();
+        Log.d("prova", String.valueOf(getTempo()));
+
 
         double km_totali      = 0.0;
         double passi_totali   = 0.0;
@@ -149,6 +151,8 @@ public class Sessione
             calorie_totali += Calorie_Bruciate.get(i);
             tempo_totale   += Tempo.get(i);
         }
+
+        Log.d("tempo", String.valueOf(tempo_totale));
 
         Statistiche_Totali.add(km_totali);
         Statistiche_Totali.add(passi_totali);

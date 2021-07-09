@@ -287,7 +287,15 @@ public class ActivityFragment extends Fragment implements IActivity
                     StoricoCalorie.add("Calorie: " + String.valueOf(sessione.getCalorie_Bruciate().get(i)));
                     StoricoPassi.add("Passi: " + String.valueOf(sessione.getPassi().get(i)));
                     StoricoSessioneData.add("Sessione del " + String.valueOf(sessione.getData().get(i).get("dayOfMonth")) + "/" + String.valueOf(sessione.getData().get(i).get("monthValue")) + "/" + String.valueOf(sessione.getData().get(i).get("year")));
-                    StoricoTempo.add("Durata: " + formatSecondDateTime(Integer.parseInt(String.valueOf(sessione.getTempo().get(i)))));
+
+                    Log.d("STRUNZ", String.valueOf(sessione.getTempo().get(i)));
+                    if(sessione.getTempo().get(i) == 0){
+                        StoricoTempo.add("Durata: 0:00");
+                    }
+                    else{
+                        StoricoTempo.add("Durata: " + formatSecondDateTime(Integer.parseInt(String.valueOf(sessione.getTempo().get(i)))));
+                    }
+
                     StoricoVelocitaMedia.add("Velocità media: " + String.valueOf(df1.format(sessione.getVelocita_Media().get(i))));
                     StoricoValutazione.add(String.valueOf(sessione.getValutazione().get(i)) + "/5");
                     ArrayDocumentoID.add(sessione.getDocumentID().get(i));
