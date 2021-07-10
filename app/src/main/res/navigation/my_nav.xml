@@ -7,22 +7,22 @@
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.jammbell.ProfileFragment"
+        android:name="com.appiedi.jammbell.ProfileFragment"
         android:label="Profilo"
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/challengeFragment"
-        android:name="com.example.jammbell.ChallengeFragment"
+        android:name="com.appiedi.jammbell.ChallengeFragment"
         android:label="Sfide"
         tools:layout="@layout/fragment_challenge" />
     <fragment
         android:id="@+id/mapFragment"
-        android:name="com.example.jammbell.MapFragment"
+        android:name="com.appiedi.jammbell.MapFragment"
         android:label="Home"
         tools:layout="@layout/fragment_map" />
     <fragment
         android:id="@+id/activityFragment"
-        android:name="com.example.jammbell.ActivityFragment"
+        android:name="com.appiedi.jammbell.ActivityFragment"
         android:label="Storico"
         tools:layout="@layout/fragment_activity" />
 </navigation>
