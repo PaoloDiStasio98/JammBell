@@ -266,7 +266,6 @@ public class ActivityFragment extends Fragment implements IActivity
                     StoricoPassi.add("Passi: " + String.valueOf(sessione.getPassi().get(i)));
                     StoricoSessioneData.add("Sessione del " + String.valueOf(sessione.getData().get(i).get("dayOfMonth")) + "/" + String.valueOf(sessione.getData().get(i).get("monthValue")) + "/" + String.valueOf(sessione.getData().get(i).get("year")));
 
-                    Log.d("STRUNZ", String.valueOf(sessione.getTempo().get(i)));
                     if(sessione.getTempo().get(i) == 0){
                         StoricoTempo.add("Durata: 0:00");
                     }
@@ -297,12 +296,12 @@ public class ActivityFragment extends Fragment implements IActivity
     }
 
 
-    private static String formatSecondDateTime(int scound)
+    private static String formatSecondDateTime(int second)
     {
-        if(scound <= 0)return "";
-        int h = scound / 3600;
-        int m = scound % 3600 / 60;
-        int s = scound % 60; // Less than 60 is the second, enough 60 is the minute
+        if(second <= 0)return "";
+        int h = second / 3600;
+        int m = second % 3600 / 60;
+        int s = second % 60; // Less than 60 is the second, enough 60 is the minute
         if(m<10 && s<10)
             return h+":0"+m+":0"+s+"";
         if(m < 10)
