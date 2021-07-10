@@ -7,4 +7,6 @@ import java.util.Map;
 public interface ISessioneVeloce
 {
     void pushSessione(Map<String, Object> SessioneVeloce, FirestoreCallback firestoreCallback);
+    void OrdinaTutteSessioni(FirestoreCallback firestoreCallback);
+    void OrdinaSessioniPerData(int day, int month, int year, FirestoreCallback firestoreCallback);
 }

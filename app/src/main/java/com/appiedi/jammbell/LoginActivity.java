@@ -14,10 +14,11 @@ import android.widget.TextView;
 
 import com.appiedi.jammbell.Model.FirestoreCallback;
 import com.appiedi.jammbell.Model.Utente;
+import com.appiedi.jammbell.View.ILogin;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements ILogin {
 
     private FirebaseAuth mAuth;
     private EditText MailEditText=null, PasswordEditText=null;

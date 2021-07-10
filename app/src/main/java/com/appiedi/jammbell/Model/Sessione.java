@@ -28,7 +28,6 @@ public class Sessione
     private ArrayList<Long>                   Passi            = new ArrayList<>();
     private ArrayList<Long>                   Calorie_Bruciate = new ArrayList<>();
     private ArrayList<Long>                   Tempo            = new ArrayList<>();
-    private ArrayList<Long>                   Feedback         = new ArrayList<>();
     private ArrayList<Double>                 Km_Percorsi      = new ArrayList<>();
     private ArrayList<Double>                 Velocita_Media   = new ArrayList<>();
     private ArrayList<HashMap<String,String>> Data             = new ArrayList<>();
@@ -62,10 +61,6 @@ public class Sessione
 
     public ArrayList<Long> getTempo() {
         return Tempo;
-    }
-
-    public ArrayList<Long> getFeedback() {
-        return Feedback;
     }
 
     public ArrayList<Double> getKm_Percorsi() {
@@ -107,7 +102,7 @@ public class Sessione
                             for(QueryDocumentSnapshot doc : value)
                             {
                                 Calorie_Bruciate.add((Long) doc.get("Calorie"));
-                                Feedback.add((Long) doc.get("Feedback"));
+                                Valutazione.add((Long) doc.get("Feedback"));
                                 Passi.add((Long) doc.get("Passi"));
                                 Tempo.add((Long) doc.get("Tempo"));
                                 Km_Percorsi.add((Double) doc.get("Km"));

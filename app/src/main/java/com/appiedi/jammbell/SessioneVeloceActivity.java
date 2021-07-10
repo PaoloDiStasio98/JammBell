@@ -24,7 +24,7 @@ import android.widget.TextView;
 
 import com.appiedi.jammbell.Model.FirestoreCallback;
 import com.appiedi.jammbell.Model.Utente;
-import com.appiedi.jammbell.View.ISessioneVeloceActivity;
+import com.appiedi.jammbell.View.ISessioneVeloce;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -45,7 +45,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.List;
 
-public class SessioneVeloceActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener, ISessioneVeloceActivity
+public class SessioneVeloceActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener, ISessioneVeloce
 {
     private FirebaseAuth mAuth;
     private Button ButtonStart;

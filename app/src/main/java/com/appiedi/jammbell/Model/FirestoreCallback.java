@@ -2,8 +2,6 @@ package com.appiedi.jammbell.Model;
 
 public class FirestoreCallback implements IFirestoreCallback {
 
-   FirestoreCallback firestoreCallback;
-
     @Override
     public void onCallback() {
 

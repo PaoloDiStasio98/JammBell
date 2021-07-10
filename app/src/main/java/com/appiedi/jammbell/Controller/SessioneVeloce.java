@@ -8,6 +8,17 @@ import java.util.Map;
 public class SessioneVeloce
 {
     public SessioneVeloce() {
+
+    }
+
+    public void OrdinaTutteSessioni(FirestoreCallback firestoreCallback){
+        Sessione sessione = new Sessione();
+        sessione.OrdinaTutteSessioni(firestoreCallback);
+    }
+
+    public void OrdinaSessioniPerData(int day, int month, int year, FirestoreCallback firestoreCallback){
+        Sessione sessione = new Sessione();
+        sessione.OrdinaSessioniPerData(day, month, year, firestoreCallback);
     }
 
     public void pushSessione(Map<String, Object> SessioneVeloce, FirestoreCallback firestoreCallback)

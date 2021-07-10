@@ -27,7 +27,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.appiedi.jammbell.View.ISessioneGuidataActivity;
+import com.appiedi.jammbell.View.ISessioneGuidata;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -57,7 +57,7 @@ public class SessioneGuidataActivity extends AppCompatActivity implements
         OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        com.google.android.gms.location.LocationListener, ISessioneGuidataActivity {
+        com.google.android.gms.location.LocationListener, ISessioneGuidata {
 
     private int minutiCamminata, minutiCorsa, numeroRipetizioni;
     private TextView cronometroTextView;

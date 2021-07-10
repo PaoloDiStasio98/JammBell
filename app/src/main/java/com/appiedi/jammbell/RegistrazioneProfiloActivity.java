@@ -16,8 +16,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.appiedi.jammbell.Controller.Profile;
 import com.appiedi.jammbell.Model.FirestoreCallback;
 import com.appiedi.jammbell.Model.Utente;
+import com.appiedi.jammbell.View.IRegistrazioneProfilo;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,7 +28,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RegistrazioneProfiloActivity extends AppCompatActivity implements NumberPicker.OnValueChangeListener
+public class RegistrazioneProfiloActivity extends AppCompatActivity implements NumberPicker.OnValueChangeListener, IRegistrazioneProfilo
 {
 
     private DatePickerDialog datePickerDialog;
