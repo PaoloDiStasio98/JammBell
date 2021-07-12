@@ -501,6 +501,7 @@ public class SessioneGuidataActivity extends AppCompatActivity implements
                                 if(corsa_iniziata == true)
                                     timercorsa.cancel();
                                 timertotale.cancel();
+                                notificationManager.cancel(100);
                                 Intent intent = new Intent(getBaseContext(), Main2Activity.class);
                                 startActivity(intent);
                             }

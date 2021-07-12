@@ -54,7 +54,6 @@ public class LoginActivity extends AppCompatActivity implements ILogin {
         TextRegistrazione.setSpan(new UnderlineSpan(), 28, 31, 0);
         SignupButton.setText(TextRegistrazione);
 
-
         LoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
