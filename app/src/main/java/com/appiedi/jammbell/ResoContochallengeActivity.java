@@ -5,12 +5,14 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -76,6 +78,7 @@ public class ResoContochallengeActivity extends AppCompatActivity implements IRe
     private Button SessioneVeloceButton;
     private String StatoGara;
     private String IDDocumentoGara;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

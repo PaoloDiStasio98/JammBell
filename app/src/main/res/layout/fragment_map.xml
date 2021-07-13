@@ -44,7 +44,7 @@
           app:fab_size="mini"
           app:fab_title="Sessione veloce" />
 
-      <com.getbase.floatingactionbutton.FloatingActionButton
+       <com.getbase.floatingactionbutton.FloatingActionButton
           android:id="@+id/ButtonSessioneGuidata"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
